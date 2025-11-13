@@ -41,55 +41,88 @@
     </button>
   </div>
 </header>
-<main class="shop-page">
 
-  <!-- SHOP HERO -->
-  <section class="shop-page-hero">
-    <div class="shop-page-hero-inner">
-      <h1 class="shop-page-heading">
-        SHOP ALL KNIVES
-      </h1>
-      <p class="shop-page-subheading">
-        Fixed • Folding • Kitchen
+<main class="cart-page">
+
+  <!-- CART HEADER -->
+  <section class="cart-hero">
+    <div class="cart-hero-inner">
+      <h1 class="cart-heading">YOUR CART</h1>
+      <p class="cart-subheading">
+        Review your selection before checkout.
       </p>
     </div>
   </section>
 
-  <!-- CATEGORY GRID -->
-  <section class="shop-page-categories">
-    <div class="shop-page-categories-inner">
+  <!-- CART CONTENT -->
+  <section class="cart-content">
+    <div class="cart-inner">
 
-      <div class="product-grid">
-        <!-- Fixed -->
-        <a href="#fixed" class="product-card shop-category-card">
-          <img
-            src="./productimages/imgplaceholder.png"
-            alt="Fixed blade knives"
-            class="product-image"
-          />
-          <div class="shop-category-label">FIXED BLADES</div>
-        </a>
+      <!-- LEFT: items -->
+      <div class="cart-items">
 
-        <!-- Folding -->
-        <a href="#folding" class="product-card shop-category-card">
-          <img
-            src="./productimages/imgplaceholder.png"
-            alt="Folding knives"
-            class="product-image"
-          />
-          <div class="shop-category-label">FOLDING KNIVES</div>
-        </a>
+        <!-- Empty state – you can remove once you wire real items -->
+        <div class="cart-empty">
+          <p>Your cart is currently empty.</p>
+          <a href="shop.html" class="cart-empty-cta">
+            RETURN TO SHOP
+          </a>
+        </div>
 
-        <!-- Kitchen -->
-        <a href="#kitchen" class="product-card shop-category-card">
-          <img
-            src="./productimages/imgplaceholder.png"
-            alt="Kitchen knives"
-            class="product-image"
-          />
-          <div class="shop-category-label">KITCHEN</div>
-        </a>
+        <!-- Example item row – keep as template for later -->
+        <!--
+        <div class="cart-item">
+          <div class="cart-item-main">
+            <div class="cart-item-image-wrap">
+              <img src="images/ridgeback-knife.png" alt="Ridgeback" />
+            </div>
+            <div class="cart-item-info">
+              <h2 class="cart-item-name">Ridgeback</h2>
+              <p class="cart-item-meta">Fixed Blade • MagnaCut • Stonewash</p>
+            </div>
+          </div>
+          <div class="cart-item-side">
+            <div class="cart-item-qty">
+              <button>-</button>
+              <span>1</span>
+              <button>+</button>
+            </div>
+            <div class="cart-item-price">$480</div>
+          </div>
+        </div>
+        -->
+
       </div>
+
+      <!-- RIGHT: summary -->
+      <aside class="cart-summary">
+        <h2 class="cart-summary-heading">Order Summary</h2>
+
+        <div class="cart-summary-row">
+          <span>Subtotal</span>
+          <span>$0.00</span>
+        </div>
+
+        <div class="cart-summary-row">
+          <span>Shipping</span>
+          <span>Calculated at checkout</span>
+        </div>
+
+        <div class="cart-summary-divider"></div>
+
+        <div class="cart-summary-row cart-summary-total">
+          <span>Total</span>
+          <span>$0.00</span>
+        </div>
+
+        <button class="cart-checkout-btn" disabled>
+          PROCEED TO CHECKOUT
+        </button>
+
+        <p class="cart-summary-note">
+          Checkout integration coming soon. For now, reach out via the contact page for purchases.
+        </p>
+      </aside>
 
     </div>
   </section>
