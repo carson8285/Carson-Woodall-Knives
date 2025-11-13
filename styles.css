@@ -294,6 +294,13 @@ body {
   color: #9a9a9a;
 }
 
+.footer-logo-link {
+  display: inline-flex;
+  text-decoration: none;
+  color: inherit;
+}
+
+
 /* mobile adjustments */
 @media (max-width: 600px) {
   .footer-logo {
