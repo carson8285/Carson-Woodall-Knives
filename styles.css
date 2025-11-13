@@ -495,3 +495,189 @@ html {
     display: none; /* later we can build a mobile drawer menu */
   }
 }
+
+/* CONTACT PAGE */
+
+/* CONTACT PAGE */
+
+.contact-section {
+  width: 100vw;
+  min-height: 100vh;
+  padding: 120px 24px 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+}
+
+.contact-inner {
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
+}
+
+.contact-heading {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.contact-subheading {
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b3b3b3;
+  margin-bottom: 48px;
+}
+
+/* form */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.form-field {
+  text-align: left;
+}
+
+.form-field label {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c7c7c7;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #eee;
+  font-size: 14px;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.contact-submit {
+  margin-top: 12px;
+  padding: 14px 20px;
+  background: #ffffff10;
+  color: #ffffffd8;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.contact-submit:hover {
+  background: #ffffff22;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.contact-note {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: #818181;
+  margin-top: 12px;
+}
+
+/* SHOP PAGE */
+
+/* SHOP PAGE */
+
+.shop-page {
+  width: 100vw;
+  min-height: 100vh;
+}
+
+/* hero */
+
+.shop-page-hero {
+  width: 100%;
+  padding: 120px 24px 40px;  /* top padding clears fixed nav */
+  display: flex;
+  justify-content: center;
+}
+
+.shop-page-hero-inner {
+  width: 100%;
+  max-width: 900px;
+  text-align: center;
+}
+
+.shop-page-heading {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.shop-page-subheading {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #b3b3b3;
+}
+
+/* category grid section */
+
+.shop-page-categories {
+  width: 100%;
+  padding: 24px 24px 120px;
+  display: flex;
+  justify-content: center;
+}
+
+.shop-page-categories-inner {
+  width: 100%;
+  max-width: 1080px;
+}
+
+/* reuse .product-grid / .product-card / .product-image from home,
+   but add label and hover interaction */
+
+.shop-category-card {
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+}
+
+.shop-category-card .product-image {
+  filter: brightness(0.9);
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.shop-category-card:hover .product-image {
+  filter: brightness(1.05);
+  transform: scale(1.02);
+}
+
+.shop-category-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #f5f5f5;
+
+  background: rgba(0, 0, 0, 0.55);
+  padding: 6px 10px;
+  border-radius: 999px;
+}

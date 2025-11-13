@@ -26,9 +26,9 @@
 
   <!-- CENTER: links -->
   <nav class="nav-links" aria-label="Main navigation">
-    <a href="#shop">SHOP</a>
+    <a href="./shop.html">SHOP</a>
     <a href="#about">ABOUT</a>
-    <a href="#contact">CONTACT</a>
+    <a href="./contact.html">CONTACT</a>
   </nav>
 
   <!-- RIGHT: cart + menu -->
@@ -193,6 +193,20 @@
   const navBar = document.querySelector('.nav-bar');
   const menuBtn = document.querySelector('.nav-menu-btn');
   const navLinks = document.querySelectorAll('.nav-links a');
+
+// Select your logo link
+const logoLink = document.querySelector('.nav-logo-btn, .footer-logo-link'); 
+// adjust selector depending on your actual class
+
+logoLink.addEventListener('click', function (e) {
+
+  // If NOT currently at the top of the page
+  if (window.scrollY > 20) {
+    e.preventDefault(); // stop link navigation
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } 
+  // ELSE let the default <a href="index.html"> work normally
+});
 
   if (navBar && menuBtn) {
     menuBtn.addEventListener('click', () => {

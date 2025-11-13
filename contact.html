@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | Carson Woodall Knives</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+ <header class="nav-bar">
+  <!-- LEFT: logo (scorpion + text, both SVGs) -->
+  <a href="index.html" class="nav-left" class="nav-logo-btn">
+    <img
+      src="./productimages/notxtlogowhite.svg"
+      alt=""
+      class="nav-logo-scorpion"
+    />
+    <img
+      src="./productimages/textlogowhite.svg"
+      alt="Carson Woodall Knives"
+      class="nav-logo-textimg"
+    />
+  </a>
+
+  <!-- CENTER: links -->
+  <nav class="nav-links" aria-label="Main navigation">
+    <a href="./shop.html">SHOP</a>
+    <a href="index.html#about">ABOUT</a>
+    <a href="./contact.html">CONTACT</a>
+  </nav>
+
+  <!-- RIGHT: cart + menu -->
+  <div class="nav-right">
+    <button class="nav-cart-btn" type="button" aria-label="Cart">
+      <img src="./productimages/shopping-cart.svg" alt="" />
+    </button>
+
+    <button class="nav-menu-btn" type="button" aria-label="Toggle menu">
+      <img src="./productimages/menulogo.svg" alt="" />
+    </button>
+  </div>
+</header>
+  <!-- CONTACT PAGE WRAPPER -->
+  <section class="contact-section">
+    <div class="contact-inner">
+
+      <h1 class="contact-heading">GET IN TOUCH</h1>
+      <p class="contact-subheading">Questions • Commissions • Inquiries</p>
+
+      <form class="contact-form">
+        <div class="form-field">
+          <label>Your Name</label>
+          <input type="text" required />
+        </div>
+
+        <div class="form-field">
+          <label>Your Email</label>
+          <input type="email" required />
+        </div>
+
+        <div class="form-field">
+          <label>Your Message</label>
+          <textarea rows="6" required></textarea>
+        </div>
+
+        <button class="contact-submit">SEND MESSAGE</button>
+      </form>
+
+      <p class="contact-note">
+        I read every message personally. Expect a reply within 1–3 business days.
+      </p>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+    
+      <div class="footer-brand">
+        <a href="#top" class="footer-logo-link">
+        <img
+          src="./productimages/notxtlogowhite.svg" 
+          alt="CW Scorpion Logo" 
+          class="footer-logo"
+        />
+        <div class="footer-wordmark">
+          <strong>CARSON WOODALL</strong> KNIVES
+        </a>
+        </div>
+      </div>
+
+      <div class="footer-divider"></div>
+
+      <p class="footer-copy">
+        © 2025 Carson Woodall Knives. All rights reserved.
+      </p>
+
+    </div>
+  </footer>
+  
+<script>
+  const navBar = document.querySelector('.nav-bar');
+  const menuBtn = document.querySelector('.nav-menu-btn');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+// Select your logo link
+const logoLink = document.querySelector('.nav-logo-btn, .footer-logo-link'); 
+// adjust selector depending on your actual class
+
+logoLink.addEventListener('click', function (e) {
+
+  // If NOT currently at the top of the page
+  if (window.scrollY > 20) {
+    e.preventDefault(); // stop link navigation
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } 
+  // ELSE let the default <a href="index.html"> work normally
+});
+
+  if (navBar && menuBtn) {
+    menuBtn.addEventListener('click', () => {
+      navBar.classList.toggle('nav-bar--open');
+    });
+
+    // close when clicking a nav link
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navBar.classList.remove('nav-bar--open');
+      });
+    });
+  }
+</script>
+</body>
+</html>
