@@ -169,30 +169,54 @@
   </section>
 
   <!-- SECTION 5 – FOOTER -->
-  <footer class="footer">
-    <div class="footer-inner">
-    
-      <div class="footer-brand">
-        <a href="#top" class="footer-logo-link">
+   <div class="section-divider"></div>
+<footer class="footer">
+  <div class="footer-inner">
+
+    <!-- TOP: newsletter -->
+    <div class="footer-newsletter">
+      <h2 class="footer-newsletter-heading">STAY CONNECTED</h2>
+
+      <form class="footer-newsletter-form" action="#" method="post">
+        <input
+          type="email"
+          name="email"
+          placeholder="Email address"
+          required
+        />
+        <button type="submit">SUBSCRIBE</button>
+      </form>
+    </div>
+
+    <!-- MIDDLE: nav · logo · socials -->
+    <div class="footer-main">
+      <nav class="footer-nav">
+        <a href="shop.html">SHOP</a>
+        <a href="index.html#about">ABOUT</a>
+        <a href="contact.html">CONTACT</a>
+      </nav>
+
+      <a href="#top" class="footer-logo-link">
         <img
-          src="./productimages/notxtlogowhite.svg" 
-          alt="CW Scorpion Logo" 
+          src="./productimages/logowhite.svg"
+          alt="Carson Woodall Knives"
           class="footer-logo"
         />
-        <div class="footer-wordmark">
-          <strong>CARSON WOODALL</strong> KNIVES
-        </a>
-        </div>
+      </a>
+
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram" class="footer-social-icon">IG</a>
+        <a href="#" aria-label="Facebook" class="footer-social-icon">F</a>
+        <a href="#" aria-label="YouTube" class="footer-social-icon">YT</a>
       </div>
-
-      <div class="footer-divider"></div>
-
-      <p class="footer-copy">
-        © 2025 Carson Woodall Knives. All rights reserved.
-      </p>
-
     </div>
-  </footer>
+
+    <!-- BOTTOM: copyright -->
+    <div class="footer-copy">
+      © 2025 CARSON WOODALL KNIVES
+    </div>
+  </div>
+</footer>
   
 <script>
   const navBar = document.querySelector('.nav-bar');
