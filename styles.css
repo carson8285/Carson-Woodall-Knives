@@ -326,29 +326,38 @@ html {
   top: 0;
   left: 0;
   right: 0;
+
   height: 64px;
   padding: 0 32px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;   /* <-- center the middle group */
+
   background: transparent;
-  transition:
-  backdrop-filter 0.35s ease,
-  -webkit-backdrop-filter 0.35s ease,
-  background 0.25s ease,
-  padding 0.25s ease;                     /* your Figma bar color */
-  z-index: 100;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border-bottom: none;
-  background: transparent;
-  box-sizing: border-box;
+
+  z-index: 100;
+  transition:
+    background 0.25s ease,
+    backdrop-filter 0.25s ease,
+    -webkit-backdrop-filter 0.25s ease,
+    padding 0.25s ease;
 }
+
 
 /* LEFT: logo link (scorpion + text) */
 
 .nav-left {
+  position: absolute;
+  left: 32px;                 /* matches your padding */
+  top: 0;
+  bottom: 0;
+
   display: flex;
   align-items: center;
-  gap: 0px;
+  gap: 0;
   text-decoration: none;
 }
 
@@ -378,7 +387,6 @@ html {
 /* CENTER: nav links – hidden when collapsed */
 
 .nav-links {
-  flex: 1;
   display: flex;
   justify-content: center;
   gap: 96px;
@@ -408,6 +416,11 @@ html {
 /* RIGHT: cart + menu */
 
 .nav-right {
+  position: absolute;
+  right: 32px;                /* matches your padding */
+  top: 0;
+  bottom: 0;
+
   display: flex;
   align-items: center;
   gap: 24px;
