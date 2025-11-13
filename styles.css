@@ -48,10 +48,11 @@ body {
 .snap-page .knife-hero,
 .snap-page .shop-section,
 .snap-page .about-section {
-  scroll-snap-align: center;  /* center each section in the viewport */
+  scroll-snap-align: center;
 }
-.footer {
-  scroll-snap-align: end;  /* or 'start' if you prefer */
+
+.snap-page .footer {
+  scroll-snap-align: end;   /* only the home footer snaps */
 }
 
 /* SECTION 1 – big logo */
