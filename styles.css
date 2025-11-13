@@ -39,10 +39,59 @@ body {
 
 /* SECTION 1 – big logo */
 
+/* HERO SECTION (if you don't already have this) */
+
+.landing-hero {
+  width: 100vw;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;   /* horizontal centering */
+  align-items: center;       /* vertical centering */
+
+  padding: 0;
+  margin: 0;
+
+  background: transparent;
+  position: relative;
+}
+
+
+/* wrapper just for layout */
+.hero-logo-wrap {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  transform: translateX(-30px);
+}
+
+
+/* logo with simple entrance animation */
 .hero-logo {
   max-width: 480px;
   width: 60vw;
+  display: block;
   filter: drop-shadow(0 16px 45px rgba(0, 0, 0, 0.75));
+
+  opacity: 0;
+  transform: translateY(24px) scale(0.94);
+  animation: hero-logo-enter 0.9s ease-out 0.15s forwards;
+}
+
+@keyframes hero-logo-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.94);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(0) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* SECTION 2 – header + subheader + knife image */
