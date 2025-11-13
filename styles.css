@@ -307,52 +307,106 @@ body {
     letter-spacing: 0.12em;
   }
 }
-
-/* smooth scroll for the logo link */
+/* smooth scroll */
 html {
   scroll-behavior: smooth;
 }
 
-/* NAVBAR OVERLAY – logo left, burger right */
+/* NAV BAR – base layout (collapsed state matches your first screenshot) */
 
-.nav-overlay {
+.nav-bar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-
-  padding: 24px;
+  height: 64px;
+  padding: 0 32px;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-
-  background: transparent;    /* no bar, just floating icons */
-  z-index: 100;
-  pointer-events: none;       /* so clicks pass through EXCEPT buttons */
-}
-
-.nav-logo-btn,
-.nav-menu-btn {
-  pointer-events: auto;       /* re-enable clicking on actual controls */
-}
-
-/* logo button */
-
-.nav-logo-btn {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  background: transparent;
+  transition:
+  backdrop-filter 0.35s ease,
+  -webkit-backdrop-filter 0.35s ease,
+  background 0.25s ease,
+  padding 0.25s ease;                     /* your Figma bar color */
+  z-index: 100;
+  border-bottom: none;
+  background: transparent;
+  box-sizing: border-box;
+}
+
+/* LEFT: logo link (scorpion + text) */
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 0px;
   text-decoration: none;
 }
 
-.nav-logo-btn img {
-  width: 225px;                /* tweak to match your Figma */
+/* scorpion: hidden when collapsed */
+.nav-logo-scorpion {
+  width: 0;                 /* collapsed: takes NO space */
+  margin-right: 0;
   height: auto;
+  display: block;
+  opacity: 0;
+  overflow: hidden;         /* hides anything while width is 0 */
+
+  transition:
+    width 0.25s ease,
+    margin-right 0.25s ease,
+    opacity 0.25s ease;
+}
+
+
+/* text logo SVG: always visible */
+.nav-logo-textimg {
+  height: 32px;        /* tune until it matches what you had */
+  width: auto;
   display: block;
 }
 
-/* hamburger button */
+/* CENTER: nav links – hidden when collapsed */
 
+.nav-links {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 96px;
+
+  font-family: "Karla", system-ui, sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  opacity: 0.8;
+}
+
+/* RIGHT: cart + menu */
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-cart-btn,
 .nav-menu-btn {
   display: inline-flex;
   align-items: center;
@@ -363,23 +417,74 @@ html {
   cursor: pointer;
 }
 
-.nav-menu-btn img {
-  width: 60px;                /* tweak as needed */
+/* cart: hidden when collapsed */
+.nav-cart-btn img {
+  width: 28px;
   height: auto;
-  display: block;
 }
 
-/* responsive tweak if you want smaller icons on mobile */
-@media (max-width: 600px) {
-  .nav-overlay {
-    padding: 16px;
+.nav-cart-btn {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(8px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.nav-menu-btn img {
+  width: 32px;
+  height: auto;
+}
+
+/* ───── EXPANDED STATE (after clicking menu) ───── */
+
+.nav-bar.nav-bar--open {
+  padding-left: 32px;
+  padding-right: 32px;
+  backdrop-filter: blur(14px);        /* frosted glass effect */
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: none; /* remove any hint of a line */
+}
+
+
+/* show scorpion */
+.nav-bar.nav-bar--open .nav-logo-scorpion {
+  width: 40px;          /* whatever size matches your Figma */
+  margin-right: 12px;   /* spacing between scorpion and text logo */
+  opacity: 1;
+}
+
+
+/* show links */
+.nav-bar.nav-bar--open .nav-links {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* show cart */
+.nav-bar.nav-bar--open .nav-cart-btn {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+/* responsive tweaks – fine-tune later */
+
+@media (max-width: 900px) {
+  .nav-links {
+    gap: 40px;
+    font-size: 14px;
   }
 
-  .nav-logo-btn img {
-    width: 32px;
+  .nav-logo-textimg {
+    height: 28px;
   }
+}
 
-  .nav-menu-btn img {
-    width: 24px;
+@media (max-width: 700px) {
+  .nav-links {
+    display: none; /* later we can build a mobile drawer menu */
   }
 }

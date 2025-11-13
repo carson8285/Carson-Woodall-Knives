@@ -8,22 +8,40 @@
 </head>
 
 <body>
-  <!-- NAVBAR OVERLAY -->
-  <header class="nav-overlay">
-    <a href="#top" class="nav-logo-btn">
-      <img 
-        src="./productimages/textlogowhite.svg" 
-        alt="Carson Woodall Knives" 
-      />
-    </a>
 
-    <button class="nav-menu-btn" type="button" aria-label="Open menu">
-      <img 
-        src="./productimages/menulogo.svg" 
-        alt=""
-      />
+<header class="nav-bar">
+  <!-- LEFT: logo (scorpion + text, both SVGs) -->
+  <a href="#top" class="nav-left">
+    <img
+      src="./productimages/notxtlogowhite.svg"
+      alt=""
+      class="nav-logo-scorpion"
+    />
+    <img
+      src="./productimages/textlogowhite.svg"
+      alt="Carson Woodall Knives"
+      class="nav-logo-textimg"
+    />
+  </a>
+
+  <!-- CENTER: links -->
+  <nav class="nav-links" aria-label="Main navigation">
+    <a href="#shop">SHOP</a>
+    <a href="#about">ABOUT</a>
+    <a href="#contact">CONTACT</a>
+  </nav>
+
+  <!-- RIGHT: cart + menu -->
+  <div class="nav-right">
+    <button class="nav-cart-btn" type="button" aria-label="Cart">
+      <img src="./productimages/shopping-cart.svg" alt="" />
     </button>
-  </header>
+
+    <button class="nav-menu-btn" type="button" aria-label="Toggle menu">
+      <img src="./productimages/menulogo.svg" alt="" />
+    </button>
+  </div>
+</header>
 
   <!-- SECTION 1 – BIG LOGO -->
   <section class="landing-hero" id="top">
@@ -168,6 +186,24 @@
 
     </div>
   </footer>
+  
+<script>
+  const navBar = document.querySelector('.nav-bar');
+  const menuBtn = document.querySelector('.nav-menu-btn');
+  const navLinks = document.querySelectorAll('.nav-links a');
 
+  if (navBar && menuBtn) {
+    menuBtn.addEventListener('click', () => {
+      navBar.classList.toggle('nav-bar--open');
+    });
+
+    // close when clicking a nav link
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navBar.classList.remove('nav-bar--open');
+      });
+    });
+  }
+</script>
 </body>
 </html>
