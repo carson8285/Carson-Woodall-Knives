@@ -376,7 +376,7 @@ html {
   right: 0;
 
   height: 64px;
-  padding: 0 32px;
+  padding: 50px;
   display: flex;
   align-items: center;
   justify-content: center;   /* <-- center the middle group */
@@ -399,7 +399,7 @@ html {
 
 .nav-left {
   position: absolute;
-  left: 32px;                 /* matches your padding */
+  left: 25px;                 /* matches your padding */
   top: 0;
   bottom: 0;
 
@@ -427,7 +427,7 @@ html {
 
 /* text logo SVG: always visible */
 .nav-logo-textimg {
-  height: 32px;        /* tune until it matches what you had */
+  height: 40px;        /* tune until it matches what you had */
   width: auto;
   display: block;
 }
@@ -487,7 +487,7 @@ html {
 
 /* cart: hidden when collapsed */
 .nav-cart-btn img {
-  width: 28px;
+  width: 40px;
   height: auto;
 }
 
@@ -501,7 +501,7 @@ html {
 }
 
 .nav-menu-btn img {
-  width: 32px;
+  width: 60px;
   height: auto;
 }
 
@@ -518,7 +518,7 @@ html {
 
 /* show scorpion */
 .nav-bar.nav-bar--open .nav-logo-scorpion {
-  width: 40px;          /* whatever size matches your Figma */
+  width: 60px;          /* whatever size matches your Figma */
   margin-right: 12px;   /* spacing between scorpion and text logo */
   opacity: 1;
 }
