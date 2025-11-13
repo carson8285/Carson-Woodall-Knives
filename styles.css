@@ -89,7 +89,7 @@ body {
   max-width: 480px;
   width: 60vw;
   display: block;
-  filter: drop-shadow(0 16px 45px rgba(0, 0, 0, 0.75));
+  filter: drop-shadow(0 16px 45px rgba(255, 255, 255, 0.466));
 
   opacity: 0;
   transform: translateY(24px) scale(0.94);
