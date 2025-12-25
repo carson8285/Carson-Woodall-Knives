@@ -99,15 +99,15 @@ body {
 
 .landing-hero {
   width: 100vw;
-  min-height: calc(100vh - 150px); /* 2 × 36px */
+  min-height: calc(100svh - 150px); /* 2 × 36px */
+  min-height: calc(100dvh - 150px); /* 2 × 36px */
   position: relative;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   text-align: center;
   padding: 0 24px;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
   background: transparent;
 }
 
@@ -171,9 +171,9 @@ body {
 /* SEE GALLERY BUTTON (pinned to bottom, not in layout flow) */
 .see-gallery-btn {
   position: absolute;
-  bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
+  bottom: calc(18px + env(safe-area-inset-bottom));
 
   padding: 0.7rem 1.6rem;
   border-radius: 999px;
@@ -202,6 +202,13 @@ body {
     font-size: 0.95rem;
     padding: 0.65rem 1.25rem;
   }
+
+@media (max-height: 740px){
+  .see-gallery-btn{ bottom: calc(10px + env(safe-area-inset-bottom)); }
+  .landing-hero{ padding-bottom: calc(82px + env(safe-area-inset-bottom)); }
+  .hero-logo{ width: min(56vw, 460px); } /* slightly smaller logo only when needed */
+}
+
 }
 
 /* =========================
