@@ -100,7 +100,6 @@ body {
 .landing-hero {
   width: 100vw;
   min-height: calc(100svh - 150px); /* 2 × 36px */
-  min-height: calc(100dvh - 150px); /* 2 × 36px */
   position: relative;
   display: flex;
   justify-content: center;
@@ -166,6 +165,29 @@ body {
   0% { opacity: 0; transform: translateY(18px) scale(0.96); }
   60% { opacity: 1; transform: translateY(0) scale(1.02); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (orientation: landscape) and (max-height: 500px){
+  .landing-hero{
+    padding-bottom: calc(70px + env(safe-area-inset-bottom));
+  }
+
+  .coming-soon-wrap{ margin-bottom: 14px; }
+
+  .coming-soon-text{
+    font-size: clamp(1.6rem, 6vw, 3rem);
+    letter-spacing: 0.14em;
+  }
+
+  .hero-logo{
+    width: min(48vw, 340px);
+  }
+
+  .see-gallery-btn{
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    padding: 0.55rem 1.1rem;
+    font-size: 0.95rem;
+  }
 }
 
 /* SEE GALLERY BUTTON (pinned to bottom, not in layout flow) */
