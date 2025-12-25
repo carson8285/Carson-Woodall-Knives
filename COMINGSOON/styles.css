@@ -135,7 +135,7 @@ body {
 
   opacity: 0;
   transform: translateY(26px) scale(0.97);
-  animation: coming-soon-enter 0.95s ease-out 0.10s forwards;
+  animation: coming-soon-enter 0.9s ease-out 0.15s forwards;
 }
 
 @keyframes coming-soon-enter {
@@ -159,7 +159,7 @@ body {
 
   opacity: 0;
   transform: translateY(18px) scale(0.96);
-  animation: hero-logo-enter 0.9s ease-out 0.22s forwards;
+  animation: hero-logo-enter 0.9s ease-out 0.15s forwards;
 }
 
 @keyframes hero-logo-enter {
