@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini EDC | Carson Woodall Knives</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="snap-container">
+
+ <header class="nav-bar">
+  <!-- LEFT: logo (scorpion + text, both SVGs) -->
+  <a href="index.html" class="nav-left" class="nav-logo-btn">
+    <img
+      src="./productimages/notxtlogowhite.svg"
+      alt=""
+      class="nav-logo-scorpion"
+    />
+    <img
+      src="./productimages/textlogowhite.svg"
+      alt="Carson Woodall Knives"
+      class="nav-logo-textimg"
+    />
+  </a>
+
+  <!-- CENTER: links -->
+  <nav class="nav-links" aria-label="Main navigation">
+    <a href="./shop.html">SHOP</a>
+    <a href="index.html#about">ABOUT</a>
+    <a href="./contact.html">CONTACT</a>
+  </nav>
+
+  <!-- RIGHT: cart + menu -->
+  <div class="nav-right">
+    <a href="./cart.html" class="nav-cart-btn" aria-label="Cart">
+      <img src="./productimages/shopping-cart.svg" alt="cart" />
+    </a>
+
+    <button class="nav-menu-btn" type="button" aria-label="Toggle menu">
+      <img src="./productimages/menulogo.svg" alt="menu" />
+    </button>
+  </div>
+</header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-overlay">
+      <h1>PRODUCT PAGE</h1>
+      <p class="tagline">Born in the Desert, Built to Work.</p>
+    </div>
+    <img src="../knifewebsite/productimages/imgplaceholder.png" alt="pRODUCT HERO PHOTO" class="hero-image">
+  </section>
+
+  <!-- PRODUCT GALLERY -->
+  <section class="product-gallery">
+    <div class="main-image-container">
+      <img id="mainProductImage" src="../knifewebsite/productimages/imgplaceholder.png" alt="Rattlesnake No.1 Knife">
+    </div>
+
+    <div class="product-options">
+      <div class="price-addcart">
+        <span class="price">$425</span>
+        <button class="add-cart">Add to Cart</button>
+      </div>
+
+      <div class="option-group">
+        <label for="handleSelect">Handle Material:</label>
+        <select id="handleSelect">
+          <option value="../knifewebsite/productimages/imgplaceholder.png">Stabilized Burl</option>
+          <option value="../knifewebsite/productimages/imgplaceholder.png">Micarta</option>
+          <option value="../knifewebsite/productimages/imgplaceholder.png">Exotic Wood</option>
+        </select>
+      </div>
+
+      <div class="option-group">
+        <label for="spineSelect">Spine File Design:</label>
+        <select id="spineSelect">
+          <option value="../knifewebsite/productimages/imgplaceholder.png">Classic Spine</option>
+          <option value="../knifewebsite/productimages/imgplaceholder.png">Chisel Spine</option>
+          <option value="../knifewebsite/productimages/imgplaceholder.png">Decorative Spine</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPECIFICATIONS -->
+  <section class="specs">
+    <h2>Specifications</h2>
+    <div class="spec-grid">
+      <div><span>Steel:</span> <span>1084 High Carbon</span></div>
+      <div><span>Blade Length:</span> <span>4.25 in</span></div>
+      <div><span>Overall Length:</span> <span>9 in</span></div>
+      <div><span>Handle:</span> <span>Stabilized Burl / Micarta / Exotic Wood</span></div>
+      <div><span>Finish:</span> <span>Hand-satin</span></div>
+      <div><span>Weight:</span> <span>7.8 oz</span></div>
+    </div>
+  </section>
+
+  <!-- MAKER'S STORY -->
+  <section class="story">
+    <h2>Maker’s Note</h2>
+    <p>
+      This knife was built as a daily companion — compact, balanced, and
+      unapologetically functional. The grind favors control, the handle fits
+      the hand without excess, and every surface was finished by hand at
+      Rattlesnake Ridge.
+    </p>
+  </section>
+
+  <!-- OPTIONAL RELATED KNIVES -->
+  <section class="related">
+    <h2>Other Knives You Might Like</h2>
+    <div class="related-grid">
+      <img src="../knifewebsite/productimages/imgplaceholder.png" alt="Knife 2">
+      <img src="../knifewebsite/productimages/imgplaceholder.png" alt="Knife 3">
+      <img src="../knifewebsite/productimages/imgplaceholder.png" alt="Knife 4">
+    </div>
+  </section>
+
+  <script src="product.js"></script>
+</body>
+</html>
+
+  <!-- FOOTER -->
+    <div class="section-divider"></div>
+<footer class="footer">
+  <div class="footer-inner">
+
+    <!-- TOP: newsletter -->
+    <div class="footer-newsletter">
+      <h2 class="footer-newsletter-heading">STAY CONNECTED</h2>
+
+      <form class="footer-newsletter-form" action="#" method="post">
+        <input
+          type="email"
+          name="email"
+          placeholder="Email address"
+          required
+        />
+        <button type="submit">SUBSCRIBE</button>
+      </form>
+    </div>
+
+    <!-- MIDDLE: nav · logo · socials -->
+    <div class="footer-main">
+      <nav class="footer-nav">
+        <a href="shop.html">SHOP</a>
+        <a href="index.html#about">ABOUT</a>
+        <a href="contact.html">CONTACT</a>
+      </nav>
+
+      <a href="#top" class="footer-logo-link">
+        <img
+          src="./productimages/logowhite.svg"
+          alt="Carson Woodall Knives"
+          class="footer-logo"
+        />
+      </a>
+
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram" class="footer-social-icon">IG</a>
+        <a href="#" aria-label="Facebook" class="footer-social-icon">F</a>
+        <a href="#" aria-label="YouTube" class="footer-social-icon">YT</a>
+      </div>
+    </div>
+
+    <!-- BOTTOM: copyright -->
+    <div class="footer-copy">
+      © 2025 CARSON WOODALL KNIVES
+    </div>
+  </div>
+</footer>
+  
+<script>
+  const navBar = document.querySelector('.nav-bar');
+  const menuBtn = document.querySelector('.nav-menu-btn');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+// Select your logo link
+const logoLink = document.querySelector('.nav-logo-btn, .footer-logo-link'); 
+// adjust selector depending on your actual class
+
+logoLink.addEventListener('click', function (e) {
+
+  // If NOT currently at the top of the page
+  if (window.scrollY > 20) {
+    e.preventDefault(); // stop link navigation
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } 
+  // ELSE let the default <a href="index.html"> work normally
+});
+
+  if (navBar && menuBtn) {
+    menuBtn.addEventListener('click', () => {
+      navBar.classList.toggle('nav-bar--open');
+    });
+
+    // close when clicking a nav link
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navBar.classList.remove('nav-bar--open');
+      });
+    });
+  }
+</script>
+</body>
+</html>
+

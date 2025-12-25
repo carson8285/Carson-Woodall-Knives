@@ -1162,3 +1162,185 @@ html {
   }
 }
 
+/* PRODUCT PAGE */
+/* GENERAL STYLES */
+body {
+  margin: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #0a0a0a;
+  color: #eee;
+  line-height: 1.6;
+}
+
+/* HERO SECTION */
+.hero {
+  position: relative;
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  filter: brightness(0.45);
+}
+
+.hero-overlay {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.hero .tagline {
+  font-size: 1.25rem;
+  opacity: 0.8;
+}
+
+/* PRODUCT GALLERY */
+.product-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 4rem 10vw;
+  gap: 2rem;
+}
+
+.main-image-container {
+  flex: 1 1 500px;
+}
+
+.main-image-container img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+.product-options {
+  flex: 1 1 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.price-addcart {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.add-cart {
+  padding: 0.75rem 2rem;
+  border: 1px solid #eee;
+  background: transparent;
+  color: #eee;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.add-cart:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.option-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.option-group select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #eee;
+  background: #111;
+  color: #eee;
+}
+
+/* SPECIFICATIONS */
+.specs {
+  padding: 4rem 10vw;
+}
+
+.specs h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.spec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem 3rem;
+}
+
+.spec-grid div {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 0.25rem;
+}
+
+/* MAKER'S STORY */
+.story {
+  padding: 4rem 12vw;
+  text-align: center;
+}
+
+.story h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.story p {
+  max-width: 700px;
+  margin: 0 auto;
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
+/* RELATED KNIVES */
+.related {
+  padding: 4rem 10vw;
+  text-align: center;
+}
+
+.related h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+}
+
+.related-grid img {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  transition: transform 0.3s;
+}
+
+.related-grid img:hover {
+  transform: scale(1.03);
+}
