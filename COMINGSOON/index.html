@@ -8,6 +8,21 @@
 </head>
 <body>
 
+<div class="lightbox" id="lightbox">
+
+  <div class="lightbox-zone lightbox-prev" aria-label="Previous image">
+    <span class="lightbox-arrow">‹</span>
+  </div>
+
+  <img src="" alt="" class="lightbox-img">
+
+  <div class="lightbox-zone lightbox-next" aria-label="Next image">
+    <span class="lightbox-arrow">›</span>
+  </div>
+
+</div>
+
+
 <div class="banner-stack" id="top">
 <div class="scroll-banner">
   <div class="scroll-track">
@@ -60,22 +75,34 @@
 
     <div class="gallery-grid">
       <!-- Swap these placeholders with your real images -->
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
-      <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/1.jpg" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/2.jpg" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/3.jpg" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/4.jpg" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/5.jpg" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/6.jpg" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/7.jpg" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/8.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/9.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/10.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/11.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/12.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/13.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/14.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/15.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/16.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/17.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/18.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/19.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/20.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/21.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/22.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/23.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/24.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/25.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/26.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/27.JPG" alt="Knife 1" loading="lazy" />
+      <img src="./productimages/galleryimgs/28.JPG" alt="Knife 1" loading="lazy" />
       <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
       <img src="./productimages/imgplaceholder.png" alt="Knife 1" loading="lazy" />
       
@@ -104,7 +131,11 @@
     <div class="footer-newsletter">
       <h2 class="footer-newsletter-heading">STAY CONNECTED</h2>
 
-      <form class="footer-newsletter-form" action="#" method="post">
+<form
+  class="footer-newsletter-form"
+  action="https://formspree.io/f/xykygdje"
+  method="POST"
+>
         <input
           type="email"
           name="email"
@@ -139,6 +170,61 @@
     </div>
   </div>
 </footer>
+
+<script>
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.querySelector('.lightbox-img');
+  const galleryImages = Array.from(document.querySelectorAll('.gallery-grid img'));
+  const prevBtn = document.querySelector('.lightbox-prev');
+  const nextBtn = document.querySelector('.lightbox-next');
+
+  let currentIndex = 0;
+
+  function openLightbox(index) {
+    currentIndex = index;
+    lightboxImg.src = galleryImages[currentIndex].src;
+    lightbox.classList.add('active');
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    lightboxImg.src = '';
+  }
+
+  function showNext() {
+    currentIndex = (currentIndex + 1) % galleryImages.length;
+    lightboxImg.src = galleryImages[currentIndex].src;
+  }
+
+  function showPrev() {
+    currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+    lightboxImg.src = galleryImages[currentIndex].src;
+  }
+
+  galleryImages.forEach((img, index) => {
+    img.addEventListener('click', () => openLightbox(index));
+  });
+
+  nextBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showNext();
+  });
+
+  prevBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showPrev();
+  });
+
+  lightbox.addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('active')) return;
+
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') showNext();
+    if (e.key === 'ArrowLeft') showPrev();
+  });
+</script>
 
 
 </body>
