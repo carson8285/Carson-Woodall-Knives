@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Knife Builder</title>
+  <link rel="stylesheet" href="builder.css" />
+</head>
+<body>
+
+<div class="builder">
+
+  <!-- VIEWPORT -->
+  <section class="builder-viewport">
+    <div class="viewport-placeholder">
+      <span>3D VIEWPORT</span>
+      <small>(Three.js will live here)</small>
+    </div>
+  </section>
+
+  <!-- SIDEBAR -->
+  <aside class="builder-sidebar">
+
+    <header class="builder-header">
+      <h1>Knife Builder</h1>
+    </header>
+
+    <!-- CATEGORY / MODEL -->
+    <div class="builder-group">
+      <label>Category</label>
+      <select id="categorySelect"></select>
+    </div>
+
+    <div class="builder-group">
+      <label>Knife Model</label>
+      <select id="knifeSelect"></select>
+    </div>
+
+    <!-- OPTIONS -->
+    <div class="builder-group">
+      <label>Handle Material</label>
+      <select id="handleSelect"></select>
+    </div>
+
+    <div class="builder-group">
+      <label>Filework</label>
+      <select id="fileworkSelect"></select>
+    </div>
+
+    <div class="builder-group">
+      <label>Finish</label>
+      <select id="finishSelect"></select>
+    </div>
+
+    <!-- PRICE -->
+    <div class="builder-price">
+      <span>Total</span>
+      <strong id="price">$0</strong>
+    </div>
+
+    <!-- ACTION -->
+    <button id="addToCartBtn">Add to Cart</button>
+
+  </aside>
+
+</div>
+
+<script src="builder.js"></script>
+</body>
+</html>
