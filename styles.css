@@ -1480,7 +1480,7 @@ body {
     flex-wrap: wrap;              /* allows links row to wrap below */
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    background: rgba(0,0,0,0.35);
+    background: transparent;
   }
 
   /* stop absolute positioning so the header can grow */
@@ -1520,7 +1520,7 @@ body {
     text-align: center;
     padding: 12px 10px;
     border-radius: 12px;
-    background: rgba(255,255,255,0.06);
+    background: transparent;
     border: 1px solid rgba(255,255,255,0.10);
   }
 
@@ -1529,3 +1529,4 @@ body {
   .nav-menu-btn img { width: 54px; }
   .nav-cart-btn img { width: 36px; }
 }
+
