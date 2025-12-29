@@ -94,6 +94,10 @@ body {
   opacity: 0;
   transform: translateY(24px) scale(0.94);
   animation: hero-logo-enter 0.9s ease-out 0.15s forwards;
+
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform, filter;
 }
 
 @keyframes hero-logo-enter {
