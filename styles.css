@@ -1530,3 +1530,21 @@ body {
   .nav-cart-btn img { width: 36px; }
 }
 
+/* Disable scroll snap on mobile */
+@media (max-width: 700px) {
+  html, body {
+    scroll-snap-type: none !important;
+  }
+@media (max-width: 700px) {
+  html { scroll-behavior: auto !important; }
+}
+  /* In case any sections have snap alignment set */
+  .snap-page .landing-hero,
+  .snap-page .knife-hero,
+  .snap-page .shop-section,
+  .snap-page .about-section,
+  .snap-page .footer {
+    scroll-snap-align: none !important;
+  }
+}
+
