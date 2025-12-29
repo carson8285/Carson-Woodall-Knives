@@ -15,60 +15,65 @@ const els = {
   addToCart: document.getElementById('addToCartBtn')
 };
 
-// Loader helpers
+// Loader
 const previewStage = document.getElementById('previewStage');
-const loaderEl = document.getElementById('previewLoader');
+const previewLoader = document.getElementById('previewLoader');
+
 let loadToken = 0;
+let loaderTimer = null;
 
 function setPreviewLoading(isLoading, text = 'Loading…') {
-  if (!previewStage || !loaderEl) return;
-  const textEl = loaderEl.querySelector('.loader-text');
-  if (textEl) textEl.textContent = text;
+  if (!previewStage || !previewLoader) return;
+  const t = previewLoader.querySelector('.loader-text');
+  if (t) t.textContent = text;
   previewStage.classList.toggle('is-loading', isLoading);
 }
 
-// Optional: avoid flashing loader for super fast updates
-let loaderTimer = null;
 function showLoaderSoon(text) {
   clearTimeout(loaderTimer);
   loaderTimer = setTimeout(() => setPreviewLoading(true, text), 120);
 }
+
 function hideLoaderNow() {
   clearTimeout(loaderTimer);
   setPreviewLoading(false);
 }
 
-// Preload preview image so we can keep loader up until it's ready
-function preloadImage(src) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(src);
-    img.onerror = reject;
-    img.src = src;
+// Helps Three.js adjust to new container sizes
+function kickViewerResize() {
+  requestAnimationFrame(() => {
+    window.dispatchEvent(new Event('resize'));
   });
 }
+
+// Start loading immediately
+setPreviewLoading(true, 'Loading catalog…');
 
 fetch('./data/catalog.json')
   .then(res => res.json())
   .then(data => {
     catalog = data;
     initCategories();
+  })
+  .catch(err => {
+    console.error('Failed to load catalog:', err);
+    setPreviewLoading(true, 'Catalog failed to load');
   });
 
 function initCategories() {
   for (const id in catalog.categories) {
     els.category.add(new Option(catalog.categories[id].label, id));
   }
+
   els.category.onchange = () => loadCategory(els.category.value);
 
-  // initial load
+  // initial category load
   loadCategory(els.category.value);
 }
 
 function loadCategory(catId) {
-  // loader for category switch
-  showLoaderSoon('Loading category…');
   const token = ++loadToken;
+  showLoaderSoon('Loading category…');
 
   state.category = catId;
   state.knife = null;
@@ -83,7 +88,7 @@ function loadCategory(catId) {
 
   els.knife.onchange = () => loadKnife(els.knife.value);
 
-  // choose first knife by default (select.value updates after options are added)
+  // auto load first knife
   loadKnife(els.knife.value, token);
 }
 
@@ -95,28 +100,29 @@ function loadKnife(knifeId, inheritedToken = null) {
 
   const knife = catalog.categories[state.category].knives[knifeId];
 
-  populateOptions(els.handle, knife.options.handle, 'handle', token);
-  populateOptions(els.filework, knife.options.filework, 'filework', token);
-  populateOptions(els.finish, knife.options.finish, 'finish', token);
+  populateOptions(els.handle, knife.options.handle, 'handle');
+  populateOptions(els.filework, knife.options.filework, 'filework');
+  populateOptions(els.finish, knife.options.finish, 'finish');
 
   updatePrice();
   applyConfig(token);
 }
 
-function populateOptions(select, options, key, token) {
+function populateOptions(select, options, key) {
   select.innerHTML = '';
   for (const id in options) {
     select.add(new Option(options[id].label, id));
   }
+
   state.options[key] = select.value;
 
   select.onchange = () => {
-    const nextToken = ++loadToken;
+    const token = ++loadToken;
     showLoaderSoon('Updating…');
 
     state.options[key] = select.value;
     updatePrice();
-    applyConfig(nextToken);
+    applyConfig(token);
   };
 }
 
@@ -131,33 +137,22 @@ function updatePrice() {
   els.price.textContent = `$${total}`;
 }
 
-// Core: applyConfig now supports async image/3D readiness + token
 async function applyConfig(token = ++loadToken) {
   console.log('Apply config to viewer:', state);
 
-  const img = document.getElementById('knifePreview');
-  const src = getPreviewImage();
-
   try {
-    // preload the preview image; keep loader until ready
-    if (img) {
-      await preloadImage(src).catch(() => null); // tolerate missing images
-      if (token !== loadToken) return; // stale update, ignore
-      img.src = src;
-    }
-
-    // call the Three.js viewer if it exists (if it has async loading, prefer a Promise)
+    // If your viewer exists, call it. If it returns a Promise, await it.
     if (window.KnifeViewer && typeof window.KnifeViewer.applyState === 'function') {
       const result = window.KnifeViewer.applyState(state);
-
-      // If your viewer returns a Promise when it loads models/materials, await it
       if (result && typeof result.then === 'function') {
         await result;
-        if (token !== loadToken) return;
       }
     }
+
+    // Ensure Three.js re-sizes after any state/layout change
+    kickViewerResize();
   } finally {
-    // Only hide if we’re still current
+    // Only hide loader if this is still the latest action
     if (token === loadToken) hideLoaderNow();
   }
 }
@@ -170,8 +165,3 @@ els.addToCart.onclick = () => {
   };
   console.log('Add to cart payload:', payload);
 };
-
-function getPreviewImage() {
-  const { knife, options } = state;
-  return `./assets/images/${knife}_${options.handle}_${options.filework}.webp`;
-}

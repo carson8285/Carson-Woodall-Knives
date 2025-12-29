@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Knife Builder</title>
   <link rel="stylesheet" href="builder.css" />
+
   <script type="importmap">
 {
   "imports": {
@@ -12,79 +13,70 @@
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
   }
 }
-</script>
+  </script>
 </head>
+
 <body>
+  <div class="builder">
 
-<div class="builder">
+    <!-- VIEWPORT -->
+    <section class="builder-viewport">
+      <div id="previewStage" class="preview-stage">
+        <div id="knifeViewer" class="viewport-3d"></div>
 
-  <!-- VIEWPORT -->
-<section class="builder-viewport">
-  <div id="previewStage" class="preview-stage">
-
-    <!-- 3D VIEWER -->
-    <div id="knifeViewer" class="viewport-3d"></div>
-
-    <!-- LOADING OVERLAY -->
-    <div id="previewLoader" class="preview-loader" aria-live="polite" aria-busy="true">
-      <div class="loader-inner">
-        <div class="spinner"></div>
-        <div class="loader-text">Loading…</div>
+        <!-- LOADING OVERLAY -->
+        <div id="previewLoader" class="preview-loader" aria-live="polite" aria-busy="true">
+          <div class="loader-inner">
+            <div class="spinner"></div>
+            <div class="loader-text">Loading…</div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
+    <!-- SIDEBAR -->
+    <aside class="builder-sidebar">
+      <header class="builder-header">
+        <h1>Knife Builder</h1>
+      </header>
+
+      <div class="builder-group">
+        <label>Category</label>
+        <select id="categorySelect"></select>
+      </div>
+
+      <div class="builder-group">
+        <label>Knife Model</label>
+        <select id="knifeSelect"></select>
+      </div>
+
+      <div class="builder-group">
+        <label>Handle Material</label>
+        <select id="handleSelect"></select>
+      </div>
+
+      <div class="builder-group">
+        <label>Filework</label>
+        <select id="fileworkSelect"></select>
+      </div>
+
+      <div class="builder-group">
+        <label>Finish</label>
+        <select id="finishSelect"></select>
+      </div>
+
+<div class="builder-footer">
+  <div class="builder-price">
+    <span>Total</span>
+    <strong id="price">$0</strong>
   </div>
-</section>
 
-  <!-- SIDEBAR -->
-  <aside class="builder-sidebar">
-
-    <header class="builder-header">
-      <h1>Knife Builder</h1>
-    </header>
-
-    <!-- CATEGORY / MODEL -->
-    <div class="builder-group">
-      <label>Category</label>
-      <select id="categorySelect"></select>
-    </div>
-
-    <div class="builder-group">
-      <label>Knife Model</label>
-      <select id="knifeSelect"></select>
-    </div>
-
-    <!-- OPTIONS -->
-    <div class="builder-group">
-      <label>Handle Material</label>
-      <select id="handleSelect"></select>
-    </div>
-
-    <div class="builder-group">
-      <label>Filework</label>
-      <select id="fileworkSelect"></select>
-    </div>
-
-    <div class="builder-group">
-      <label>Finish</label>
-      <select id="finishSelect"></select>
-    </div>
-
-    <!-- PRICE -->
-    <div class="builder-price">
-      <span>Total</span>
-      <strong id="price">$0</strong>
-    </div>
-
-    <!-- ACTION -->
-    <button id="addToCartBtn">Add to Cart</button>
-
-  </aside>
-
+  <button id="addToCartBtn">Add to Cart</button>
 </div>
 
-<script type="module" src="viewer.js"></script>
-<script src="builder.js"></script>
+  </div>
 
+  <script type="module" src="viewer.js"></script>
+  <script src="builder.js"></script>
 </body>
 </html>
