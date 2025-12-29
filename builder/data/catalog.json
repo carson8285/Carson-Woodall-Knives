@@ -1,0 +1,27 @@
+{
+  "categories": {
+    "fixed": {
+      "label": "Fixed Blades",
+      "knives": {
+        "dagger_v1": {
+          "label": "Dagger",
+          "basePrice": 425,
+          "options": {
+            "handle": {
+              "burl_maple": { "label": "Burl Maple", "price": 85 },
+              "black_micarta": { "label": "Black Micarta", "price": 40 }
+            },
+            "filework": {
+              "none": { "label": "None", "price": 0 },
+              "vine": { "label": "Vine", "price": 60 }
+            },
+            "finish": {
+              "high_polish": { "label": "High Polish", "price": 0 },
+              "acid_etch_stonewash": { "label": "Acid Etch Stonewash", "price": 35 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

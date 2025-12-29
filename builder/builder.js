@@ -52,6 +52,7 @@ function loadKnife(knifeId) {
   populateOptions(els.finish, knife.options.finish, 'finish');
 
   updatePrice();
+  applyConfig();
 }
 
 function populateOptions(select, options, key) {
@@ -80,8 +81,17 @@ function updatePrice() {
 
 function applyConfig() {
   console.log('Apply config to viewer:', state);
-  // This is where Three.js hooks in later
+
+  // keep your existing preview image path logic as a fallback
+  const img = document.getElementById('knifePreview');
+  if (img) img.src = getPreviewImage();
+
+  // call the Three.js viewer if it exists
+  if (window.KnifeViewer && typeof window.KnifeViewer.applyState === 'function') {
+    window.KnifeViewer.applyState(state);
+  }
 }
+
 
 els.addToCart.onclick = () => {
   const payload = {
@@ -91,3 +101,8 @@ els.addToCart.onclick = () => {
   };
   console.log('Add to cart payload:', payload);
 };
+
+function getPreviewImage() {
+  const { knife, options } = state;
+  return `./assets/images/${knife}_${options.handle}_${options.filework}.webp`;
+}

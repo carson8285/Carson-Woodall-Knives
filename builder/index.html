@@ -5,18 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Knife Builder</title>
   <link rel="stylesheet" href="builder.css" />
+  <script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
 </head>
 <body>
 
 <div class="builder">
 
   <!-- VIEWPORT -->
-  <section class="builder-viewport">
-    <div class="viewport-placeholder">
-      <span>3D VIEWPORT</span>
-      <small>(Three.js will live here)</small>
-    </div>
-  </section>
+<section class="builder-viewport">
+  <div id="knifeViewer" class="viewport-3d">
+    <!-- Fallback image if WebGL fails or while loading -->
+    <img id="knifePreview" class="viewer-fallback" src="../productimages/imgplaceholder.png" alt="">
+  </div>
+</section>
+
 
   <!-- SIDEBAR -->
   <aside class="builder-sidebar">
@@ -65,6 +74,8 @@
 
 </div>
 
+<script type="module" src="viewer.js"></script>
 <script src="builder.js"></script>
+
 </body>
 </html>
