@@ -535,7 +535,7 @@ body {
     font-size: 10px;
     letter-spacing: 0.12em;
   }
-}
+
 /* smooth scroll */
 html {
   scroll-snap-type: y mandatory;
@@ -1631,3 +1631,11 @@ body {
   html { scroll-behavior: auto !important; }
 }
 
+/* Phone landscape: make the scorpion readable when menu is open */
+@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+  .nav-bar.nav-bar--open .nav-logo-scorpion {
+    width: 44px;        /* bump up from “tiny” */
+    margin-right: 10px;
+    opacity: 1;
+  }
+}
