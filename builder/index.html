@@ -21,9 +21,19 @@
   <!-- VIEWPORT -->
 <section class="builder-viewport">
   <div id="knifeViewer" class="viewport-3d">
-    <!-- Fallback image if WebGL fails or while loading -->
-    <img id="knifePreview" class="viewer-fallback" src="../productimages/imgplaceholder.png" alt="">
+      </div>
+      
+<div id="previewStage" class="preview-stage">
+  <!-- your preview content (img/canvas) -->
+
+  <div id="previewLoader" class="preview-loader" aria-live="polite" aria-busy="true">
+    <div class="loader-inner">
+      <div class="spinner"></div>
+      <div class="loader-text">Loading…</div>
+    </div>
   </div>
+</div>
+
 </section>
 
 
