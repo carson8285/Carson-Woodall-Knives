@@ -672,6 +672,46 @@ html {
   height: auto;
 }
 
+/* MOBILE NAV MENU (simple dropdown, uses your existing .nav-bar--open toggle) */
+@media (max-width: 700px) {
+  .nav-links {
+    display: flex;                 /* override your display:none */
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    top: 92px;                     /* below your nav bar */
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 16px;
+
+    background: rgba(0,0,0,0.72);
+    border: 1px solid rgba(255,255,255,0.10);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 200;
+  }
+
+  .nav-bar.nav-bar--open .nav-links {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .nav-links a {
+    padding: 12px 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+  }
+}
+
 /* ───── EXPANDED STATE (after clicking menu) ───── */
 
 .nav-bar.nav-bar--open {
