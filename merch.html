@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Merchandise | Carson Woodall Knives</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+<header class="nav-bar">
+  <a href="./index.html#top" class="nav-left">
+    <img src="./productimages/notxtlogowhite.svg" alt="" class="nav-logo-scorpion" />
+    <img src="./productimages/textlogowhite.svg" alt="Carson Woodall Knives" class="nav-logo-textimg" />
+  </a>
+
+  <nav class="nav-links" aria-label="Main navigation">
+    <a href="./index.html#shop">SHOP</a>
+    <a href="./index.html#about">ABOUT</a>
+    <a href="./contact.html">CONTACT</a>
+    <a href="./builder/index.html">KNIFE BUILDER</a>
+  </nav>
+
+  <div class="nav-right">
+    <a href="./cart.html" class="nav-cart-btn" aria-label="Cart">
+      <img src="./productimages/shopping-cart.svg" alt="cart" />
+    </a>
+
+    <button class="nav-menu-btn" type="button" aria-label="Toggle menu">
+      <img src="./productimages/menulogo.svg" alt="menu" />
+    </button>
+  </div>
+</header>
+
+<main class="shop-page">
+  <section class="shop-page-hero">
+    <div class="shop-page-hero-inner">
+      <h1 class="shop-page-heading">MERCHNDISE</h1>
+      <p class="shop-page-subheading">Available merch and current offerings.</p>
+    </div>
+  </section>
+
+  <!-- Filters -->
+  <section class="shop-page-categories">
+    <div class="shop-page-categories-inner">
+
+      <div class="filters-bar">
+        <div class="filters-left">
+          <div class="filter">
+            <label for="filterType">Type</label>
+            <select id="filterType">
+              <option value="all">All</option>
+              <option value="fixed">Fixed</option>
+              <option value="kitchen">Kitchen</option>
+              <option value="hunting">Hunting / Bushcraft</option>
+            </select>
+          </div>
+
+          <div class="filter">
+            <label for="filterSteel">Steel</label>
+            <select id="filterSteel">
+              <option value="all">All</option>
+              <option value="magnacut">Magnacut</option>
+              <option value="cpm154">CPM-154</option>
+              <option value="aebl">AEB-L</option>
+            </select>
+          </div>
+
+          <div class="filter">
+            <label for="filterAvailability">Availability</label>
+            <select id="filterAvailability">
+              <option value="all">All</option>
+              <option value="in-stock">In stock</option>
+              <option value="made-to-order">Made to order</option>
+              <option value="sold">Sold</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filters-right">
+          <div class="filter">
+            <label for="sortBy">Sort</label>
+            <select id="sortBy">
+              <option value="featured">Featured</option>
+              <option value="price-low">Price: Low → High</option>
+              <option value="price-high">Price: High → Low</option>
+              <option value="newest">Newest</option>
+            </select>
+          </div>
+
+          <div class="filter search">
+            <label for="search">Search</label>
+            <input id="search" type="text" placeholder="Model, steel, finish..." />
+          </div>
+        </div>
+      </div>
+
+      <!-- Product grid -->
+      <div class="listing-grid" id="listingGrid">
+        <!-- JS will render cards here -->
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div class="section-divider"></div>
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-newsletter">
+      <h2 class="footer-newsletter-heading">STAY CONNECTED</h2>
+      <form class="footer-newsletter-form" action="#" method="post">
+        <input type="email" name="email" placeholder="Email address" required />
+        <button type="submit">SUBSCRIBE</button>
+      </form>
+    </div>
+
+    <div class="footer-main">
+      <nav class="footer-nav">
+        <a href="./index.html#shop">SHOP</a>
+        <a href="./index.html#about">ABOUT</a>
+        <a href="./contact.html">CONTACT</a>
+      </nav>
+
+      <a href="./index.html#top" class="footer-logo-link">
+        <img src="./productimages/logowhite.svg" alt="Carson Woodall Knives" class="footer-logo" />
+      </a>
+
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram" class="footer-social-icon">IG</a>
+        <a href="#" aria-label="Facebook" class="footer-social-icon">F</a>
+        <a href="#" aria-label="YouTube" class="footer-social-icon">YT</a>
+      </div>
+    </div>
+
+    <div class="footer-copy">© 2025 CARSON WOODALL KNIVES</div>
+  </div>
+</footer>
+
+<script>
+  // nav open/close (same as your index behavior)
+  const navBar = document.querySelector('.nav-bar');
+  const menuBtn = document.querySelector('.nav-menu-btn');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  if (navBar && menuBtn) {
+    menuBtn.addEventListener('click', () => navBar.classList.toggle('nav-bar--open'));
+    navLinks.forEach(link => link.addEventListener('click', () => navBar.classList.remove('nav-bar--open')));
+  }
+
+  // --- Product data (starter mock) ---
+  // Later: replace with fetch('./data/knives.json')
+  const products = [
+    {
+      id: "mini-edc-01",
+      title: "Mini EDC",
+      price: 275,
+      type: "fixed",
+      steel: "magnacut",
+      availability: "in-stock",
+      image: "./productimages/miniedc.jpeg",
+      featured: true,
+      date: "2025-12-01"
+    },
+    {
+      id: "chef-01",
+      title: "Chef Knife",
+      price: 320,
+      type: "kitchen",
+      steel: "aebl",
+      availability: "made-to-order",
+      image: "./productimages/imgplaceholder.png",
+      featured: false,
+      date: "2025-11-10"
+    },
+  ];
+
+  const els = {
+    grid: document.getElementById("listingGrid"),
+    filterType: document.getElementById("filterType"),
+    filterSteel: document.getElementById("filterSteel"),
+    filterAvailability: document.getElementById("filterAvailability"),
+    sortBy: document.getElementById("sortBy"),
+    search: document.getElementById("search"),
+  };
+
+  function render(list) {
+    els.grid.innerHTML = list.map(p => `
+      <a class="listing-card" href="./product.html?id=${encodeURIComponent(p.id)}">
+        <div class="listing-img">
+          <img src="${p.image}" alt="${p.title}" />
+        </div>
+        <div class="listing-meta">
+          <div class="listing-title">${p.title}</div>
+          <div class="listing-sub">
+            <span class="pill">${p.type.replace("-", " ")}</span>
+            <span class="pill">${p.steel.toUpperCase()}</span>
+            <span class="pill">${p.availability.replace("-", " ")}</span>
+          </div>
+          <div class="listing-price">$${p.price}</div>
+        </div>
+      </a>
+    `).join("");
+  }
+
+  function apply() {
+    const t = els.filterType.value;
+    const s = els.filterSteel.value;
+    const a = els.filterAvailability.value;
+    const q = els.search.value.trim().toLowerCase();
+    const sort = els.sortBy.value;
+
+    let list = products.filter(p => {
+      const okType = (t === "all" || p.type === t);
+      const okSteel = (s === "all" || p.steel === s);
+      const okAvail = (a === "all" || p.availability === a);
+      const okSearch = (!q || (p.title + " " + p.type + " " + p.steel).toLowerCase().includes(q));
+      return okType && okSteel && okAvail && okSearch;
+    });
+
+    if (sort === "featured") {
+      list.sort((x, y) => Number(y.featured) - Number(x.featured));
+    } else if (sort === "price-low") {
+      list.sort((x, y) => x.price - y.price);
+    } else if (sort === "price-high") {
+      list.sort((x, y) => y.price - x.price);
+    } else if (sort === "newest") {
+      list.sort((x, y) => new Date(y.date) - new Date(x.date));
+    }
+
+    render(list);
+  }
+
+  ["change", "input"].forEach(evt => {
+    els.filterType.addEventListener(evt, apply);
+    els.filterSteel.addEventListener(evt, apply);
+    els.filterAvailability.addEventListener(evt, apply);
+    els.sortBy.addEventListener(evt, apply);
+    els.search.addEventListener(evt, apply);
+  });
+
+  render(products);
+</script>
+
+</body>
+</html>
