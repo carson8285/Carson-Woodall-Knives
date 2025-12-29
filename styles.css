@@ -672,45 +672,6 @@ html {
   height: auto;
 }
 
-/* MOBILE NAV MENU (simple dropdown, uses your existing .nav-bar--open toggle) */
-@media (max-width: 700px) {
-  .nav-links {
-    display: flex;                 /* override your display:none */
-    position: fixed;
-    left: 16px;
-    right: 16px;
-    top: 92px;                     /* below your nav bar */
-    flex-direction: column;
-    gap: 14px;
-    padding: 16px;
-    border-radius: 16px;
-
-    background: rgba(0,0,0,0.72);
-    border: 1px solid rgba(255,255,255,0.10);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-8px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    z-index: 200;
-  }
-
-  .nav-bar.nav-bar--open .nav-links {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-  }
-
-  .nav-links a {
-    padding: 12px 12px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
-    text-align: center;
-  }
-}
 
 /* ───── EXPANDED STATE (after clicking menu) ───── */
 
@@ -1503,4 +1464,64 @@ body {
 
 .related-grid img:hover {
   transform: scale(1.03);
+}
+
+/* MOBILE NAV: header expands downward (no overlay) */
+@media (max-width: 700px) {
+  .nav-bar {
+    height: auto;
+    padding: 14px 16px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;              /* allows links row to wrap below */
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(0,0,0,0.35);
+  }
+
+  /* stop absolute positioning so the header can grow */
+  .nav-left,
+  .nav-right {
+    position: static;
+    top: auto; bottom: auto; left: auto; right: auto;
+  }
+
+  /* keep cart visible on mobile */
+  .nav-cart-btn {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  /* the dropdown area (but it's not overlay, it lives in the header) */
+  .nav-links {
+    width: 100%;
+    order: 3;                     /* forces it below logos/buttons */
+    display: none;                /* closed by default */
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 0 6px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .nav-bar.nav-bar--open .nav-links {
+    display: flex;
+  }
+
+  .nav-links a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 12px 10px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+
+  /* optional: reduce logo sizes a touch */
+  .nav-logo-textimg { height: 28px; }
+  .nav-menu-btn img { width: 54px; }
+  .nav-cart-btn img { width: 36px; }
 }
