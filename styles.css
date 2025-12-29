@@ -1552,4 +1552,82 @@ body {
   }
 }
 
+/* Treat phone-landscape as mobile (prevents desktop nav squish) */
+@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+  .nav-bar {
+    height: auto;
+    padding: 12px 14px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .nav-left,
+  .nav-right {
+    position: static;
+  }
+
+  .nav-cart-btn {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .nav-links {
+    width: 100%;
+    order: 3;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 0 4px;
+
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .nav-bar.nav-bar--open .nav-links {
+    display: flex;
+  }
+
+  .nav-links a {
+    width: 100%;
+    text-align: center;
+    padding: 12px 10px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .nav-logo-textimg { height: 24px; }
+  .nav-menu-btn img { width: 46px; }
+  .nav-cart-btn img { width: 32px; }
+}
+
+/* Hero logo sizing + centering for phone landscape */
+@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+  .landing-hero {
+    min-height: 100vh;
+    padding-top: 84px;   /* gives space for fixed nav */
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-logo {
+    width: auto;
+    height: min(52vh, 320px); /* cap by height */
+    max-width: 80vw;
+    margin: 0 auto;
+    display: block;
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+  html, body { scroll-snap-type: none !important; }
+  html { scroll-behavior: auto !important; }
+}
 
