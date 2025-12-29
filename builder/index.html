@@ -20,22 +20,21 @@
 
   <!-- VIEWPORT -->
 <section class="builder-viewport">
-  <div id="knifeViewer" class="viewport-3d">
+  <div id="previewStage" class="preview-stage">
+
+    <!-- 3D VIEWER -->
+    <div id="knifeViewer" class="viewport-3d"></div>
+
+    <!-- LOADING OVERLAY -->
+    <div id="previewLoader" class="preview-loader" aria-live="polite" aria-busy="true">
+      <div class="loader-inner">
+        <div class="spinner"></div>
+        <div class="loader-text">Loading…</div>
       </div>
-      
-<div id="previewStage" class="preview-stage">
-  <img id="knifePreview" src="" alt="Knife preview" />
-
-  <div id="previewLoader" class="preview-loader" aria-live="polite" aria-busy="true">
-    <div class="loader-inner">
-      <div class="spinner"></div>
-      <div class="loader-text">Loading…</div>
     </div>
+
   </div>
-</div>
-
 </section>
-
 
   <!-- SIDEBAR -->
   <aside class="builder-sidebar">
