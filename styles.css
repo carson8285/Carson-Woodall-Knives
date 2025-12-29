@@ -520,10 +520,14 @@ body {
 }
 
 /* mobile adjustments */
-@media (max-width: 600px) {
+/* Fix footer logo size on mobile */
+@media (max-width: 700px) {
   .footer-logo {
-    width: 36px;
+    width: 120px;     /* sweet spot */
+    height: auto;
   }
+}
+
   .footer-wordmark {
     font-size: 10px;
   }
@@ -1547,4 +1551,5 @@ body {
     scroll-snap-align: none !important;
   }
 }
+
 
