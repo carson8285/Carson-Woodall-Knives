@@ -225,10 +225,31 @@ html, body {
   border-top: 1px solid rgba(255,255,255,0.08);
 }
 
-.builder-footer {
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.35),
-    rgba(0,0,0,0)
-  );
+/* ✅ Mobile sizing fix: make grid rows behave + sidebar scroll correctly */
+@media (max-width: 900px) {
+  .builder {
+    height: 100svh;                 /* lock the whole layout to the screen */
+    min-height: 0;                  /* allow children to shrink */
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 52svh) minmax(0, 1fr);
+  }
+
+  .builder-viewport {
+    min-height: 0;                  /* critical: allow it to shrink */
+  }
+
+  .builder-sidebar {
+    min-height: 0;                  /* critical: allow it to shrink */
+    height: 100%;                   /* fill its grid row */
+    overflow-y: auto;               /* scroll when content is long */
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ✅ Phone landscape: shorter viewer, taller sidebar */
+@media (max-height: 520px) and (orientation: landscape) and (pointer: coarse) {
+  .builder {
+    height: 100svh;
+    grid-template-rows: minmax(0, 44svh) minmax(0, 1fr);
+  }
 }
