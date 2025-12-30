@@ -1,9 +1,5 @@
 let catalog;
-let state = {
-  category: null,
-  knife: null,
-  options: {}
-};
+let state = { category: null, knife: null, options: {} };
 
 const els = {
   category: document.getElementById('categorySelect'),
@@ -15,31 +11,26 @@ const els = {
   addToCart: document.getElementById('addToCartBtn')
 };
 
-// Loader elements
 const previewStage = document.getElementById('previewStage');
 const previewLoader = document.getElementById('previewLoader');
 
-let loadToken = 0;
 let loaderTimer = null;
-
 function setPreviewLoading(isLoading, text = 'Loading…') {
   if (!previewStage || !previewLoader) return;
   const t = previewLoader.querySelector('.loader-text');
   if (t) t.textContent = text;
   previewStage.classList.toggle('is-loading', isLoading);
 }
-
 function showLoaderSoon(text) {
   clearTimeout(loaderTimer);
   loaderTimer = setTimeout(() => setPreviewLoading(true, text), 120);
 }
-
 function hideLoaderNow() {
   clearTimeout(loaderTimer);
   setPreviewLoading(false);
 }
 
-// Listen to viewer loading events (authoritative)
+// Viewer events are authoritative
 window.addEventListener("knifeviewer:loading", (e) => {
   const { loading, text } = e.detail || {};
   if (loading) setPreviewLoading(true, text || "Loading…");
@@ -52,7 +43,7 @@ window.addEventListener("knifeviewer:error", (e) => {
   setPreviewLoading(true, msg);
 });
 
-// Start loading immediately
+// Start
 setPreviewLoading(true, 'Loading catalog…');
 
 fetch('./data/catalog.json')
@@ -75,7 +66,6 @@ function initCategories() {
 }
 
 function loadCategory(catId) {
-  const token = ++loadToken;
   showLoaderSoon('Loading category…');
 
   state.category = catId;
@@ -84,21 +74,16 @@ function loadCategory(catId) {
 
   els.knife.innerHTML = '';
   const knives = catalog.categories[catId].knives;
-
-  for (const id in knives) {
-    els.knife.add(new Option(knives[id].label, id));
-  }
+  for (const id in knives) els.knife.add(new Option(knives[id].label, id));
 
   els.knife.onchange = () => loadKnife(els.knife.value);
-  loadKnife(els.knife.value, token);
+  loadKnife(els.knife.value);
 }
 
-function loadKnife(knifeId, inheritedToken = null) {
-  const token = inheritedToken ?? ++loadToken;
+function loadKnife(knifeId) {
   showLoaderSoon('Loading knife…');
 
   state.knife = knifeId;
-
   const knife = catalog.categories[state.category].knives[knifeId];
 
   populateOptions(els.handle, knife.options.handle, 'handle');
@@ -106,57 +91,56 @@ function loadKnife(knifeId, inheritedToken = null) {
   populateOptions(els.finish, knife.options.finish, 'finish');
 
   updatePrice();
-  applyConfig(token);
+  applyConfig();
 }
 
 function populateOptions(select, options, key) {
   select.innerHTML = '';
-  for (const id in options) {
-    select.add(new Option(options[id].label, id));
-  }
-
+  for (const id in options) select.add(new Option(options[id].label, id));
   state.options[key] = select.value;
 
   select.onchange = () => {
-    const token = ++loadToken;
     showLoaderSoon('Updating…');
-
     state.options[key] = select.value;
     updatePrice();
-    applyConfig(token);
+    applyConfig();
   };
 }
 
 function updatePrice() {
   const knife = catalog.categories[state.category].knives[state.knife];
   let total = knife.basePrice;
-
   for (const key in state.options) {
     total += knife.options[key][state.options[key]].price;
   }
-
   els.price.textContent = `$${total}`;
 }
 
-async function applyConfig(token = ++loadToken) {
+async function applyConfig() {
   try {
-    // Wait for viewer to be ready (kills the “blank until refresh” race)
-    if (window.KnifeViewer?.ready) await window.KnifeViewer.ready;
+    // Ensure viewer is initialized, but don't hang forever.
+    // If it can't init, it'll emit an error event.
+    if (window.KnifeViewer?.ready) {
+      const readyOk = await window.KnifeViewer.ready();
+      if (!readyOk) {
+        setPreviewLoading(true, "Viewer not ready. Refresh if needed.");
+        return;
+      }
+    }
 
-    if (window.KnifeViewer && typeof window.KnifeViewer.applyState === 'function') {
+    if (window.KnifeViewer?.applyState) {
       await window.KnifeViewer.applyState(state);
     }
   } finally {
-    // hide only if this is still the latest action
-    if (token === loadToken) hideLoaderNow();
+    // If viewer didn't emit a stop-loading for some reason, fail-safe hide
+    setTimeout(() => {
+      // only hide if we're still in generic "Loading…" state
+      if (previewStage?.classList.contains('is-loading')) hideLoaderNow();
+    }, 3000);
   }
 }
 
 els.addToCart.onclick = () => {
-  const payload = {
-    knife: state.knife,
-    category: state.category,
-    options: state.options
-  };
+  const payload = { knife: state.knife, category: state.category, options: state.options };
   console.log('Add to cart payload:', payload);
 };
