@@ -209,9 +209,10 @@ function getModelUrlFromState(state) {
   const knifeId = state?.knife;
   if (!knifeId) return null;
 
-  // Most common setup: /builder/assets/models/<knifeId>.glb
-  return `./assets/models/${knifeId}.glb`;
+  // Resolves relative to viewer.js location, works on GitHub Pages subpaths
+  return new URL(`./assets/models/${knifeId}.glb`, import.meta.url).href;
 }
+
 
 async function applyState(state) {
   const ok = await ensureInit();
