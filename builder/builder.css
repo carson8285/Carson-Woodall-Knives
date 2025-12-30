@@ -253,3 +253,37 @@ html, body {
     grid-template-rows: minmax(0, 44svh) minmax(0, 1fr);
   }
 }
+
+/* Force mobile layout to fill the whole screen */
+@media (max-width: 900px) {
+  html, body { height: 100%; }
+
+  .builder {
+    height: 100svh;          /* hard lock to screen */
+    min-height: 100svh;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 52svh 1fr;  /* viewer + sidebar */
+  }
+
+  .builder-viewport {
+    height: 52svh;
+    min-height: 0;
+  }
+
+  .builder-sidebar {
+    height: 100%;            /* fill the 1fr row */
+    min-height: 0;
+    align-self: stretch;     /* force fill grid cell */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Phone landscape: give sidebar more room */
+@media (max-height: 520px) and (orientation: landscape) and (pointer: coarse) {
+  .builder {
+    grid-template-rows: 44svh 1fr;
+  }
+  .builder-viewport { height: 44svh; }
+}
