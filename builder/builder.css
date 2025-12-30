@@ -211,3 +211,33 @@ body{
   }
   .builder-viewport{ height: 44svh; }
 }
+
+/* Phone landscape: switch back to side-by-side layout */
+@media (orientation: landscape) and (pointer: coarse) and (max-height: 520px) {
+  .builder {
+    height: 100svh;
+    min-height: 100svh;
+    grid-template-columns: 1fr 360px;   /* desktop-style */
+    grid-template-rows: 1fr;            /* single row */
+  }
+
+  .builder-viewport {
+    height: 100%;
+    min-height: 0;
+    border-bottom: none;
+    border-right: 1px solid var(--line);
+  }
+
+  .builder-sidebar {
+    width: 360px;
+    max-width: 360px;                  /* stop 100vw from portrait rules */
+    height: 100%;
+    min-height: 0;
+    border-top: none;
+    border-left: 1px solid var(--line);
+    overflow-y: auto;
+  }
+}
+
+grid-template-columns: 1fr 320px;
+.builder-sidebar { width: 320px; max-width: 320px; }
