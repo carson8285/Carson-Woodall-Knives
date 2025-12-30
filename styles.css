@@ -1639,3 +1639,235 @@ body {
     opacity: 1;
   }
 }
+
+/* ===== WRAPPER ===== */
+.builder-images{
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===== TWO-COLUMN LAYOUT ===== */
+.builder-images__inner{
+  width: 100%;
+  max-width: 1400px;
+  min-height: 100vh;
+
+  display: grid;
+  grid-template-columns: 1fr 420px; /* knife | sidebar */
+}
+
+/* ===== LEFT: KNIFE ===== */
+.builder-knife{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.builder-knife img{
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  display: block;
+}
+
+/* ===== RIGHT: SIDEBAR ===== */
+.builder-sidebar{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.builder-sidebar img{
+  height: 90vh;       /* KEY: fits screen height */
+  width: auto;        /* prevents stretching */
+  max-width: 100%;
+  display: block;
+}
+
+/* ===== MOBILE: STACK ===== */
+@media (max-width: 900px){
+  .builder-images__inner{
+    grid-template-columns: 1fr;
+  }
+
+  .builder-sidebar img{
+    height: auto;
+    max-height: 80vh;
+    width: auto;
+  }
+}
+/* ===== LEFT COLUMN STACK ===== */
+.builder-left{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 64px 48px;
+}
+
+/* ===== TEXT ===== */
+/* LEFT COLUMN STACK */
+.builder-left{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 64px;           /* matches your section padding vibe */
+}
+
+/* TEXT: align with knife column */
+.builder-text{
+  max-width: 640px;             /* wider so it lines up with knife scale */
+  margin-bottom: 28px;          /* less floaty */
+}
+
+/* Header: matches your site headings */
+.builder-text__h{
+  font-size: clamp(24px, 3.4vw, 34px);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+
+/* Subheader: matches your site subheading treatment */
+.builder-text__p{
+  font-size: 13px;
+  line-height: 1.8;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  margin: 0;
+}
+@media (max-width: 900px){
+  .builder-left{
+    padding: 64px 20px 24px;
+  }
+  .builder-text{
+    margin-bottom: 22px;
+  }
+}
+/* KNIFE BUILDER CTA */
+.builder-cta{
+  margin-top: 28px;
+  align-self: flex-start;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 48px;
+  padding: 0 26px;
+
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.builder-cta:hover{
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.32);
+}
+@media (max-width: 900px){
+  .builder-cta{
+    align-self: center;
+    margin-top: 22px;
+  }
+}
+.builder-sidebar img{
+  filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
+}
+
+.builder-knife img{
+  filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
+}
+/* 1) Make the promo section a snap target (desktop) */
+.snap-page .builder-images{
+  scroll-snap-align: center;   /* or start, see note below */
+  scroll-snap-stop: always;    /* prevents “skipping past” */
+  min-height: 100vh;           /* important for consistent snapping */
+}
+
+/* 2) If you have a fixed nav, prevent snap landing under it */
+.snap-page .builder-images{
+  scroll-margin-top: 80px;     /* adjust to your nav height */
+}
+/* DESKTOP: section is exactly one viewport tall */
+@media (min-width: 1024px){
+  .builder-images{
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden; /* prevents accidental overflow */
+  }
+
+  .builder-images__inner{
+    height: 100%;
+    min-height: 0;
+    align-items: center;
+  }
+}
+@media (min-width: 1024px){
+  .builder-left{
+    height: 100%;
+    padding: 64px 64px;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    align-content: center;
+  }
+}
+@media (min-width: 1024px){
+  .builder-knife img{
+    max-height: 45\\vh;   /* 👈 adjust between 40–50vh if needed */
+    width: auto;
+    padding: 60px 0;
+  }
+}
+@media (min-width: 1024px){
+  .builder-sidebar img{
+\    height: auto;
+  }
+}
+
+@media (min-width: 1024px){
+
+  /* give the sidebar more real estate */
+  .builder-images__inner{
+    grid-template-columns: 1fr 520px; /* was 420px */
+  }
+
+  /* sidebar column fills height */
+  .builder-sidebar{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* use a frame so the image can scale UP to be readable */
+  .builder-sidebar{
+    padding: 24px;
+  }
+
+  .builder-sidebar img{
+    height: 82vh;       /* readable */
+    width: auto;
+    max-width: 100%;
+    display: block;
+  }
+}
+@media (max-width: 900px){
+  .builder-knife{
+    padding: 75px 0;
+  }
+}
+
