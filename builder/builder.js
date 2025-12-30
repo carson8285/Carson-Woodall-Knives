@@ -15,7 +15,7 @@ const els = {
   addToCart: document.getElementById('addToCartBtn')
 };
 
-// Loader
+// Loader elements
 const previewStage = document.getElementById('previewStage');
 const previewLoader = document.getElementById('previewLoader');
 
@@ -39,12 +39,18 @@ function hideLoaderNow() {
   setPreviewLoading(false);
 }
 
-// Helps Three.js adjust to new container sizes
-function kickViewerResize() {
-  requestAnimationFrame(() => {
-    window.dispatchEvent(new Event('resize'));
-  });
-}
+// Listen to viewer loading events (authoritative)
+window.addEventListener("knifeviewer:loading", (e) => {
+  const { loading, text } = e.detail || {};
+  if (loading) setPreviewLoading(true, text || "Loading…");
+  else hideLoaderNow();
+});
+
+window.addEventListener("knifeviewer:error", (e) => {
+  const msg = e.detail?.message || "Viewer error";
+  console.warn(msg);
+  setPreviewLoading(true, msg);
+});
 
 // Start loading immediately
 setPreviewLoading(true, 'Loading catalog…');
@@ -64,10 +70,7 @@ function initCategories() {
   for (const id in catalog.categories) {
     els.category.add(new Option(catalog.categories[id].label, id));
   }
-
   els.category.onchange = () => loadCategory(els.category.value);
-
-  // initial category load
   loadCategory(els.category.value);
 }
 
@@ -87,8 +90,6 @@ function loadCategory(catId) {
   }
 
   els.knife.onchange = () => loadKnife(els.knife.value);
-
-  // auto load first knife
   loadKnife(els.knife.value, token);
 }
 
@@ -138,21 +139,15 @@ function updatePrice() {
 }
 
 async function applyConfig(token = ++loadToken) {
-  console.log('Apply config to viewer:', state);
-
   try {
-    // If your viewer exists, call it. If it returns a Promise, await it.
-    if (window.KnifeViewer && typeof window.KnifeViewer.applyState === 'function') {
-      const result = window.KnifeViewer.applyState(state);
-      if (result && typeof result.then === 'function') {
-        await result;
-      }
-    }
+    // Wait for viewer to be ready (kills the “blank until refresh” race)
+    if (window.KnifeViewer?.ready) await window.KnifeViewer.ready;
 
-    // Ensure Three.js re-sizes after any state/layout change
-    kickViewerResize();
+    if (window.KnifeViewer && typeof window.KnifeViewer.applyState === 'function') {
+      await window.KnifeViewer.applyState(state);
+    }
   } finally {
-    // Only hide loader if this is still the latest action
+    // hide only if this is still the latest action
     if (token === loadToken) hideLoaderNow();
   }
 }

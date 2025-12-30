@@ -236,8 +236,8 @@ body{
     border-top: none;
     border-left: 1px solid var(--line);
     overflow-y: auto;
+    grid-template-columns: 1fr 320px;
+
   }
 }
 
-grid-template-columns: 1fr 320px;
-.builder-sidebar { width: 320px; max-width: 320px; }
