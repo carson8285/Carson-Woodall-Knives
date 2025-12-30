@@ -1,52 +1,48 @@
-:root {
+:root{
   --bg: #0b0b0b;
-  --panel: rgba(0,0,0,0.55);
   --line: rgba(255,255,255,0.10);
   --text: rgba(255,255,255,0.92);
   --muted: rgba(255,255,255,0.70);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*{ box-sizing:border-box; margin:0; padding:0; }
 
-html, body {
-  height: 100%;
+html, body { height:100%; }
+
+body{
   background: radial-gradient(circle at 50% 10%, #2a2a2a 0, var(--bg) 65%);
   color: var(--text);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
 }
 
-/* Desktop: viewport + sidebar */
-.builder {
+/* ───────────────── Desktop layout ───────────────── */
+
+.builder{
   min-height: 100svh;
   display: grid;
-  grid-template-columns: 1fr 360px; /* same sidebar width as you like */
+  grid-template-columns: 1fr 360px;
 }
 
-/* VIEWPORT AREA */
-.builder-viewport {
+.builder-viewport{
   min-height: 100svh;
-  position: relative;
   border-right: 1px solid var(--line);
 }
 
-.preview-stage {
+.preview-stage{
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
 
-/* Three.js mount fills the viewport area */
-#knifeViewer,
-.viewport-3d {
+#knifeViewer, .viewport-3d{
   width: 100%;
   height: 100%;
 }
 
-/* SIDEBAR — KEEPING YOUR STYLE */
-.builder-sidebar {
+/* Sidebar look (your vibe) */
+.builder-sidebar{
   width: 360px;
-  max-width: 92vw;
   min-height: 100svh;
   padding: 22px 18px;
 
@@ -55,31 +51,34 @@ html, body {
   -webkit-backdrop-filter: blur(12px);
 
   border-left: 1px solid var(--line);
-  overflow-y: auto;
+  overflow: auto;
+
+  /* for pinned bottom controls */
+  display: flex;
+  flex-direction: column;
 }
 
-.builder-header { margin-bottom: 18px; }
-
-.builder-header h1 {
+/* Header */
+.builder-header{ margin-bottom: 18px; }
+.builder-header h1{
   font-size: 18px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
-.builder-group {
+/* Controls */
+.builder-group{
   display: grid;
   gap: 8px;
   margin: 14px 0;
 }
-
-.builder-group label {
+.builder-group label{
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted);
 }
-
-.builder-group select {
+.builder-group select{
   width: 100%;
   padding: 12px 12px;
   border-radius: 10px;
@@ -89,8 +88,15 @@ html, body {
   outline: none;
 }
 
-.builder-price {
-  margin: 18px 0 14px;
+/* Footer pinned area */
+.builder-footer{
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.builder-price{
+  margin: 0 0 12px;
   padding: 14px 12px;
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.10);
@@ -99,20 +105,19 @@ html, body {
   justify-content: space-between;
   align-items: center;
 }
-
-.builder-price span {
+.builder-price span{
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted);
 }
-
-#price {
+#price{
   font-size: 15px;
   letter-spacing: 0.12em;
+  font-weight: 600;
 }
 
-#addToCartBtn {
+#addToCartBtn{
   width: 100%;
   padding: 13px 12px;
   border-radius: 12px;
@@ -123,167 +128,86 @@ html, body {
   text-transform: uppercase;
   cursor: pointer;
 }
+#addToCartBtn:hover{ background: rgba(255,255,255,0.10); }
 
-#addToCartBtn:hover {
-  background: rgba(255,255,255,0.10);
-}
-
-/* LOADER OVERLAY */
-.preview-loader {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
+/* Loader overlay */
+.preview-loader{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
   background: rgba(0,0,0,0.55);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  opacity: 0;
-  pointer-events: none;
+  opacity:0;
+  pointer-events:none;
   transition: opacity 140ms ease;
-  z-index: 50;
+  z-index:50;
 }
-
-.preview-stage.is-loading .preview-loader {
-  opacity: 1;
-  pointer-events: auto;
+.preview-stage.is-loading .preview-loader{
+  opacity:1;
+  pointer-events:auto;
 }
-
-.loader-inner {
-  display: grid;
-  gap: 10px;
-  place-items: center;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.12);
+.loader-inner{
+  display:grid;
+  gap:10px;
+  place-items:center;
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.12);
   background: rgba(0,0,0,0.35);
 }
-
-.spinner {
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  border: 2px solid rgba(255,255,255,0.22);
+.spinner{
+  width:28px; height:28px;
+  border-radius:999px;
+  border:2px solid rgba(255,255,255,0.22);
   border-top-color: rgba(255,255,255,0.85);
   animation: spin 0.8s linear infinite;
 }
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.loader-text {
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+@keyframes spin{ to{ transform: rotate(360deg); } }
+.loader-text{
+  font-size:11px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
   color: rgba(255,255,255,0.85);
 }
 
-/* MOBILE: stack sidebar below and clamp viewport height */
-@media (max-width: 900px) {
-  .builder {
+/* ───────────────── Mobile layout ───────────────── */
+/* This is the part that fixes your screenshot */
+@media (max-width: 900px){
+  .builder{
+    height: 100svh;
+    min-height: 100svh;
     grid-template-columns: 1fr;
-    grid-template-rows: 52svh auto;   /* viewport is ~half screen */
+    grid-template-rows: 52svh 1fr;
   }
 
-  .builder-viewport {
+  .builder-viewport{
     min-height: 0;
+    height: 52svh;
     border-right: none;
     border-bottom: 1px solid var(--line);
   }
 
-  .builder-sidebar {
-    width: 100%;
+  /* FORCE sidebar to be full width */
+  .builder-sidebar{
+    width: 100vw;
+    max-width: none;          /* kills the 92vw behavior */
     min-height: 0;
+    height: 100%;
     border-left: none;
     border-top: 1px solid var(--line);
+
+    /* remove any chance it’s not flush */
+    margin: 0;
+    border-radius: 0;
   }
 }
 
-/* Phone landscape: shorter preview so sidebar controls are usable */
-@media (max-height: 520px) and (orientation: landscape) and (pointer: coarse) {
-  .builder {
-    grid-template-rows: 46svh auto;
-  }
-}
-
-/* Sidebar layout: content scrolls, footer sticks to bottom */
-.builder-sidebar {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Everything above the footer scrolls naturally */
-.builder-sidebar > :not(.builder-footer) {
-  flex-shrink: 0;
-}
-
-/* Footer stays at bottom */
-.builder-footer {
-  margin-top: auto; /* key line */
-  padding-top: 16px;
-}
-
-.builder-footer {
-  border-top: 1px solid rgba(255,255,255,0.08);
-}
-
-/* ✅ Mobile sizing fix: make grid rows behave + sidebar scroll correctly */
-@media (max-width: 900px) {
-  .builder {
-    height: 100svh;                 /* lock the whole layout to the screen */
-    min-height: 0;                  /* allow children to shrink */
-    grid-template-columns: 1fr;
-    grid-template-rows: minmax(0, 52svh) minmax(0, 1fr);
-  }
-
-  .builder-viewport {
-    min-height: 0;                  /* critical: allow it to shrink */
-  }
-
-  .builder-sidebar {
-    min-height: 0;                  /* critical: allow it to shrink */
-    height: 100%;                   /* fill its grid row */
-    overflow-y: auto;               /* scroll when content is long */
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-/* ✅ Phone landscape: shorter viewer, taller sidebar */
-@media (max-height: 520px) and (orientation: landscape) and (pointer: coarse) {
-  .builder {
-    height: 100svh;
-    grid-template-rows: minmax(0, 44svh) minmax(0, 1fr);
-  }
-}
-
-/* Force mobile layout to fill the whole screen */
-@media (max-width: 900px) {
-  html, body { height: 100%; }
-
-  .builder {
-    height: 100svh;          /* hard lock to screen */
-    min-height: 100svh;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 52svh 1fr;  /* viewer + sidebar */
-  }
-
-  .builder-viewport {
-    height: 52svh;
-    min-height: 0;
-  }
-
-  .builder-sidebar {
-    height: 100%;            /* fill the 1fr row */
-    min-height: 0;
-    align-self: stretch;     /* force fill grid cell */
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-/* Phone landscape: give sidebar more room */
-@media (max-height: 520px) and (orientation: landscape) and (pointer: coarse) {
-  .builder {
+/* Phone landscape */
+@media (max-height: 520px) and (orientation: landscape) and (pointer: coarse){
+  .builder{
     grid-template-rows: 44svh 1fr;
   }
-  .builder-viewport { height: 44svh; }
+  .builder-viewport{ height: 44svh; }
 }
