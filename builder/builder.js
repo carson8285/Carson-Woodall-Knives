@@ -1,4 +1,6 @@
 let catalog;
+let catalogUrl; // ABSOLUTE URL of catalog.json (used to resolve ../ paths)
+
 let state = {
   category: null,
   knife: null,
@@ -41,16 +43,52 @@ function hideLoaderNow() {
 
 // Helps Three.js adjust to new container sizes
 function kickViewerResize() {
-  requestAnimationFrame(() => {
-    window.dispatchEvent(new Event('resize'));
-  });
+  requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
 }
+
+// ---------- model URL resolver (relative to catalog.json) ----------
+function resolveModelUrls() {
+  const knifeData = catalog?.categories?.[state.category]?.knives?.[state.knife];
+  const r = knifeData?.rendering;
+
+  if (!knifeData || !r || !catalogUrl) return { primary: null, fallback: null };
+
+  const knife = state.knife;
+  const handle = state.options.handle;
+  const filework = state.options.filework;
+  const finish = state.options.finish;
+
+  if (!knife || !handle || !filework || !finish) return { primary: null, fallback: null };
+
+  const basePath = r.basePath || "./";
+  const pattern = r.pattern || "{knife}.glb";
+  const fallbackPattern = r.fallback || "{knife}.glb";
+
+  const filename = pattern
+    .replace("{knife}", knife)
+    .replace("{handle}", handle)
+    .replace("{filework}", filework)
+    .replace("{finish}", finish);
+
+  const fallbackName = fallbackPattern.replace("{knife}", knife);
+
+  // Resolve basePath relative to catalog.json URL, then resolve file under it
+  const base = new URL(basePath, catalogUrl);
+  return {
+    primary: new URL(filename, base).toString(),
+    fallback: new URL(fallbackName, base).toString()
+  };
+}
+// ---------------------------------------------------------------
 
 // Start loading immediately
 setPreviewLoading(true, 'Loading catalog…');
 
 fetch('./data/catalog.json')
-  .then(res => res.json())
+  .then(res => {
+    catalogUrl = new URL(res.url); // <-- this makes ../assets/ work from /data/
+    return res.json();
+  })
   .then(data => {
     catalog = data;
     initCategories();
@@ -61,13 +99,13 @@ fetch('./data/catalog.json')
   });
 
 function initCategories() {
+  els.category.innerHTML = '';
   for (const id in catalog.categories) {
     els.category.add(new Option(catalog.categories[id].label, id));
   }
 
   els.category.onchange = () => loadCategory(els.category.value);
 
-  // initial category load
   loadCategory(els.category.value);
 }
 
@@ -88,7 +126,6 @@ function loadCategory(catId) {
 
   els.knife.onchange = () => loadKnife(els.knife.value);
 
-  // auto load first knife
   loadKnife(els.knife.value, token);
 }
 
@@ -138,30 +175,47 @@ function updatePrice() {
 }
 
 async function applyConfig(token = ++loadToken) {
-  console.log('Apply config to viewer:', state);
-
   try {
-    // If your viewer exists, call it. If it returns a Promise, await it.
+    const { primary, fallback } = resolveModelUrls();
+
+    console.log('Resolved model PRIMARY:', primary);
+    console.log('Resolved model FALLBACK:', fallback);
+
     if (window.KnifeViewer && typeof window.KnifeViewer.applyState === 'function') {
-      const result = window.KnifeViewer.applyState(state);
+      const result = window.KnifeViewer.applyState({
+        ...state,
+        modelUrl: primary,
+        fallbackModelUrl: fallback
+      });
+
       if (result && typeof result.then === 'function') {
         await result;
       }
     }
 
-    // Ensure Three.js re-sizes after any state/layout change
     kickViewerResize();
   } finally {
-    // Only hide loader if this is still the latest action
     if (token === loadToken) hideLoaderNow();
   }
 }
 
 els.addToCart.onclick = () => {
+  const knifeData = catalog.categories[state.category].knives[state.knife];
+
+  let total = knifeData.basePrice;
+  for (const key in state.options) {
+    total += knifeData.options[key][state.options[key]].price;
+  }
+
+  const { primary } = resolveModelUrls();
+
   const payload = {
     knife: state.knife,
     category: state.category,
-    options: state.options
+    options: { ...state.options },
+    price: total,
+    modelUrl: primary
   };
+
   console.log('Add to cart payload:', payload);
 };

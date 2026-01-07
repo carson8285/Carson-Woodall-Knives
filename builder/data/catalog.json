@@ -3,30 +3,17 @@
     "fixed": {
       "label": "Fixed Blades",
       "knives": {
-        "dagger_v1": {
-          "label": "Dagger",
-          "basePrice": 425,
-          "options": {
-            "handle": {
-              "burl_maple": { "label": "Burl Maple", "price": 85 },
-              "black_micarta": { "label": "Black Micarta", "price": 40 }
-            },
-            "filework": {
-              "none": { "label": "None", "price": 0 },
-              "vine": { "label": "Vine", "price": 60 }
-            },
-            "finish": {
-              "high_polish": { "label": "High Polish", "price": 0 },
-              "acid_etch_stonewash": { "label": "Acid Etch Stonewash", "price": 35 }
-            }
-          }
-        }
-          ,"miniedc_v1": {
+        "miniedc": {
           "label": "Mini EDC",
           "basePrice": 275,
+          "rendering": {
+            "basePath": "../assets/models/",
+            "pattern": "{knife}__{handle}__{filework}__{finish}.glb",
+            "fallback": "../assets/models/{knife}.glb"
+          },
           "options": {
             "handle": {
-              "Cocobolo": { "label": "Cocobolo", "price": 85 },
+              "cocobolo": { "label": "Cocobolo", "price": 85 },
               "black_micarta": { "label": "Black Micarta", "price": 40 }
             },
             "filework": {
@@ -39,25 +26,6 @@
             }
           }
         }
-          ,"miniedc_v2": {
-          "label": "Mini EDC",
-          "basePrice": 275,
-          "options": {
-            "handle": {
-              "Cocobolo": { "label": "Cocobolo", "price": 85 },
-              "black_micarta": { "label": "Black Micarta", "price": 40 }
-            },
-            "filework": {
-              "none": { "label": "None", "price": 0 },
-              "vine": { "label": "Vine", "price": 60 }
-            },
-            "finish": {
-              "high_polish": { "label": "High Polish", "price": 0 },
-              "acid_etch_stonewash": { "label": "Acid Etch Stonewash", "price": 35 }
-            }
-          }
-        }
-
       }
     }
   }

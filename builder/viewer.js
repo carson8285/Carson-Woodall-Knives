@@ -31,12 +31,12 @@ class KnifeViewer {
     this.controls.maxDistance = 4.0;
     this.controls.target.set(0, 0.20, 0);
 
-    // Lights (minimal, reflections come from env)
+    // Lights
     const dir = new THREE.DirectionalLight(0xffffff, 0.35);
     dir.position.set(3, 6, 3);
     this.scene.add(dir);
 
-    // Environment (critical for mirror steel)
+    // Environment
     new RGBELoader().load(
       'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_08_1k.hdr',
       (hdr) => {
@@ -61,100 +61,99 @@ class KnifeViewer {
     this.renderer.setSize(w, h);
   }
 
-  // Loads a GLB and centers it
-  loadModel(url) {
-    if (!url || url === this.currentUrl) return;
-    this.currentUrl = url;
+  disposeCurrent() {
+    if (!this.current) return;
 
-    // remove previous
-    if (this.current) {
-      this.scene.remove(this.current);
-      this.current.traverse((o) => {
-        if (o.geometry) o.geometry.dispose();
-        if (o.material) {
-          const mats = Array.isArray(o.material) ? o.material : [o.material];
-          mats.forEach((m) => {
-            // Don't dispose textures if you reuse; ok for now.
-            m.dispose?.();
-          });
-        }
-      });
-      this.current = null;
-    }
-
-    this.loader.load(
-      url,
-      (gltf) => {
-        this.current = gltf.scene;
-        this.scene.add(this.current);
-
-        // center + frame
-this.current = gltf.scene;
-this.scene.add(this.current);
-
-// ---- RESET TRANSFORMS (important) ----
-this.current.position.set(0, 0, 0);
-this.current.rotation.set(0, 0, 0);
-this.current.scale.set(1, 1, 1);
-this.current.updateWorldMatrix(true, true);
-
-// ---- 1) CENTER FIRST ----
-let box = new THREE.Box3().setFromObject(this.current);
-let center = box.getCenter(new THREE.Vector3());
-
-// move model so its center is at origin
-this.current.position.sub(center);
-this.current.updateWorldMatrix(true, true);
-
-// ---- 2) SCALE TO A TARGET SIZE ----
-box = new THREE.Box3().setFromObject(this.current);
-const size = box.getSize(new THREE.Vector3());
-const maxDim = Math.max(size.x, size.y, size.z);
-
-const targetMaxDim = 1.2; // tweak: 1.0 smaller, 1.5 bigger
-const s = targetMaxDim / maxDim;
-
-this.current.scale.setScalar(s);
-this.current.updateWorldMatrix(true, true);
-
-// ---- 3) RE-CENTER AGAIN (scaling can shift bounds slightly) ----
-box = new THREE.Box3().setFromObject(this.current);
-center = box.getCenter(new THREE.Vector3());
-this.current.position.sub(center);
-this.current.updateWorldMatrix(true, true);
-
-// ---- 4) SET ORBIT TARGET TO THE MODEL (NOT THE VIEWPORT CENTER) ----
-box = new THREE.Box3().setFromObject(this.current);
-const finalSize = box.getSize(new THREE.Vector3());
-
-// orbit around the knife center (slightly above center feels better)
-this.controls.target.set(0, finalSize.y * 0.12, 0);
-this.controls.update();
-
-// ---- 5) PLACE CAMERA TO FRAME IT ----
-const dist = targetMaxDim * 1.8;
-this.camera.position.set(0, finalSize.y * 0.20, dist);
-this.camera.lookAt(this.controls.target);
-
-      },
-      undefined,
-      (err) => console.error('GLB load error:', err)
-    );
+    this.scene.remove(this.current);
+    this.current.traverse((o) => {
+      if (o.geometry) o.geometry.dispose();
+      if (o.material) {
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        mats.forEach((m) => m.dispose?.());
+      }
+    });
+    this.current = null;
   }
 
-  // Hook for your builder state
-  applyState(state) {
-    // 1) Decide which model file to load for the selected knife
-    // Adjust this path to match your project.
-    // Example expects: /builder/assets/models/<knifeId>.glb
-const knifeId = state?.knife;
-if (knifeId) {
-  this.loadModel(`./assets/models/${knifeId}.glb`);
-}
+  // Promise-based loader
+  loadModel(url) {
+    if (!url) return Promise.resolve(false);
+    if (url === this.currentUrl) return Promise.resolve(false);
 
-    // 2) Later: toggle meshes/material variants based on options
-    // state.options.handle / filework / finish
-    // For now we just load the knife model.
+    this.currentUrl = url;
+    this.disposeCurrent();
+
+    console.log('GLB loadModel():', url);
+
+    return new Promise((resolve, reject) => {
+      this.loader.load(
+        url,
+        (gltf) => {
+          this.current = gltf.scene;
+          this.scene.add(this.current);
+
+          // ---- RESET TRANSFORMS ----
+          this.current.position.set(0, 0, 0);
+          this.current.rotation.set(0, 0, 0);
+          this.current.scale.set(1, 1, 1);
+          this.current.updateWorldMatrix(true, true);
+
+          // ---- 1) CENTER FIRST ----
+          let box = new THREE.Box3().setFromObject(this.current);
+          let center = box.getCenter(new THREE.Vector3());
+          this.current.position.sub(center);
+          this.current.updateWorldMatrix(true, true);
+
+          // ---- 2) SCALE TO A TARGET SIZE ----
+          box = new THREE.Box3().setFromObject(this.current);
+          const size = box.getSize(new THREE.Vector3());
+          const maxDim = Math.max(size.x, size.y, size.z);
+
+          const targetMaxDim = 1.2;
+          const s = targetMaxDim / (maxDim || 1);
+          this.current.scale.setScalar(s);
+          this.current.updateWorldMatrix(true, true);
+
+          // ---- 3) RE-CENTER AGAIN ----
+          box = new THREE.Box3().setFromObject(this.current);
+          center = box.getCenter(new THREE.Vector3());
+          this.current.position.sub(center);
+          this.current.updateWorldMatrix(true, true);
+
+          // ---- 4) SET ORBIT TARGET ----
+          box = new THREE.Box3().setFromObject(this.current);
+          const finalSize = box.getSize(new THREE.Vector3());
+          this.controls.target.set(0, finalSize.y * 0.12, 0);
+          this.controls.update();
+
+          // ---- 5) PLACE CAMERA ----
+          const dist = targetMaxDim * 1.8;
+          this.camera.position.set(0, finalSize.y * 0.20, dist);
+          this.camera.lookAt(this.controls.target);
+
+          resolve(true);
+        },
+        undefined,
+        (err) => {
+          console.error('GLB load error:', err, url);
+          reject(err);
+        }
+      );
+    });
+  }
+
+  // Builder hook: try modelUrl, then fallbackModelUrl
+  applyState(state) {
+    const primary = state?.modelUrl;
+    const fallback = state?.fallbackModelUrl;
+
+    if (!primary) return Promise.resolve(false);
+
+    return this.loadModel(primary).catch((err) => {
+      console.warn('Primary failed, trying fallback:', fallback, err);
+      if (fallback) return this.loadModel(fallback);
+      throw err;
+    });
   }
 
   animate() {
@@ -164,7 +163,6 @@ if (knifeId) {
   }
 }
 
-// Create viewer and expose it globally so builder.js can call it
 const container = document.getElementById('knifeViewer');
 const viewer = new KnifeViewer(container);
 window.KnifeViewer = viewer;
