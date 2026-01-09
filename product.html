@@ -87,25 +87,33 @@
     {
       id: "mini-edc-01",
       title: "Mini EDC",
-      price: 275,
-      image: "./productimages/miniedc.jpeg",
+      basePrice: 275,
+      images: [
+        "./productimages/miniedc.jpeg",
+        "./productimages/miniedc.jpeg",        // replace with real images
+        "./productimages/miniedc.jpeg"
+      ],
       description: "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
-      specs: {
-        steel: "Magnacut",
-        finish: "Stonewash",
-        handle: "Micarta",
-      }
-    },
-    {
-      id: "chef-01",
-      title: "Chef Knife",
-      price: 320,
-      image: "./productimages/imgplaceholder.png",
-      description: "Kitchen workhorse designed for balance and control.",
-      specs: {
-        steel: "AEB-L",
-        finish: "Satin",
-        handle: "G10",
+      options: {
+        steel: [
+          { id: "1095", label: "1095 High Carbon Steel", price: 0 },
+          { id: "stainless", label: "Stainless Steel", price: 25 }
+        ],
+        finish: [
+          { id: "stonewash", label: "Stonewash", price: 20 },
+          { id: "acid", label: "Acid Etch", price: 10 },
+          { id: "satin", label: "Satin Steel", price: 0 },
+          { id: "high_polish", label: "High Polish", price: 75 }
+        ],
+        handle: [
+          { id: "black_micarta", label: "Black Micarta", price: 0 },
+          { id: "cocobolo", label: "Cocobolo", price: 85 }
+        ]
+      },
+      defaults: {
+        steel: "1095",
+        finish: "satin",
+        handle: "black_micarta"
       }
     }
   ];
@@ -116,35 +124,172 @@
 
   document.title = `${product.title} | Carson Woodall Knives`;
 
+  // State for gallery + selections
+  const uiState = {
+    imgIndex: 0,
+    selections: {
+      steel: product.defaults?.steel || product.options.steel[0].id,
+      finish: product.defaults?.finish || product.options.finish[0].id,
+      handle: product.defaults?.handle || product.options.handle[0].id
+    }
+  };
+
   const root = document.getElementById("productRoot");
-  root.innerHTML = `
-    <div class="main-image-container">
-      <img src="${product.image}" alt="${product.title}">
-    </div>
 
-    <div class="product-options">
-      <h1 style="letter-spacing:0.12em; text-transform:uppercase;">${product.title}</h1>
-      <p style="opacity:0.85;">${product.description}</p>
+  function optionPrice(group, id) {
+    const opt = product.options[group].find(o => o.id === id);
+    return opt ? (opt.price || 0) : 0;
+  }
 
-      <div class="price-addcart">
-        <div class="price">$${product.price}</div>
-        <button class="add-cart" type="button">Add to Cart</button>
+  function calcTotal() {
+    return (
+      product.basePrice +
+      optionPrice("steel", uiState.selections.steel) +
+      optionPrice("finish", uiState.selections.finish) +
+      optionPrice("handle", uiState.selections.handle)
+    );
+  }
+
+  function money(n) {
+    return `$${Math.round(n)}`;
+  }
+
+  function render() {
+    const thumbs = product.images
+      .map((src, i) => {
+        const active = i === uiState.imgIndex ? "is-active" : "";
+        return `
+          <button class="thumb ${active}" type="button" data-idx="${i}" aria-label="View image ${i + 1}">
+            <img src="${src}" alt="${product.title} thumbnail ${i + 1}">
+          </button>
+        `;
+      })
+      .join("");
+
+    // Build dropdown options
+    function buildSelect(group, currentId) {
+      return product.options[group]
+        .map(o => `<option value="${o.id}" ${o.id === currentId ? "selected" : ""}>${o.label}</option>`)
+        .join("");
+    }
+
+    root.innerHTML = `
+      <div class="main-image-container">
+        <div class="gallery">
+          <div class="gallery-main">
+            <button class="gallery-nav prev" type="button" aria-label="Previous image">‹</button>
+            <img class="gallery-image" src="${product.images[uiState.imgIndex]}" alt="${product.title}">
+            <button class="gallery-nav next" type="button" aria-label="Next image">›</button>
+          </div>
+
+          <div class="gallery-thumbs" role="list">
+            ${thumbs}
+          </div>
+        </div>
       </div>
 
-      <div class="option-group">
-        <label>Steel</label>
-        <div style="padding:10px 0; opacity:0.9;">${product.specs.steel}</div>
+      <div class="product-options">
+        <h1 style="letter-spacing:0.12em; text-transform:uppercase;">${product.title}</h1>
+        <p style="opacity:0.85;">${product.description}</p>
+
+        <div class="price-addcart">
+          <div class="price" id="livePrice">${money(calcTotal())}</div>
+          <button class="add-cart" id="addToCartBtn" type="button">Add to Cart</button>
+        </div>
+
+        <div class="option-group">
+          <label for="steelSelect">Steel</label>
+          <select id="steelSelect">
+            ${buildSelect("steel", uiState.selections.steel)}
+          </select>
+        </div>
+
+        <div class="option-group">
+          <label for="finishSelect">Finish</label>
+          <select id="finishSelect">
+            ${buildSelect("finish", uiState.selections.finish)}
+          </select>
+        </div>
+
+        <div class="option-group">
+          <label for="handleSelect">Handle</label>
+          <select id="handleSelect">
+            ${buildSelect("handle", uiState.selections.handle)}
+          </select>
+        </div>
+
+        <div class="mini-specs">
+          <div class="mini-row"><span>Base</span><span>${money(product.basePrice)}</span></div>
+          <div class="mini-row"><span>Steel</span><span>${money(optionPrice("steel", uiState.selections.steel))}</span></div>
+          <div class="mini-row"><span>Finish</span><span>${money(optionPrice("finish", uiState.selections.finish))}</span></div>
+          <div class="mini-row"><span>Handle</span><span>${money(optionPrice("handle", uiState.selections.handle))}</span></div>
+        </div>
       </div>
-      <div class="option-group">
-        <label>Finish</label>
-        <div style="padding:10px 0; opacity:0.9;">${product.specs.finish}</div>
-      </div>
-      <div class="option-group">
-        <label>Handle</label>
-        <div style="padding:10px 0; opacity:0.9;">${product.specs.handle}</div>
-      </div>
-    </div>
-  `;
+    `;
+
+    wireEvents();
+  }
+
+  function setImageIndex(i) {
+    const len = product.images.length;
+    uiState.imgIndex = (i + len) % len;
+    render();
+  }
+
+  function wireEvents() {
+    // Gallery buttons
+    const prev = root.querySelector(".gallery-nav.prev");
+    const next = root.querySelector(".gallery-nav.next");
+    prev?.addEventListener("click", () => setImageIndex(uiState.imgIndex - 1));
+    next?.addEventListener("click", () => setImageIndex(uiState.imgIndex + 1));
+
+    // Thumbs
+    root.querySelectorAll(".thumb").forEach(btn => {
+      btn.addEventListener("click", () => setImageIndex(parseInt(btn.dataset.idx, 10)));
+    });
+
+    // Dropdowns
+    const steelSel = root.querySelector("#steelSelect");
+    const finishSel = root.querySelector("#finishSelect");
+    const handleSel = root.querySelector("#handleSelect");
+
+    steelSel?.addEventListener("change", (e) => {
+      uiState.selections.steel = e.target.value;
+      render();
+    });
+    finishSel?.addEventListener("change", (e) => {
+      uiState.selections.finish = e.target.value;
+      render();
+    });
+    handleSel?.addEventListener("change", (e) => {
+      uiState.selections.handle = e.target.value;
+      render();
+    });
+
+    // Add to cart (for now: console log payload)
+    const addBtn = root.querySelector("#addToCartBtn");
+    addBtn?.addEventListener("click", () => {
+      const payload = {
+        id: product.id,
+        title: product.title,
+        basePrice: product.basePrice,
+        selections: { ...uiState.selections },
+        total: calcTotal(),
+        image: product.images[uiState.imgIndex]
+      };
+      console.log("ADD TO CART:", payload);
+
+      // Later: save to localStorage, or send to Shopify, etc.
+    });
+
+    // Keyboard support for gallery
+    window.onkeydown = (e) => {
+      if (e.key === "ArrowLeft") setImageIndex(uiState.imgIndex - 1);
+      if (e.key === "ArrowRight") setImageIndex(uiState.imgIndex + 1);
+    };
+  }
+
+  render();
 </script>
 
 </body>
