@@ -1608,30 +1608,111 @@ html {
 }
 
 /* =========================================================
-   Builder Promo: Mobile Image Scaling (no stretch)
+   Builder Promo: No Distortion (all mobile, incl. landscape)
    ========================================================= */
 
-@media (max-width: 900px) {
-  /* Make sure the grid items can shrink */
-  .builder-images__inner > * { min-width: 0; }
+/* If anything inside a grid/flex refuses to shrink, it can push sideways */
+.builder-images__inner > * { min-width: 0; }
 
-  /* Kill any inherited fixed-height behavior on mobile */
-  .builder-knife img,
-  .builder-sidebar img {
-    width: auto;          /* key: don't force width */
-    height: auto;         /* key: don't force height */
-    max-width: 100%;      /* clamp to screen */
-    max-height: 70vh;     /* clamp to screen height */
-    object-fit: contain;  /* never crop, never distort */
-    display: block;
-    margin: 0 auto;       /* keep centered */
+/* Mobile portrait + general small widths */
+@media (max-width: 900px) {
+  .builder-images,
+  .builder-images__inner {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
-  /* Optional: separate them with breathing room */
-  .builder-knife { padding: 28px 0 10px; }
-  .builder-sidebar { padding: 10px 0 28px; }
+  /* Force true single column */
+  .builder-images__inner {
+    grid-template-columns: 1fr !important;
+    min-height: auto;
+  }
+
+  /* Kill ALL fixed-height rules that cause distortion */
+  .builder-knife img,
+  .builder-sidebar img {
+    height: auto !important;
+    width: auto !important;
+
+    max-width: 100%;
+    max-height: 78vh;
+
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* Keep spacing tidy */
+  .builder-knife { padding: 28px 0 12px; }
+  .builder-sidebar { padding: 12px 0 28px; }
 }
 
-@media (max-width: 900px) {
-  .builder-sidebar img { max-height: 82vh; }
+/* Phone-landscape specifically (this is where your current CSS gets weird) */
+@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+  .builder-images,
+  .builder-images__inner {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .builder-images__inner {
+    grid-template-columns: 1fr !important;
+  }
+
+  .builder-knife img,
+  .builder-sidebar img {
+    height: auto !important;
+    width: auto !important;
+
+    max-width: 100%;
+    max-height: 70vh;
+
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* Slightly tighter padding so landscape doesn't feel cramped */
+  .builder-knife { padding: 18px 0 8px; }
+  .builder-sidebar { padding: 8px 0 18px; }
+}
+/* =========================================================
+   Footer: prevent social overflow (mobile + phone-landscape)
+   ========================================================= */
+
+.footer,
+.footer-inner {
+  max-width: 100%;
+}
+
+.footer-main {
+  max-width: 100%;
+}
+
+/* Make the footer wrap earlier than 768px, and also in phone-landscape */
+@media (max-width: 900px),
+       (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+
+  .footer-main {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 22px;
+    text-align: center;
+  }
+
+  .footer-nav {
+    align-items: center;
+  }
+
+  .footer-social {
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100%;
+  }
+
+  .footer-social-icon {
+    flex: 0 0 auto;
+  }
 }
