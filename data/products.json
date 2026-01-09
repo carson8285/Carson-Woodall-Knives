@@ -1,0 +1,44 @@
+{
+  "products": [
+    {
+      "id": "mini-edc-01",
+      "title": "Mini EDC",
+      "basePrice": 275,
+      "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
+      "images": [
+        "./productimages/miniedc.jpeg",
+        "./productimages/noimage.png",
+        "./productimages/noimage.png",
+        "./productimages/noimage.png"
+      ],
+      "variantToIndex": {
+        "1095__acid__cocobolo": 0,
+        "1095__stonewash__black_micarta": 1,
+        "1095__high_polish__cocobolo": 2,
+        "stainless__satin__cocobolo": 3
+      },
+
+      "options": {
+        "steel": [
+          { "id": "1095", "label": "1095 High Carbon Steel", "price": 0 },
+          { "id": "stainless", "label": "Stainless Steel", "price": 25 }
+        ],
+        "finish": [
+          { "id": "stonewash", "label": "Stonewash", "price": 20 },
+          { "id": "acid", "label": "Acid Etch", "price": 10 },
+          { "id": "satin", "label": "Satin Steel", "price": 0 },
+          { "id": "high_polish", "label": "High Polish", "price": 75 }
+        ],
+        "handle": [
+          { "id": "black_micarta", "label": "Black Micarta", "price": 0 },
+          { "id": "cocobolo", "label": "Cocobolo", "price": 85 }
+        ]
+      },
+      "defaults": {
+        "steel": "1095",
+        "finish": "acid",
+        "handle": "cocobolo"
+      }
+    }
+  ]
+}

@@ -51,7 +51,7 @@
             <label for="filterType">Type</label>
             <select id="filterType">
               <option value="all">All</option>
-              <option value="fixed">Fixed</option>
+              <option value="fixed">EDC</option>
               <option value="kitchen">Kitchen</option>
               <option value="hunting">Hunting / Bushcraft</option>
             </select>
@@ -61,9 +61,8 @@
             <label for="filterSteel">Steel</label>
             <select id="filterSteel">
               <option value="all">All</option>
-              <option value="magnacut">Magnacut</option>
-              <option value="cpm154">CPM-154</option>
-              <option value="aebl">AEB-L</option>
+              <option value="1095">1095 High Carbon</option>
+              <option value="stainless">Stainless</option>
             </select>
           </div>
 
@@ -73,7 +72,6 @@
               <option value="all">All</option>
               <option value="in-stock">In stock</option>
               <option value="made-to-order">Made to order</option>
-              <option value="sold">Sold</option>
             </select>
           </div>
         </div>
@@ -148,21 +146,28 @@
     navLinks.forEach(link => link.addEventListener('click', () => navBar.classList.remove('nav-bar--open')));
   }
 
-  // --- Product data (starter mock) ---
-  // Later: replace with fetch('./data/knives.json')
-  const products = [
-    {
-      id: "mini-edc-01",
-      title: "Mini EDC",
-      price: 275,
-      type: "fixed",
-      steel: "magnacut",
-      availability: "in-stock",
-      image: "./productimages/miniedc.jpeg",
-      featured: true,
-      date: "2025-12-01"
-    },
-  ];
+  // ---------- KNIFE LISTING (pull from JSON) ----------
+  // Expected JSON shape:
+  // {
+  //   "products": [
+  //     {
+  //       "id": "mini-edc-01",
+  //       "title": "Mini EDC",
+  //       "basePrice": 275,
+  //       "type": "fixed",
+  //       "steelTag": "1095",          // optional for filtering tags
+  //       "availability": "in-stock",
+  //       "cardImage": "./productimages/miniedc.jpeg", // preferred for tiles
+  //       "featured": true,
+  //       "date": "2025-12-01"
+  //     }
+  //   ]
+  // }
+  //
+  // If your products.json doesn't have cardImage/type/etc yet, this script will
+  // try to fall back gracefully.
+
+  let products = [];
 
   const els = {
     grid: document.getElementById("listingGrid"),
@@ -173,23 +178,48 @@
     search: document.getElementById("search"),
   };
 
+  function money(n) {
+    return `$${Math.round(Number(n) || 0)}`;
+  }
+
+  function pillText(s) {
+    return String(s || "").replace(/-/g, " ");
+  }
+
   function render(list) {
-    els.grid.innerHTML = list.map(p => `
-      <a class="listing-card" href="./product.html?id=${encodeURIComponent(p.id)}">
-        <div class="listing-img">
-          <img src="${p.image}" alt="${p.title}" />
-        </div>
-        <div class="listing-meta">
-          <div class="listing-title">${p.title}</div>
-          <div class="listing-sub">
-            <span class="pill">${p.type.replace("-", " ")}</span>
-            <span class="pill">${p.steel.toUpperCase()}</span>
-            <span class="pill">${p.availability.replace("-", " ")}</span>
+    els.grid.innerHTML = list.map(p => {
+      // Fallbacks so you don't have to perfect JSON on day 1
+      const img =
+        p.cardImage ||
+        (Array.isArray(p.images) ? p.images[0] : null) ||
+        p.image ||
+        "./productimages/noimage.png";
+
+      const title = p.title || "Untitled";
+      const price = p.basePrice ?? p.price ?? 0;
+
+      // tags for pills (fallback if you haven’t defined them yet)
+      const type = p.type || "fixed";
+      const steel = (p.steelTag || p.steel || "").toString();
+      const availability = p.availability || "made-to-order";
+
+      return `
+        <a class="listing-card" href="./product.html?id=${encodeURIComponent(p.id)}">
+          <div class="listing-img">
+            <img src="${img}" alt="${title}" />
           </div>
-          <div class="listing-price">$${p.price}</div>
-        </div>
-      </a>
-    `).join("");
+          <div class="listing-meta">
+            <div class="listing-title">${title}</div>
+            <div class="listing-sub">
+              <span class="pill">${pillText(type)}</span>
+              ${steel ? `<span class="pill">${steel.toUpperCase()}</span>` : ``}
+              <span class="pill">${pillText(availability)}</span>
+            </div>
+            <div class="listing-price">${money(price)}</div>
+          </div>
+        </a>
+      `;
+    }).join("");
   }
 
   function apply() {
@@ -200,36 +230,65 @@
     const sort = els.sortBy.value;
 
     let list = products.filter(p => {
-      const okType = (t === "all" || p.type === t);
-      const okSteel = (s === "all" || p.steel === s);
-      const okAvail = (a === "all" || p.availability === a);
-      const okSearch = (!q || (p.title + " " + p.type + " " + p.steel).toLowerCase().includes(q));
+      const type = p.type || "fixed";
+      const steel = (p.steelTag || p.steel || "").toString();
+      const avail = p.availability || "made-to-order";
+      const title = (p.title || "").toLowerCase();
+
+      const okType = (t === "all" || type === t);
+      const okSteel = (s === "all" || steel === s);
+      const okAvail = (a === "all" || avail === a);
+
+      const haystack = `${title} ${type} ${steel} ${avail}`.toLowerCase();
+      const okSearch = (!q || haystack.includes(q));
+
       return okType && okSteel && okAvail && okSearch;
     });
 
     if (sort === "featured") {
-      list.sort((x, y) => Number(y.featured) - Number(x.featured));
+      list.sort((x, y) => Number(!!y.featured) - Number(!!x.featured));
     } else if (sort === "price-low") {
-      list.sort((x, y) => x.price - y.price);
+      list.sort((x, y) => (x.basePrice ?? x.price ?? 0) - (y.basePrice ?? y.price ?? 0));
     } else if (sort === "price-high") {
-      list.sort((x, y) => y.price - x.price);
+      list.sort((x, y) => (y.basePrice ?? y.price ?? 0) - (x.basePrice ?? x.price ?? 0));
     } else if (sort === "newest") {
-      list.sort((x, y) => new Date(y.date) - new Date(x.date));
+      list.sort((x, y) => new Date(y.date || 0) - new Date(x.date || 0));
     }
 
     render(list);
   }
 
-  ["change", "input"].forEach(evt => {
-    els.filterType.addEventListener(evt, apply);
-    els.filterSteel.addEventListener(evt, apply);
-    els.filterAvailability.addEventListener(evt, apply);
-    els.sortBy.addEventListener(evt, apply);
-    els.search.addEventListener(evt, apply);
-  });
+  function wireFilters() {
+    ["change", "input"].forEach(evt => {
+      els.filterType.addEventListener(evt, apply);
+      els.filterSteel.addEventListener(evt, apply);
+      els.filterAvailability.addEventListener(evt, apply);
+      els.sortBy.addEventListener(evt, apply);
+      els.search.addEventListener(evt, apply);
+    });
+  }
 
-  render(products);
+  async function init() {
+    try {
+      const res = await fetch("./data/products.json", { cache: "no-store" });
+      const data = await res.json();
+      products = Array.isArray(data) ? data : (data.products || []);
+      if (!products.length) {
+        console.warn("products.json loaded but no products found.");
+      }
+      wireFilters();
+      render(products);
+    } catch (err) {
+      console.error("Failed to load ./data/products.json", err);
+      // Fallback to empty state so page doesn’t implode
+      wireFilters();
+      els.grid.innerHTML = `<div class="cart-empty"><p>Products failed to load.</p></div>`;
+    }
+  }
+
+  init();
 </script>
+
 
 </body>
 </html>
