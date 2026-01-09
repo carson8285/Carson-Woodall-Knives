@@ -1,8 +1,22 @@
+/* =========================================================
+   Carson Woodall Knives
+   ---------------------------------------------------------
+   Global stylesheet shared by:
+   index · cart · contact · knives · merch · product
+   Notes:
+   - Global radial background lives on <body>.
+   - Keep section backgrounds transparent unless a page
+     explicitly needs a surface.
+   ========================================================= */
+
+/* =========================
+   Global Base + Background
+   ========================= */
+
 :root {
   --bg-deep: #111111;
 }
 
-/* reset */
 * {
   margin: 0;
   padding: 0;
@@ -15,7 +29,7 @@ body {
   padding: 0;
 }
 
-/* single global background – no seams */
+/* Global site background */
 body {
   min-height: 100vh;
   background: radial-gradient(circle at 50% 10%, #2a2a2a 0, var(--bg-deep) 65%);
@@ -23,68 +37,69 @@ body {
   color: #f5f5f5;
 }
 
-/* all major sections share these basics */
+/* Default scroll behavior */
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+/* =========================
+   Scroll Snap (Home Only)
+   ========================= */
+
+.snap-page {
+  scroll-behavior: smooth;
+}
+
+.snap-page .landing-hero,
+.snap-page .knife-hero,
+.snap-page .shop-section,
+.snap-page .about-section,
+.snap-page .builder-images {
+  scroll-snap-align: center;
+}
+
+.snap-page .footer {
+  scroll-snap-align: end;
+}
+
+.snap-page .builder-images {
+  scroll-snap-stop: always;
+  min-height: 100vh;
+  scroll-margin-top: 80px; /* offsets fixed nav */
+}
+
+/* =========================
+   Shared Section Shells
+   ========================= */
+
 .landing-hero,
 .knife-hero,
-.shop-section {
+.shop-section,
+.about-section {
   width: 100vw;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 80px 24px;
-  box-sizing: border-box;
-  background: transparent;  /* important: no extra background here */
+  background: transparent;
 }
 
-/* SCROLL SNAP */
-
-/* Enable gentle vertical snapping on index only */
-.snap-page {
-  scroll-behavior: smooth;        /* you already had this on html, this is fine here too */
-}
-
-.snap-page .landing-hero,
-.snap-page .knife-hero,
-.snap-page .shop-section,
-.snap-page .about-section {
-  scroll-snap-align: center;
-}
-
-.snap-page .footer {
-  scroll-snap-align: end;   /* only the home footer snaps */
-}
-
-/* SECTION 1 – big logo */
-
-/* HERO SECTION (if you don't already have this) */
+/* =========================
+   Landing Hero (Logo)
+   ========================= */
 
 .landing-hero {
-  width: 100vw;
-  min-height: 100vh;
-
-  display: flex;
-  justify-content: center;   /* horizontal centering */
-  align-items: center;       /* vertical centering */
-
   padding: 0;
-  margin: 0;
-
-  background: transparent;
   position: relative;
 }
 
-
-/* wrapper just for layout */
 .hero-logo-wrap {
   position: relative;
   display: inline-block;
-  margin: 0;
-  padding: 0;
 }
 
-
-/* logo with simple entrance animation */
 .hero-logo {
   max-width: 480px;
   width: 60vw;
@@ -95,27 +110,19 @@ body {
   transform: translateY(24px) scale(0.94);
   animation: hero-logo-enter 0.9s ease-out 0.15s forwards;
 
-  -webkit-transform: translateZ(0);
   transform: translateZ(0);
   will-change: transform, filter;
 }
 
 @keyframes hero-logo-enter {
-  0% {
-    opacity: 0;
-    transform: translateY(24px) scale(0.94);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(0) scale(1.03);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  0% { opacity: 0; transform: translateY(24px) scale(0.94); }
+  60% { opacity: 1; transform: translateY(0) scale(1.03); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* SECTION 2 – header + subheader + knife image */
+/* =========================
+   Knife Hero (Index)
+   ========================= */
 
 .knife-inner {
   width: 100%;
@@ -150,18 +157,13 @@ body {
   filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.8));
 }
 
-/* SECTION 3 – shop grid (updated) */
-
-/* SECTION 3 – SHOP YOUR STYLE (big hero tiles) */
+/* =========================
+   Shop Tiles (Index)
+   ========================= */
 
 .shop-section {
-  width: 100vw;
-  min-height: 100vh;
-  display: flex;
   justify-content: center;
   padding: 80px 24px 100px;
-  box-sizing: border-box;
-  background: transparent;
 }
 
 .shop-inner {
@@ -170,8 +172,6 @@ body {
   display: flex;
   flex-direction: column;
 }
-
-/* heading + subheading sit at the top of the column */
 
 .shop-heading {
   font-size: clamp(26px, 3.4vw, 34px);
@@ -191,20 +191,16 @@ body {
   margin-bottom: 40px;
 }
 
-/* grid fills the rest of the vertical space */
-
 .product-grid {
-  flex: 1;                        /* take remaining height in section */
+  flex: 1;
   display: flex;
   gap: 32px;
   justify-content: center;
   align-items: stretch;
 }
 
-/* BIG tiles: think future animated SVGs */
-
 .product-card {
-  flex: 1 1 0;                    /* three equal columns */
+  flex: 1 1 0;
   border-radius: 18px;
   overflow: hidden;
   background: #050505;
@@ -214,8 +210,7 @@ body {
   align-items: center;
   justify-content: center;
 
-  min-height: 320px;              /* floor for short screens */
-  /* for tall screens the flex:1 + section min-height will stretch them */
+  min-height: 320px;
 }
 
 .product-image {
@@ -224,50 +219,12 @@ body {
   object-fit: cover;
 }
 
-/* ── Responsive tweaks ── */
-
-@media (max-width: 1024px) {
-  .product-grid {
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .product-card {
-    min-height: 260px;
-  }
-}
-
-@media (max-width: 600px) {
-  .shop-section {
-    padding: 64px 20px 80px;
-  }
-
-  .shop-heading {
-    font-size: 22px;
-    letter-spacing: 0.18em;
-  }
-
-  .shop-subheading {
-    font-size: 12px;
-    margin-bottom: 32px;
-  }
-
-  .product-card {
-    min-height: 220px;
-  }
-}
-
-/* SECTION 4 – ABOUT / THE MAKER */
+/* =========================
+   About (Index)
+   ========================= */
 
 .about-section {
-  width: 100vw;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 80px 24px 100px;
-  box-sizing: border-box;
-  background: transparent; /* keep background seamless */
 }
 
 .about-inner {
@@ -313,25 +270,9 @@ body {
   color: #b3b3b3;
 }
 
-/* mobile tweaks */
-@media (max-width: 600px) {
-  .about-body {
-    font-size: 13px;
-  }
-
-  .about-heading {
-    font-size: 22px;
-    letter-spacing: 0.16em;
-  }
-
-  .about-kicker {
-    font-size: 11px;
-  }
-}
-
-/* ─────────────────────────────── */
-/* FOOTER                          */
-/* ─────────────────────────────── */
+/* =========================
+   Footer
+   ========================= */
 
 .section-divider {
   width: 100%;
@@ -349,7 +290,7 @@ body {
   padding: 80px 24px 72px;
   display: flex;
   justify-content: center;
-  background: transparent; /* keeps your global radial bg */
+  background: transparent;
 }
 
 .footer-inner {
@@ -357,8 +298,6 @@ body {
   max-width: 960px;
   color: #e0e0e0;
 }
-
-/* TOP: newsletter */
 
 .footer-newsletter {
   text-align: center;
@@ -415,8 +354,6 @@ body {
   background: #ffffff;
 }
 
-/* MIDDLE: nav · logo · socials */
-
 .footer-main {
   display: flex;
   align-items: center;
@@ -425,7 +362,6 @@ body {
   margin-bottom: 40px;
 }
 
-/* left vertical nav */
 .footer-nav {
   display: flex;
   flex-direction: column;
@@ -444,7 +380,6 @@ body {
   color: #ffffff;
 }
 
-/* center logo */
 .footer-logo-link {
   display: inline-flex;
   align-items: center;
@@ -452,11 +387,10 @@ body {
 }
 
 .footer-logo {
-  width: 150px;   /* tweak if you want larger */
+  width: 150px;
   height: auto;
 }
 
-/* right socials */
 .footer-social {
   display: flex;
   align-items: center;
@@ -482,8 +416,6 @@ body {
   background: rgba(255, 255, 255, 0.16);
 }
 
-/* BOTTOM: copyright */
-
 .footer-copy {
   text-align: center;
   font-size: 11px;
@@ -492,57 +424,9 @@ body {
   color: #9b9b9b;
 }
 
-/* ── responsive tweaks ── */
-
-@media (max-width: 768px) {
-  .footer-newsletter-form {
-    flex-direction: column;
-  }
-
-  .footer-newsletter-form button {
-    width: 100%;
-    padding: 12px 18px;
-  }
-
-  .footer-main {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .footer-nav {
-    align-items: center;
-  }
-
-  .footer-social {
-    justify-content: center;
-  }
-}
-
-/* mobile adjustments */
-/* Fix footer logo size on mobile */
-@media (max-width: 700px) {
-  .footer-logo {
-    width: 120px;     /* sweet spot */
-    height: auto;
-  }
-}
-
-  .footer-wordmark {
-    font-size: 10px;
-  }
-  .footer-copy {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-  }
-
-/* smooth scroll */
-html {
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-}
-
-/* NAV BAR – base layout (collapsed state matches your first screenshot) */
+/* =========================
+   Navigation
+   ========================= */
 
 .nav-bar {
   position: fixed;
@@ -554,7 +438,7 @@ html {
   padding: 50px;
   display: flex;
   align-items: center;
-  justify-content: center;   /* <-- center the middle group */
+  justify-content: center;
 
   background: transparent;
   backdrop-filter: none;
@@ -569,29 +453,24 @@ html {
     padding 0.25s ease;
 }
 
-
-/* LEFT: logo link (scorpion + text) */
-
 .nav-left {
   position: absolute;
-  left: 25px;                 /* matches your padding */
+  left: 25px;
   top: 0;
   bottom: 0;
 
   display: flex;
   align-items: center;
-  gap: 0;
   text-decoration: none;
 }
 
-/* scorpion: hidden when collapsed */
 .nav-logo-scorpion {
-  width: 0;                 /* collapsed: takes NO space */
+  width: 0;
   margin-right: 0;
   height: auto;
   display: block;
   opacity: 0;
-  overflow: hidden;         /* hides anything while width is 0 */
+  overflow: hidden;
 
   transition:
     width 0.25s ease,
@@ -599,15 +478,11 @@ html {
     opacity 0.25s ease;
 }
 
-
-/* text logo SVG: always visible */
 .nav-logo-textimg {
-  height: 40px;        /* tune until it matches what you had */
+  height: 40px;
   width: auto;
   display: block;
 }
-
-/* CENTER: nav links – hidden when collapsed */
 
 .nav-links {
   display: flex;
@@ -622,9 +497,7 @@ html {
   opacity: 0;
   pointer-events: none;
   transform: translateY(-6px);
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .nav-links a {
@@ -636,11 +509,9 @@ html {
   opacity: 0.8;
 }
 
-/* RIGHT: cart + menu */
-
 .nav-right {
   position: absolute;
-  right: 32px;                /* matches your padding */
+  right: 32px;
   top: 0;
   bottom: 0;
 
@@ -660,82 +531,44 @@ html {
   cursor: pointer;
 }
 
-/* cart: hidden when collapsed */
-.nav-cart-btn img {
-  width: 40px;
-  height: auto;
-}
+.nav-cart-btn img { width: 40px; height: auto; }
+.nav-menu-btn img { width: 60px; height: auto; }
 
 .nav-cart-btn {
   opacity: 0;
   pointer-events: none;
   transform: translateX(8px);
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
-
-.nav-menu-btn img {
-  width: 60px;
-  height: auto;
-}
-
-
-/* ───── EXPANDED STATE (after clicking menu) ───── */
 
 .nav-bar.nav-bar--open {
   padding-left: 32px;
   padding-right: 32px;
-  backdrop-filter: blur(14px);        /* frosted glass effect */
+  backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border-bottom: none; /* remove any hint of a line */
 }
 
-
-/* show scorpion */
 .nav-bar.nav-bar--open .nav-logo-scorpion {
-  width: 60px;          /* whatever size matches your Figma */
-  margin-right: 12px;   /* spacing between scorpion and text logo */
+  width: 60px;
+  margin-right: 12px;
   opacity: 1;
 }
 
-
-/* show links */
 .nav-bar.nav-bar--open .nav-links {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
 }
 
-/* show cart */
 .nav-bar.nav-bar--open .nav-cart-btn {
   opacity: 1;
   pointer-events: auto;
   transform: translateX(0);
 }
 
-/* responsive tweaks – fine-tune later */
-
-@media (max-width: 900px) {
-  .nav-links {
-    gap: 40px;
-    font-size: 14px;
-  }
-
-  .nav-logo-textimg {
-    height: 28px;
-  }
-}
-
-@media (max-width: 700px) {
-  .nav-links {
-    display: none; /* later we can build a mobile drawer menu */
-  }
-}
-
-/* CONTACT PAGE */
-
-/* CONTACT PAGE */
+/* =========================
+   Contact Page
+   ========================= */
 
 .contact-section {
   width: 100vw;
@@ -769,7 +602,6 @@ html {
   margin-bottom: 48px;
 }
 
-/* form */
 .contact-form {
   display: flex;
   flex-direction: column;
@@ -817,7 +649,7 @@ html {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .contact-submit:hover {
@@ -832,29 +664,30 @@ html {
   margin-top: 12px;
 }
 
-/* SHOP PAGE */
-
-/* SHOP PAGE */
+/* =========================
+   Shop Listing Pages
+   (Knives / Merch)
+   ========================= */
 
 .shop-page {
   width: 100vw;
   min-height: 100vh;
 }
 
-/* FILTER BAR (for knives/merch listing pages) */
 .filters-bar {
   display: flex;
   justify-content: space-between;
   gap: 18px;
   flex-wrap: wrap;
   margin: 18px 0 28px;
-  padding: 14px 14px;
+  padding: 14px;
   border-radius: 12px;
   background: rgba(0,0,0,0.28);
   border: 1px solid rgba(255,255,255,0.08);
 }
 
-.filters-left, .filters-right {
+.filters-left,
+.filters-right {
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
@@ -870,7 +703,8 @@ html {
   margin-bottom: 8px;
 }
 
-.filter select, .filter input {
+.filter select,
+.filter input {
   min-width: 170px;
   padding: 10px 12px;
   border-radius: 8px;
@@ -882,18 +716,10 @@ html {
 
 .filter.search input { min-width: 220px; }
 
-/* LISTING GRID */
 .listing-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
-}
-
-@media (max-width: 1024px) {
-  .listing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 700px) {
-  .listing-grid { grid-template-columns: 1fr; }
 }
 
 .listing-card {
@@ -961,11 +787,9 @@ html {
   opacity: 0.92;
 }
 
-/* hero */
-
 .shop-page-hero {
   width: 100%;
-  padding: 120px 24px 40px;  /* top padding clears fixed nav */
+  padding: 120px 24px 40px;
   display: flex;
   justify-content: center;
 }
@@ -991,8 +815,6 @@ html {
   color: #b3b3b3;
 }
 
-/* category grid section */
-
 .shop-page-categories {
   width: 100%;
   padding: 24px 24px 120px;
@@ -1004,9 +826,6 @@ html {
   width: 100%;
   max-width: 1080px;
 }
-
-/* reuse .product-grid / .product-card / .product-image from home,
-   but add label and hover interaction */
 
 .shop-category-card {
   position: relative;
@@ -1039,20 +858,18 @@ html {
   border-radius: 999px;
 }
 
-/* CART PAGE */
-
-/* CART PAGE */
+/* =========================
+   Cart Page
+   ========================= */
 
 .cart-page {
   width: 100vw;
   min-height: 100vh;
 }
 
-/* header */
-
 .cart-hero {
   width: 100%;
-  padding: 120px 24px 24px; /* clear fixed nav */
+  padding: 120px 24px 24px;
   display: flex;
   justify-content: center;
 }
@@ -1078,8 +895,6 @@ html {
   color: #b3b3b3;
 }
 
-/* layout */
-
 .cart-content {
   width: 100%;
   padding: 16px 24px 120px;
@@ -1095,15 +910,11 @@ html {
   gap: 32px;
 }
 
-/* LEFT: items */
-
 .cart-items {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
-
-/* empty state */
 
 .cart-empty {
   padding: 32px 24px;
@@ -1135,8 +946,6 @@ html {
 .cart-empty-cta:hover {
   border-color: rgba(255, 255, 255, 0.3);
 }
-
-/* example item structure (for future use) */
 
 .cart-item {
   padding: 18px 16px;
@@ -1219,8 +1028,6 @@ html {
   text-transform: uppercase;
 }
 
-/* RIGHT: summary */
-
 .cart-summary {
   padding: 22px 20px;
   border-radius: 12px;
@@ -1278,67 +1085,10 @@ html {
   color: #9b9b9b;
 }
 
-/* responsive */
+/* =========================
+   Product Page (Layout + UI)
+   ========================= */
 
-@media (max-width: 900px) {
-  .cart-inner {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .cart-summary {
-    max-width: 420px;
-    margin: 0 auto;
-  }
-}
-
-/* PRODUCT PAGE */
-/* GENERAL STYLES */
-body {
-  margin: 0;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  background-color: #0a0a0a;
-  color: #eee;
-  line-height: 1.6;
-}
-
-/* HERO SECTION */
-.hero {
-  position: relative;
-  height: 60vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.hero-image {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
-  filter: brightness(0.45);
-}
-
-.hero-overlay {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 0 2rem;
-}
-
-.hero h1 {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  margin-bottom: 0.5rem;
-  letter-spacing: 0.05em;
-}
-
-.hero .tagline {
-  font-size: 1.25rem;
-  opacity: 0.8;
-}
-
-/* PRODUCT GALLERY */
 .product-gallery {
   display: flex;
   flex-wrap: wrap;
@@ -1403,475 +1153,7 @@ body {
   color: #eee;
 }
 
-/* SPECIFICATIONS */
-.specs {
-  padding: 4rem 10vw;
-}
-
-.specs h2 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.spec-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem 3rem;
-}
-
-.spec-grid div {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  padding-bottom: 0.25rem;
-}
-
-/* MAKER'S STORY */
-.story {
-  padding: 4rem 12vw;
-  text-align: center;
-}
-
-.story h2 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-}
-
-.story p {
-  max-width: 700px;
-  margin: 0 auto;
-  opacity: 0.9;
-  font-size: 1.1rem;
-}
-
-/* RELATED KNIVES */
-.related {
-  padding: 4rem 10vw;
-  text-align: center;
-}
-
-.related h2 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-}
-
-.related-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
-}
-
-.related-grid img {
-  width: 100%;
-  object-fit: cover;
-  border-radius: 4px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
-  transition: transform 0.3s;
-}
-
-.related-grid img:hover {
-  transform: scale(1.03);
-}
-
-/* MOBILE NAV: header expands downward (no overlay) */
-@media (max-width: 700px) {
-  .nav-bar {
-    height: auto;
-    padding: 14px 16px;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;              /* allows links row to wrap below */
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    background: transparent;
-  }
-
-  /* stop absolute positioning so the header can grow */
-  .nav-left,
-  .nav-right {
-    position: static;
-    top: auto; bottom: auto; left: auto; right: auto;
-  }
-
-  /* keep cart visible on mobile */
-  .nav-cart-btn {
-    opacity: 1;
-    pointer-events: auto;
-    transform: none;
-  }
-
-  /* the dropdown area (but it's not overlay, it lives in the header) */
-  .nav-links {
-    width: 100%;
-    order: 3;                     /* forces it below logos/buttons */
-    display: none;                /* closed by default */
-    flex-direction: column;
-    gap: 10px;
-    padding: 12px 0 6px;
-    opacity: 1;
-    pointer-events: auto;
-    transform: none;
-  }
-
-  .nav-bar.nav-bar--open .nav-links {
-    display: flex;
-  }
-
-  .nav-links a {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 12px 10px;
-    border-radius: 12px;
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.10);
-  }
-
-  /* optional: reduce logo sizes a touch */
-  .nav-logo-textimg { height: 28px; }
-  .nav-menu-btn img { width: 54px; }
-  .nav-cart-btn img { width: 36px; }
-}
-
-/* Disable scroll snap on mobile */
-@media (max-width: 700px) {
-  html, body {
-    scroll-snap-type: none !important;
-  }
-@media (max-width: 700px) {
-  html { scroll-behavior: auto !important; }
-}
-  /* In case any sections have snap alignment set */
-  .snap-page .landing-hero,
-  .snap-page .knife-hero,
-  .snap-page .shop-section,
-  .snap-page .about-section,
-  .snap-page .footer {
-    scroll-snap-align: none !important;
-  }
-}
-
-/* Treat phone-landscape as mobile (prevents desktop nav squish) */
-@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
-  .nav-bar {
-    height: auto;
-    padding: 12px 14px;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-
-    background: transparent;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-  }
-
-  .nav-left,
-  .nav-right {
-    position: static;
-  }
-
-  .nav-cart-btn {
-    opacity: 1;
-    pointer-events: auto;
-    transform: none;
-  }
-
-  .nav-links {
-    width: 100%;
-    order: 3;
-    display: none;
-    flex-direction: column;
-    gap: 10px;
-    padding: 12px 0 4px;
-
-    opacity: 1;
-    pointer-events: auto;
-    transform: none;
-  }
-
-  .nav-bar.nav-bar--open .nav-links {
-    display: flex;
-  }
-
-  .nav-links a {
-    width: 100%;
-    text-align: center;
-    padding: 12px 10px;
-    border-radius: 12px;
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.12);
-  }
-
-  .nav-logo-textimg { height: 24px; }
-  .nav-menu-btn img { width: 46px; }
-  .nav-cart-btn img { width: 32px; }
-}
-
-/* Hero logo sizing + centering for phone landscape */
-@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
-  .landing-hero {
-    min-height: 100vh;
-    padding-top: 84px;   /* gives space for fixed nav */
-    align-items: center;
-    justify-content: center;
-  }
-
-  .hero-logo {
-    width: auto;
-    height: min(52vh, 320px); /* cap by height */
-    max-width: 80vw;
-    margin: 0 auto;
-    display: block;
-  }
-}
-
-@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
-  html, body { scroll-snap-type: none !important; }
-  html { scroll-behavior: auto !important; }
-}
-
-/* Phone landscape: make the scorpion readable when menu is open */
-@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
-  .nav-bar.nav-bar--open .nav-logo-scorpion {
-    width: 44px;        /* bump up from “tiny” */
-    margin-right: 10px;
-    opacity: 1;
-  }
-}
-
-/* ===== WRAPPER ===== */
-.builder-images{
-  width: 100vw;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* ===== TWO-COLUMN LAYOUT ===== */
-.builder-images__inner{
-  width: 100%;
-  max-width: 1400px;
-  min-height: 100vh;
-
-  display: grid;
-  grid-template-columns: 1fr 420px; /* knife | sidebar */
-}
-
-/* ===== LEFT: KNIFE ===== */
-.builder-knife{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.builder-knife img{
-  width: 100%;
-  max-width: 800px;
-  height: auto;
-  display: block;
-}
-
-/* ===== RIGHT: SIDEBAR ===== */
-.builder-sidebar{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.builder-sidebar img{
-  height: 90vh;       /* KEY: fits screen height */
-  width: auto;        /* prevents stretching */
-  max-width: 100%;
-  display: block;
-}
-
-/* ===== MOBILE: STACK ===== */
-@media (max-width: 900px){
-  .builder-images__inner{
-    grid-template-columns: 1fr;
-  }
-
-  .builder-sidebar img{
-    height: auto;
-    max-height: 80vh;
-    width: auto;
-  }
-}
-/* ===== LEFT COLUMN STACK ===== */
-.builder-left{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 64px 48px;
-}
-
-/* ===== TEXT ===== */
-/* LEFT COLUMN STACK */
-.builder-left{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 80px 64px;           /* matches your section padding vibe */
-}
-
-/* TEXT: align with knife column */
-.builder-text{
-  max-width: 640px;             /* wider so it lines up with knife scale */
-  margin-bottom: 28px;          /* less floaty */
-}
-
-/* Header: matches your site headings */
-.builder-text__h{
-  font-size: clamp(24px, 3.4vw, 34px);
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  margin: 0 0 12px;
-}
-
-/* Subheader: matches your site subheading treatment */
-.builder-text__p{
-  font-size: 13px;
-  line-height: 1.8;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.65);
-  margin: 0;
-}
-@media (max-width: 900px){
-  .builder-left{
-    padding: 64px 20px 24px;
-  }
-  .builder-text{
-    margin-bottom: 22px;
-  }
-}
-/* KNIFE BUILDER CTA */
-.builder-cta{
-  margin-top: 28px;
-  align-self: flex-start;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  height: 48px;
-  padding: 0 26px;
-
-  border-radius: 8px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
-
-  color: rgba(255,255,255,0.9);
-  text-decoration: none;
-
-  font-size: 12px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-.builder-cta:hover{
-  background: rgba(255,255,255,0.14);
-  border-color: rgba(255,255,255,0.32);
-}
-@media (max-width: 900px){
-  .builder-cta{
-    align-self: center;
-    margin-top: 22px;
-  }
-}
-.builder-sidebar img{
-  filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
-}
-
-.builder-knife img{
-  filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
-}
-/* 1) Make the promo section a snap target (desktop) */
-.snap-page .builder-images{
-  scroll-snap-align: center;   /* or start, see note below */
-  scroll-snap-stop: always;    /* prevents “skipping past” */
-  min-height: 100vh;           /* important for consistent snapping */
-}
-
-/* 2) If you have a fixed nav, prevent snap landing under it */
-.snap-page .builder-images{
-  scroll-margin-top: 80px;     /* adjust to your nav height */
-}
-/* DESKTOP: section is exactly one viewport tall */
-@media (min-width: 1024px){
-  .builder-images{
-    height: 100vh;
-    min-height: 100vh;
-    overflow: hidden; /* prevents accidental overflow */
-  }
-
-  .builder-images__inner{
-    height: 100%;
-    min-height: 0;
-    align-items: center;
-  }
-}
-@media (min-width: 1024px){
-  .builder-left{
-    height: 100%;
-    padding: 64px 64px;
-    display: grid;
-    grid-template-rows: auto auto 1fr auto;
-    align-content: center;
-  }
-}
-@media (min-width: 1024px){
-  .builder-knife img{
-    max-height: 45\\vh;   /* 👈 adjust between 40–50vh if needed */
-    width: auto;
-    padding: 60px 0;
-  }
-}
-@media (min-width: 1024px){
-  .builder-sidebar img{
-    height: auto;
-  }
-}
-
-@media (min-width: 1024px){
-
-  /* give the sidebar more real estate */
-  .builder-images__inner{
-    grid-template-columns: 1fr 520px; /* was 420px */
-  }
-
-  /* sidebar column fills height */
-  .builder-sidebar{
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* use a frame so the image can scale UP to be readable */
-  .builder-sidebar{
-    padding: 24px;
-  }
-
-  .builder-sidebar img{
-    height: 82vh;       /* readable */
-    width: auto;
-    max-width: 100%;
-    display: block;
-  }
-}
-@media (max-width: 900px){
-  .builder-knife{
-    padding: 75px 0;
-  }
-}
-/* ===== PRODUCT GALLERY (carousel) ===== */
-
+/* Product gallery carousel */
 .gallery {
   display: flex;
   flex-direction: column;
@@ -1948,7 +1230,6 @@ body {
   border-color: rgba(255,255,255,0.35);
 }
 
-/* mini price breakdown */
 .mini-specs {
   margin-top: -6px;
   padding-top: 6px;
@@ -1966,3 +1247,362 @@ body {
   color: rgba(255,255,255,0.78);
 }
 
+/* =========================
+   Builder Promo Section
+   ========================= */
+
+.builder-images {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.builder-images__inner {
+  width: 100%;
+  max-width: 1400px;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 520px;
+}
+
+.builder-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 64px;
+}
+
+.builder-text {
+  max-width: 640px;
+  margin-bottom: 28px;
+}
+
+.builder-text__h {
+  font-size: clamp(24px, 3.4vw, 34px);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+
+.builder-text__p {
+  font-size: 13px;
+  line-height: 1.8;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  margin: 0;
+}
+
+.builder-cta {
+  margin-top: 28px;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 26px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.builder-cta:hover {
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.32);
+}
+
+.builder-knife,
+.builder-sidebar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.builder-knife img {
+  width: auto;
+  max-width: 800px;
+  height: auto;
+  display: block;
+  padding: 60px 0;
+  max-height: 45vh;
+  filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
+}
+
+.builder-sidebar {
+  height: 100%;
+  padding: 24px;
+}
+
+.builder-sidebar img {
+  height: 82vh;
+  width: auto;
+  max-width: 100%;
+  display: block;
+  filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
+}
+
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 1024px) {
+  .product-grid {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .product-card {
+    min-height: 260px;
+  }
+
+  .listing-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav-links {
+    gap: 40px;
+    font-size: 14px;
+  }
+
+  .nav-logo-textimg {
+    height: 28px;
+  }
+
+  .cart-inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cart-summary {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .builder-images__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-left {
+    padding: 64px 20px 24px;
+  }
+
+  .builder-text {
+    margin-bottom: 22px;
+  }
+
+  .builder-cta {
+    align-self: center;
+    margin-top: 22px;
+  }
+
+  .builder-sidebar img {
+    height: auto;
+    max-height: 80vh;
+    width: auto;
+  }
+
+  .builder-knife {
+    padding: 75px 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .footer-logo {
+    width: 120px;
+  }
+
+  .listing-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Mobile nav becomes stacked */
+  .nav-bar {
+    height: auto;
+    padding: 14px 16px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: transparent;
+  }
+
+  .nav-left,
+  .nav-right {
+    position: static;
+  }
+
+  .nav-cart-btn {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .nav-links {
+    width: 100%;
+    order: 3;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 0 6px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .nav-bar.nav-bar--open .nav-links {
+    display: flex;
+  }
+
+  .nav-links a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 12px 10px;
+    border-radius: 12px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+
+  /* Disable snap on mobile */
+  html,
+  body {
+    scroll-snap-type: none !important;
+  }
+
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  .snap-page .landing-hero,
+  .snap-page .knife-hero,
+  .snap-page .shop-section,
+  .snap-page .about-section,
+  .snap-page .footer,
+  .snap-page .builder-images {
+    scroll-snap-align: none !important;
+  }
+
+  /* Shop section tweaks */
+  .shop-section {
+    padding: 64px 20px 80px;
+  }
+
+  .shop-heading {
+    font-size: 22px;
+    letter-spacing: 0.18em;
+  }
+
+  .shop-subheading {
+    font-size: 12px;
+    margin-bottom: 32px;
+  }
+
+  .product-card {
+    min-height: 220px;
+  }
+
+  /* About tweaks */
+  .about-body {
+    font-size: 13px;
+  }
+
+  .about-heading {
+    font-size: 22px;
+    letter-spacing: 0.16em;
+  }
+
+  .about-kicker {
+    font-size: 11px;
+  }
+}
+
+/* Treat phone landscape as mobile */
+@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+  html,
+  body { scroll-snap-type: none !important; }
+
+  html { scroll-behavior: auto !important; }
+
+  .nav-bar {
+    height: auto;
+    padding: 12px 14px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    background: transparent;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .nav-left,
+  .nav-right {
+    position: static;
+  }
+
+  .nav-cart-btn {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .nav-links {
+    width: 100%;
+    order: 3;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 0 4px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .nav-bar.nav-bar--open .nav-links {
+    display: flex;
+  }
+
+  .nav-links a {
+    width: 100%;
+    text-align: center;
+    padding: 12px 10px;
+    border-radius: 12px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .nav-logo-textimg { height: 24px; }
+  .nav-menu-btn img { width: 46px; }
+  .nav-cart-btn img { width: 32px; }
+
+  .nav-bar.nav-bar--open .nav-logo-scorpion {
+    width: 44px;
+    margin-right: 10px;
+    opacity: 1;
+  }
+
+  .landing-hero {
+    min-height: 100vh;
+    padding-top: 84px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-logo {
+    width: auto;
+    height: min(52vh, 320px);
+    max-width: 80vw;
+    margin: 0 auto;
+    display: block;
+  }
+}
