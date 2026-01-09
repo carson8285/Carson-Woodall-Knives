@@ -1608,63 +1608,30 @@ html {
 }
 
 /* =========================================================
-   Builder Promo: Mobile Overflow Fix
+   Builder Promo: Mobile Image Scaling (no stretch)
    ========================================================= */
 
-/* 1) Never let the promo section exceed the viewport */
-.builder-images,
-.builder-images__inner {
-  width: 100%;
-  max-width: 100%;
-}
-
-/* 2) Prevent grid items from forcing the grid wider */
-.builder-images__inner > * {
-  min-width: 0; /* critical for grid overflow bugs */
-}
-
-/* 3) Clamp images so they can't push past the screen */
-.builder-knife img,
-.builder-sidebar img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* 4) Mobile: force a true single-column layout and remove width pressure */
 @media (max-width: 900px) {
-  .builder-images {
-    overflow-x: hidden; /* belt */
-  }
+  /* Make sure the grid items can shrink */
+  .builder-images__inner > * { min-width: 0; }
 
-  .builder-images__inner {
-    grid-template-columns: 1fr;
-    min-height: auto;
-    overflow-x: hidden; /* suspenders */
-  }
-
-  /* Reduce padding to avoid hidden width expansion */
-  .builder-left {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  /* Ensure the sidebar image doesn't keep its old "readable" scaling rules */
-  .builder-sidebar {
-    padding: 18px;
-  }
-
+  /* Kill any inherited fixed-height behavior on mobile */
+  .builder-knife img,
   .builder-sidebar img {
-    width: 100%;
-    max-width: 520px;   /* keeps it readable without blowing out */
-    height: auto;
-    max-height: 70vh;
+    width: auto;          /* key: don't force width */
+    height: auto;         /* key: don't force height */
+    max-width: 100%;      /* clamp to screen */
+    max-height: 70vh;     /* clamp to screen height */
+    object-fit: contain;  /* never crop, never distort */
+    display: block;
+    margin: 0 auto;       /* keep centered */
   }
 
-  .builder-knife img {
-    width: 100%;
-    max-width: 560px;
-    height: auto;
-    max-height: 50vh;
-    padding: 28px 0;
-  }
+  /* Optional: separate them with breathing room */
+  .builder-knife { padding: 28px 0 10px; }
+  .builder-sidebar { padding: 10px 0 28px; }
+}
+
+@media (max-width: 900px) {
+  .builder-sidebar img { max-height: 82vh; }
 }
