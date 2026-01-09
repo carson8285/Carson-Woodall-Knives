@@ -1716,3 +1716,20 @@ html {
     flex: 0 0 auto;
   }
 }
+/* Footer alignment fix (desktop + mobile-safe) */
+.footer-inner{
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;           /* critical: keeps content centered */
+}
+
+.footer-main{
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 40px;
+}
+
+.footer-nav{ justify-self: start; }
+.footer-logo-link{ justify-self: center; }
+.footer-social{ justify-self: end; }
