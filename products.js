@@ -7,7 +7,7 @@
 */
 
 (() => {
-  const PRODUCTS_JSON_URL = "/data/products.json"; // root-safe
+  const PRODUCTS_JSON_URL = "./data/products.json"; // root-safe
 
   const els = {
     root: document.getElementById("productRoot"),
