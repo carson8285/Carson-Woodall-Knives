@@ -7,6 +7,41 @@ let state = {
   options: {}
 };
 
+// ---- Simple local cart (localStorage) ----
+const CART_KEY = "cwk_cart";
+
+function loadCart() {
+  try {
+    const raw = localStorage.getItem(CART_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveCart(cart) {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+}
+
+function addCartItem(item) {
+  const cart = loadCart();
+
+  const existing = cart.find(
+    (entry) =>
+      entry.productId === item.productId &&
+      JSON.stringify(entry.selection) === JSON.stringify(item.selection)
+  );
+
+  if (existing) {
+    existing.quantity += item.quantity;
+  } else {
+    cart.push(item);
+  }
+
+  saveCart(cart);
+}
+// -----------------------------------------
+
 const els = {
   category: document.getElementById('categorySelect'),
   knife: document.getElementById('knifeSelect'),
@@ -201,21 +236,30 @@ async function applyConfig(token = ++loadToken) {
 
 els.addToCart.onclick = () => {
   const knifeData = catalog.categories[state.category].knives[state.knife];
+  if (!knifeData) return;
 
+  // 1) Calculate total price (same as before)
   let total = knifeData.basePrice;
   for (const key in state.options) {
     total += knifeData.options[key][state.options[key]].price;
   }
 
+  // 2) Get current primary model URL (nice to keep, even if cart doesn't use it yet)
   const { primary } = resolveModelUrls();
 
-  const payload = {
-    knife: state.knife,
-    category: state.category,
-    options: { ...state.options },
-    price: total,
+  // 3) Build a cart item in the SAME SHAPE as the product page
+  const item = {
+    productId: `builder:${state.category}:${state.knife}`,
+    title: knifeData.label || "Custom Knife",
+    selection: { ...state.options }, // { handle, filework, finish }
+    quantity: 1,
+    unitPrice: total,
+    image: "./productimages/knifebuilderscreenshot.png", // shows correctly on cart.html
+    source: "builder",
     modelUrl: primary
   };
 
-  console.log('Add to cart payload:', payload);
+  // 4) Save to cwk_cart and go to the real cart page
+  addCartItem(item);
+  window.location.href = "../cart.html";
 };

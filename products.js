@@ -9,6 +9,43 @@
 (() => {
   const PRODUCTS_JSON_URL = "./data/products.json"; // root-safe
 
+  // ---- Simple local cart (localStorage) ----
+  const CART_KEY = "cwk_cart";
+
+  function loadCart() {
+    try {
+      const raw = localStorage.getItem(CART_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveCart(cart) {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  }
+
+  function addCartItem(item) {
+    const cart = loadCart();
+
+    const existing = cart.find(
+      (entry) =>
+        entry.productId === item.productId &&
+        entry.selection?.steel === item.selection?.steel &&
+        entry.selection?.finish === item.selection?.finish &&
+        entry.selection?.handle === item.selection?.handle
+    );
+
+    if (existing) {
+      existing.quantity += item.quantity;
+    } else {
+      cart.push(item);
+    }
+
+    saveCart(cart);
+  }
+  // ------------------------------------------
+
   const els = {
     root: document.getElementById("productRoot"),
     mainImg: document.getElementById("productMainImage"),
@@ -21,6 +58,7 @@
     handle: document.getElementById("handleSelect"),
     addToCart: document.getElementById("addToCartBtn"),
   };
+
 
   // If this script is loaded on a page without the product DOM, do nothing.
   if (!els.root || !els.mainImg || !els.thumbs || !els.steel || !els.finish || !els.handle) return;
@@ -299,18 +337,36 @@
       renderPriceAndBreakdown();
     });
 
-    // Add to cart (placeholder)
-    els.addToCart?.addEventListener("click", () => {
-      const payload = {
-        id: product.id,
+    // Add to cart → store in localStorage and go to cart.html
+    els.addToCart?.addEventListener("click", (e) => {
+      if (!product) return;
+
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      const images = safeArr(product.images);
+      const variantIdx = indexForSelection(state.sel);
+
+      const image =
+        images[variantIdx ?? state.imgIndex] ||
+        images[state.imgIndex] ||
+        images[0] ||
+        "./productimages/noimage.png";
+
+      const item = {
+        productId: product.id,
         title: product.title,
-        basePrice: Number(product.basePrice) || 0,
-        selections: { ...state.sel },
-        total: calcTotal(),
-        imgIndex: state.imgIndex,
-        image: safeArr(product.images)[state.imgIndex],
+        selection: { ...state.sel },   // { steel, finish, handle }
+        quantity: 1,
+        unitPrice: calcTotal(),
+        image,
+        source: "product",
       };
-      console.log("ADD TO CART:", payload);
+
+      addCartItem(item);
+      window.location.href = "./cart.html";
     });
 
     // Keyboard nav
