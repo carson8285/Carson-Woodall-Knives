@@ -123,8 +123,7 @@
 
   if (checkoutBtn) {
     checkoutBtn.addEventListener("click", () => {
-      alert("Checkout not wired yet, but your cart data is live.");
-      console.log("cwk_cart:", loadCart());
+      window.location.href = "./checkout.html";
     });
   }
 

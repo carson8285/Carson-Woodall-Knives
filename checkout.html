@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cart | Carson Woodall Knives</title>
+  <title>Checkout | Carson Woodall Knives</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body id="top">
-  <!-- HEADER / NAV -->
+  <!-- HEADER / NAV (same pattern as cart/index) -->
   <header class="nav-bar">
-    <!-- LEFT: logo (scorpion + text, both SVGs) -->
     <a href="index.html#top" class="nav-left nav-logo-btn">
       <img
         src="./productimages/notxtlogowhite.svg"
@@ -24,16 +23,13 @@
       />
     </a>
 
-    <!-- CENTER: links -->
     <nav class="nav-links" aria-label="Main navigation">
-      <!-- On cart we link back to the real pages/sections -->
       <a href="./shop.html">SHOP</a>
       <a href="index.html#about">ABOUT</a>
       <a href="./contact.html">CONTACT</a>
       <a href="./builder/index.html">KNIFE BUILDER</a>
     </nav>
 
-    <!-- RIGHT: cart + menu -->
     <div class="nav-right">
       <a href="./cart.html" class="nav-cart-btn" aria-label="Cart">
         <img src="./productimages/shopping-cart.svg" alt="cart" />
@@ -46,70 +42,112 @@
   </header>
 
   <main class="cart-page">
-
-    <!-- CART HEADER -->
+    <!-- CHECKOUT HEADER -->
     <section class="cart-hero">
       <div class="cart-hero-inner">
-        <h1 class="cart-heading">YOUR CART</h1>
+        <h1 class="cart-heading">CHECKOUT</h1>
         <p class="cart-subheading">
-          Review your selection before checkout.
+          Enter your shipping details to finalize your order.
         </p>
       </div>
     </section>
 
-    <!-- CART CONTENT -->
+    <!-- CHECKOUT CONTENT -->
     <section class="cart-content">
       <div class="cart-inner">
 
-        <!-- LEFT: items -->
-        <div class="cart-items">
-          <!-- Empty state – cart.js will hide this when there are items -->
-          <div class="cart-empty">
-            <p>Your cart is currently empty.</p>
-            <a href="shop.html" class="cart-empty-cta">
-              RETURN TO SHOP
-            </a>
-          </div>
+        <!-- LEFT: Shipping form -->
+        <div class="cart-main checkout-main">
+          <h2 class="checkout-title">Shipping details</h2>
+          <p class="checkout-subtitle">
+            I’ll confirm your order and provide timelines before any payment is captured.
+          </p>
+
+          <form id="checkoutForm" class="contact-form checkout-form">
+            <div class="form-field">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" name="fullName" required />
+            </div>
+
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+
+            <div class="form-field">
+              <label for="phone">Phone (optional)</label>
+              <input type="tel" id="phone" name="phone" />
+            </div>
+
+            <div class="form-field">
+              <label for="address1">Address Line 1</label>
+              <input type="text" id="address1" name="address1" required />
+            </div>
+
+            <div class="form-field">
+              <label for="address2">Address Line 2 (optional)</label>
+              <input type="text" id="address2" name="address2" />
+            </div>
+
+            <div class="checkout-form-row">
+              <div class="form-field">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" required />
+              </div>
+              <div class="form-field">
+                <label for="state">State / Region</label>
+                <input type="text" id="state" name="state" required />
+              </div>
+            </div>
+
+            <div class="checkout-form-row">
+              <div class="form-field">
+                <label for="postalCode">Postal Code</label>
+                <input type="text" id="postalCode" name="postalCode" required />
+              </div>
+              <div class="form-field">
+                <label for="country">Country</label>
+                <input type="text" id="country" name="country" value="USA" required />
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="notes">Order Notes (optional)</label>
+              <textarea id="notes" name="notes" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="checkout-submit-btn cart-checkout-btn">
+              CONTINUE TO PAYMENT
+            </button>
+
+            <p class="checkout-small-print">
+              You’ll complete payment on a secure Stripe page in the next step.
+            </p>
+          </form>
         </div>
 
-        <!-- RIGHT: summary -->
-        <aside class="cart-summary">
+        <!-- RIGHT: Order summary – hug content height -->
+        <aside class="cart-summary checkout-summary" style="align-self:flex-start;">
           <h2 class="cart-summary-heading">Order Summary</h2>
 
-          <div class="cart-summary-row">
-            <span>Subtotal</span>
-            <span>$0.00</span>
-          </div>
-
-          <div class="cart-summary-row">
-            <span>Shipping</span>
-            <span>Calculated at checkout</span>
+          <div class="checkout-summary-items">
+            <!-- Populated by checkout.js -->
           </div>
 
           <div class="cart-summary-divider"></div>
 
           <div class="cart-summary-row cart-summary-total">
             <span>Total</span>
-            <span>$0.00</span>
+            <span id="checkoutTotal">$0.00</span>
           </div>
-
-          <!-- cart.js will hook this -->
-          <button class="cart-checkout-btn">
-            PROCEED TO CHECKOUT
-          </button>
-
-          <p class="cart-summary-note">
-            You’ll enter shipping details on the next step before secure payment.
-          </p>
         </aside>
 
       </div>
     </section>
-
   </main>
 
-  <!-- FOOTER – patterned off index footer -->
-  <div class="section-divider"></div>
+  <!-- FOOTER – same structure as cart/index -->
+<div class="section-divider"></div>
   <footer class="footer">
     <div class="footer-inner">
 
@@ -131,7 +169,6 @@
       <!-- MIDDLE: nav · logo · socials -->
       <div class="footer-main">
         <nav class="footer-nav">
-          <!-- Point these back at your main page sections -->
           <a href="index.html#shop">SHOP</a>
           <a href="index.html#about">ABOUT</a>
           <a href="contact.html">CONTACT</a>
@@ -180,26 +217,23 @@
     </div>
   </footer>
 
-  <!-- CART LOGIC -->
-  <script src="cart.js"></script>
+  <!-- CHECKOUT LOGIC -->
+  <script src="checkout.js"></script>
 
-  <!-- NAV SCRIPT – same behavior as index -->
+  <!-- NAV SCRIPT – same pattern as index -->
   <script>
     const navBar = document.querySelector('.nav-bar');
     const menuBtn = document.querySelector('.nav-menu-btn');
     const navLinks = document.querySelectorAll('.nav-links a');
 
-    // header logo or footer logo can trigger scroll-to-top
     const logoLink = document.querySelector('.nav-logo-btn, .footer-logo-link');
 
     if (logoLink) {
       logoLink.addEventListener('click', function (e) {
-        // If NOT currently at the top of the page
         if (window.scrollY > 20) {
-          e.preventDefault(); // stop link navigation
+          e.preventDefault();
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        // else let the default href behavior run
       });
     }
 
@@ -208,7 +242,6 @@
         navBar.classList.toggle('nav-bar--open');
       });
 
-      // close when clicking a nav link
       navLinks.forEach(link => {
         link.addEventListener('click', () => {
           navBar.classList.remove('nav-bar--open');

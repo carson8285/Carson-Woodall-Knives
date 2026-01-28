@@ -1733,3 +1733,129 @@ html {
 .footer-nav{ justify-self: start; }
 .footer-logo-link{ justify-self: center; }
 .footer-social{ justify-self: end; }
+
+/* =========================
+   Checkout Page – tuned to match cart + contact
+   ========================= */
+
+/* Left column container */
+.checkout-main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Heading/intro copy on left */
+.checkout-title {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f5f5f5;
+}
+
+.checkout-subtitle {
+  font-size: 13px;
+  color: #c0c0c0;
+  max-width: 440px;
+}
+
+/* Use existing .contact-form look, just tighten it a bit for checkout */
+.checkout-form {
+  margin-top: 8px;
+}
+
+/* Two-column rows inside the form */
+.checkout-form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.checkout-form-row .form-field {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Continue to Payment button – match cart checkout vibe */
+.checkout-submit-btn {
+  margin-top: 12px;
+  padding: 12px 16px;
+  width: 100%;
+  border-radius: 6px;
+  border: none;
+  background: #ffffff11;
+  color: #ffffffd8;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.checkout-submit-btn:hover {
+  background: #ffffff22;
+  transform: translateY(-1px);
+}
+
+.checkout-small-print {
+  font-size: 11px;
+  color: #888;
+  margin-top: 6px;
+  max-width: 440px;
+}
+
+/* Right column: items inside existing cart-summary bubble */
+.checkout-summary-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.checkout-summary-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.checkout-summary-item-main {
+  flex: 1;
+}
+
+.checkout-summary-item-title {
+  color: #f0f0f0;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.checkout-summary-item-meta {
+  color: #9a9a9a;
+  font-size: 11px;
+}
+
+.checkout-summary-item-side {
+  text-align: right;
+}
+
+.checkout-summary-qty {
+  display: block;
+  font-size: 11px;
+  color: #b0b0b0;
+}
+
+.checkout-summary-price {
+  font-size: 13px;
+  color: #ffffff;
+}
+
+/* Nudge spacing below the cart-summary divider */
+.checkout-summary-total {
+  margin-top: 8px;
+}
+
+/* Stack form rows on small screens so nothing overlaps */
+@media (max-width: 800px) {
+  .checkout-form-row {
+    flex-direction: column;
+  }
+}
