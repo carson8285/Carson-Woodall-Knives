@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Order Complete | Carson Woodall Knives</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body id="top">
+  <main class="cart-page">
+    <section class="cart-hero">
+      <div class="cart-hero-inner">
+        <h1 class="cart-heading">ORDER COMPLETE</h1>
+        <p class="cart-subheading">
+          Verifying your payment and saving your build details.
+        </p>
+      </div>
+    </section>
+
+    <section class="cart-content">
+      <div class="cart-inner">
+        <div class="cart-items">
+          <div class="cart-empty">
+            <p id="statusMessage">Finalizing your order…</p>
+            <a href="index.html" class="cart-empty-cta" id="backLink" style="display:none;">
+              RETURN HOME
+            </a>
+          </div>
+        </div>
+
+        <aside class="cart-summary" style="align-self:flex-start;">
+          <h2 class="cart-summary-heading">What happens next</h2>
+          <div class="cart-summary-row">
+            <span>1</span>
+            <span>Payment confirmed by Stripe</span>
+          </div>
+          <div class="cart-summary-row">
+            <span>2</span>
+            <span>Order added to my build queue</span>
+          </div>
+          <div class="cart-summary-row">
+            <span>3</span>
+            <span>You’ll get an email update with next steps</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div class="section-divider"></div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="#top" class="footer-logo-link">
+          <img
+            src="./productimages/logowhite.svg"
+            alt="Carson Woodall Knives"
+            class="footer-logo"
+          />
+        </a>
+      </div>
+      <div class="footer-divider"></div>
+      <p class="footer-copy">
+        © 2025 CARSON WOODALL KNIVES
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    async function confirmOrder() {
+      const params = new URLSearchParams(window.location.search);
+      const sessionId = params.get("session_id");
+      const statusEl = document.getElementById("statusMessage");
+      const backLink = document.getElementById("backLink");
+
+      if (!sessionId) {
+        statusEl.textContent = "Missing Stripe session ID. If you just paid, please contact me with your details.";
+        backLink.style.display = "inline-block";
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:4242/confirm-order?session_id=${encodeURIComponent(sessionId)}`);
+        const data = await res.json();
+
+        if (!res.ok || !data.ok) {
+          statusEl.textContent =
+            "Your payment was received, but I couldn’t finalize the order record automatically. I’ll review it manually.";
+        } else {
+          statusEl.textContent = "Your order has been confirmed and added to my build queue.";
+        }
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent =
+          "Your payment went through, but there was a problem recording the order. I’ll sort it out manually.";
+      }
+
+      backLink.style.display = "inline-block";
+    }
+
+    confirmOrder();
+  </script>
+</body>
+</html>

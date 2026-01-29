@@ -85,31 +85,31 @@
     };
   }
 
-  async function startStripeCheckout(payload) {
-    // This is where the real backend call will go later.
-    // For now we just log and show a message, so nothing crashes.
+async function startStripeCheckout(payload) {
+  console.log("Checkout payload (sending to backend):", payload);
 
-    console.log("Checkout payload (to send to backend):", payload);
+  const res = await fetch("http://localhost:4242/create-checkout-session", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
 
-    alert(
-      "Shipping info captured.\n\n" +
-      "Backend + Stripe integration isn’t wired yet, " +
-      "but your checkout payload is stored in localStorage as 'cwk_pending_checkout'."
-    );
-
-    // Example of what you'll do later (pseudo-code):
-    //
-    // const res = await fetch("/api/create-checkout-session", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(payload),
-    // });
-    //
-    // if (!res.ok) throw new Error("Failed to start checkout");
-    //
-    // const data = await res.json();
-    // window.location.href = data.url; // Stripe Checkout URL
+  if (!res.ok) {
+    console.error("Stripe backend error", await res.text());
+    throw new Error("Failed to create checkout session.");
   }
+
+  const data = await res.json();
+  if (!data.url) {
+    throw new Error("No checkout URL returned from backend.");
+  }
+
+  // Redirect to Stripe Checkout
+  window.location.href = data.url;
+}
+
 
   if (form) {
     form.addEventListener("submit", async (e) => {
