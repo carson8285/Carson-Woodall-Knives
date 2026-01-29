@@ -5,7 +5,7 @@
 const API_BASE =
   window.location.hostname === "localhost"
     ? "http://localhost:4242"
-    : "https://YOUR_RENDER_BACKEND_URL_HERE";
+    : "https://carson-woodall-knives.onrender.com";
 
 (function () {
   const CART_KEY = "cwk_cart";
