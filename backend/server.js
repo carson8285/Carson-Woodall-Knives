@@ -8,6 +8,8 @@ const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 4242;
+const FRONTEND_BASE =
+  process.env.FRONTEND_BASE || "http://localhost:8000";
 
 // ====== simple file-based order storage ======
 
@@ -71,6 +73,8 @@ app.post("/create-checkout-session", async (req, res) => {
       success_url:
         "http://localhost:8000/success.html?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: "http://localhost:8000/checkout.html?status=cancel",
+      success_url: `${FRONTEND_BASE}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${FRONTEND_BASE}/checkout.html?status=cancel`,
       metadata: {
         cart: JSON.stringify(cart),
         shipping: JSON.stringify(shipping || {}),

@@ -68,6 +68,11 @@
   </footer>
 
   <script>
+    const API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4242"
+    : "https://YOUR_RENDER_BACKEND_URL_HERE";
+
     async function confirmOrder() {
       const params = new URLSearchParams(window.location.search);
       const sessionId = params.get("session_id");
@@ -81,7 +86,7 @@
       }
 
       try {
-        const res = await fetch(`http://localhost:4242/confirm-order?session_id=${encodeURIComponent(sessionId)}`);
+        const res = await fetch(`${API_BASE}/confirm-order?session_id=${encodeURIComponent(sessionId)}`);
         const data = await res.json();
 
         if (!res.ok || !data.ok) {

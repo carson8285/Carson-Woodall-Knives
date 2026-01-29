@@ -2,6 +2,10 @@
 // 1) Read cwk_cart and render a simple order summary
 // 2) Collect shipping/contact info
 // 3) Package everything into cwk_pending_checkout for the backend / Stripe step
+const API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4242"
+    : "https://YOUR_RENDER_BACKEND_URL_HERE";
 
 (function () {
   const CART_KEY = "cwk_cart";
@@ -88,13 +92,13 @@
 async function startStripeCheckout(payload) {
   console.log("Checkout payload (sending to backend):", payload);
 
-  const res = await fetch("http://localhost:4242/create-checkout-session", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
+const res = await fetch(`${API_BASE}/create-checkout-session`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(payload),
+});
 
   if (!res.ok) {
     console.error("Stripe backend error", await res.text());
