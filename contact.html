@@ -8,9 +8,10 @@
 </head>
 
 <body>
- <header class="nav-bar">
+
+<header class="nav-bar">
   <!-- LEFT: logo (scorpion + text, both SVGs) -->
-  <a href="index.html" class="nav-left" class="nav-logo-btn">
+  <a href="#top" class="nav-left">
     <img
       src="./productimages/notxtlogowhite.svg"
       alt=""
@@ -25,9 +26,11 @@
 
   <!-- CENTER: links -->
   <nav class="nav-links" aria-label="Main navigation">
-    <a href="./shop.html">SHOP</a>
-    <a href="index.html#about">ABOUT</a>
+    <a href="./index.html#shop">SHOP</a>
+    <a href="./index.html#about">ABOUT</a>
     <a href="./contact.html">CONTACT</a>
+    <a href="./builder/index.html">KNIFE BUILDER</a>
+
   </nav>
 
   <!-- RIGHT: cart + menu -->
@@ -41,6 +44,7 @@
     </button>
   </div>
 </header>
+
   <!-- CONTACT PAGE WRAPPER -->
   <section class="contact-section">
     <div class="contact-inner">
@@ -74,50 +78,88 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="footer-inner">
-    
-      <div class="footer-brand">
-        <a href="#top" class="footer-logo-link">
+<div class="section-divider"></div>
+<footer class="footer">
+  <div class="footer-inner">
+
+    <!-- TOP: newsletter -->
+    <div class="footer-newsletter">
+      <h2 class="footer-newsletter-heading">STAY CONNECTED</h2>
+
+      <form class="footer-newsletter-form" action="#" method="post">
+        <input
+          type="email"
+          name="email"
+          placeholder="Email address"
+          required
+        />
+        <button type="submit">SUBSCRIBE</button>
+      </form>
+    </div>
+
+    <!-- MIDDLE: nav · logo · socials -->
+    <div class="footer-main">
+      <nav class="footer-nav">
+        <a href="index.html#shop">SHOP</a>
+        <a href="index.html#about">ABOUT</a>
+        <a href="contact.html">CONTACT</a>
+      </nav>
+
+      <a href="#top" class="footer-logo-link">
         <img
-          src="./productimages/notxtlogowhite.svg" 
-          alt="CW Scorpion Logo" 
+          src="./productimages/logowhite.svg"
+          alt="Carson Woodall Knives"
           class="footer-logo"
         />
-        <div class="footer-wordmark">
-          <strong>CARSON WOODALL</strong> KNIVES
-        </a>
-        </div>
+      </a>
+
+      <div class="footer-social">
+        <a
+          href="https://www.instagram.com/carsonwoodallknives"
+          target="blank"
+          aria-label="Instagram"
+          class="footer-social-icon"
+        >IG</a>
+        <a
+          href="https://www.facebook.com/share/14HZGgMjPLt/?mibextid=wwXIfr"
+          target="blank"
+          aria-label="Facebook"
+          class="footer-social-icon"
+        >F</a>
+        <a
+          href="https://www.youtube.com/@CWKnives"
+          target="blank"
+          aria-label="YouTube"
+          class="footer-social-icon"
+        >YT</a>
       </div>
-
-      <div class="footer-divider"></div>
-
-      <p class="footer-copy">
-        © 2025 Carson Woodall Knives. All rights reserved.
-      </p>
-
     </div>
-  </footer>
-  
+
+    <!-- BOTTOM: copyright -->
+    <div class="footer-copy">
+      © 2025 CARSON WOODALL KNIVES
+    </div>
+  </div>
+</footer>
+
 <script>
   const navBar = document.querySelector('.nav-bar');
   const menuBtn = document.querySelector('.nav-menu-btn');
   const navLinks = document.querySelectorAll('.nav-links a');
 
-// Select your logo link
-const logoLink = document.querySelector('.nav-logo-btn, .footer-logo-link'); 
-// adjust selector depending on your actual class
+  // Select your logo link (header or footer)
+  const logoLink = document.querySelector('.nav-logo-btn, .footer-logo-link');
 
-logoLink.addEventListener('click', function (e) {
-
-  // If NOT currently at the top of the page
-  if (window.scrollY > 20) {
-    e.preventDefault(); // stop link navigation
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  } 
-  // ELSE let the default <a href="index.html"> work normally
-});
+  if (logoLink) {
+    logoLink.addEventListener('click', function (e) {
+      // If NOT currently at the top of the page
+      if (window.scrollY > 20) {
+        e.preventDefault(); // stop link navigation
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      // ELSE let the default <a href="index.html"> work normally
+    });
+  }
 
   if (navBar && menuBtn) {
     menuBtn.addEventListener('click', () => {
@@ -132,5 +174,6 @@ logoLink.addEventListener('click', function (e) {
     });
   }
 </script>
+
 </body>
 </html>

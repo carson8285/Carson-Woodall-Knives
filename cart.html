@@ -9,41 +9,40 @@
 
 <body id="top">
   <!-- HEADER / NAV -->
-  <header class="nav-bar">
-    <!-- LEFT: logo (scorpion + text, both SVGs) -->
-    <a href="index.html#top" class="nav-left nav-logo-btn">
-      <img
-        src="./productimages/notxtlogowhite.svg"
-        alt=""
-        class="nav-logo-scorpion"
-      />
-      <img
-        src="./productimages/textlogowhite.svg"
-        alt="Carson Woodall Knives"
-        class="nav-logo-textimg"
-      />
+<header class="nav-bar">
+  <!-- LEFT: logo (scorpion + text, both SVGs) -->
+  <a href="#top" class="nav-left">
+    <img
+      src="./productimages/notxtlogowhite.svg"
+      alt=""
+      class="nav-logo-scorpion"
+    />
+    <img
+      src="./productimages/textlogowhite.svg"
+      alt="Carson Woodall Knives"
+      class="nav-logo-textimg"
+    />
+  </a>
+
+  <!-- CENTER: links -->
+  <nav class="nav-links" aria-label="Main navigation">
+    <a href="./index.html#shop">SHOP</a>
+    <a href="./index.html#about">ABOUT</a>
+    <a href="./contact.html">CONTACT</a>
+    <a href="./builder/index.html">KNIFE BUILDER</a>
+  </nav>
+
+  <!-- RIGHT: cart + menu -->
+  <div class="nav-right">
+    <a href="./cart.html" class="nav-cart-btn" aria-label="Cart">
+      <img src="./productimages/shopping-cart.svg" alt="cart" />
     </a>
 
-    <!-- CENTER: links -->
-    <nav class="nav-links" aria-label="Main navigation">
-      <!-- On cart we link back to the real pages/sections -->
-      <a href="./shop.html">SHOP</a>
-      <a href="index.html#about">ABOUT</a>
-      <a href="./contact.html">CONTACT</a>
-      <a href="./builder/index.html">KNIFE BUILDER</a>
-    </nav>
-
-    <!-- RIGHT: cart + menu -->
-    <div class="nav-right">
-      <a href="./cart.html" class="nav-cart-btn" aria-label="Cart">
-        <img src="./productimages/shopping-cart.svg" alt="cart" />
-      </a>
-
-      <button class="nav-menu-btn" type="button" aria-label="Toggle menu">
-        <img src="./productimages/menulogo.svg" alt="menu" />
-      </button>
-    </div>
-  </header>
+    <button class="nav-menu-btn" type="button" aria-label="Toggle menu">
+      <img src="./productimages/menulogo.svg" alt="menu" />
+    </button>
+  </div>
+</header>
 
   <main class="cart-page">
 
