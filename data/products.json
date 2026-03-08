@@ -7,8 +7,10 @@
       "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
       "images": [
         "./productimages/micro-edc-drop-point-cover.png",
-        "./productimages/noimage.png",
-        "./productimages/noimage.png",
+        "./productimages/drop-point/img1.png",
+        "./productimages/drop-point/img2.png",
+        "./productimages/drop-point/img3.png",
+        "./productimages/drop-point/img4.png",
         "./productimages/noimage.png"
       ],
       "variantToIndex": {
@@ -47,9 +49,11 @@
       "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
       "images": [
         "./productimages/micro-edc-trailing-point-cover.png",
-        "./productimages/noimage.png",
-        "./productimages/noimage.png",
-        "./productimages/noimage.png"
+        "./productimages/trailing-point/img1.png",
+        "./productimages/trailing-point/img2.png",
+        "./productimages/trailing-point/img3.png",
+        "./productimages/trailing-point/img4.png",
+        "./productimages/trailing-point/img5.png"
       ],
       "variantToIndex": {
         "80crv2__acid__cocobolo": 0,
@@ -87,9 +91,10 @@
       "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
       "images": [
         "./productimages/micro-edc-reverse-tanto-cover.png",
-        "./productimages/noimage.png",
-        "./productimages/noimage.png",
-        "./productimages/noimage.png"
+        "./productimages/reverse-tanto/img1.png",
+        "./productimages/reverse-tanto/img2.png",
+        "./productimages/reverse-tanto/img3.png",
+        "./productimages/reverse-tanto/img4.png"
       ],
       "variantToIndex": {
         "80crv2__acid__cocobolo": 0,
