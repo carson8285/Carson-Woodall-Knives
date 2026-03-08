@@ -6,25 +6,25 @@
       "basePrice": 200,
       "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
       "images": [
-        "./productimages/miniedc.jpeg",
+        "./productimages/micro-edc-drop-point-cover.png",
         "./productimages/noimage.png",
         "./productimages/noimage.png",
         "./productimages/noimage.png"
       ],
       "variantToIndex": {
-        "1095__acid__cocobolo": 0,
-        "1095__stonewash__black_micarta": 1,
-        "1095__high_polish__cocobolo": 2,
+        "80crv2__acid__cocobolo": 0,
+        "80crv2__stonewash__black_micarta": 1,
+        "80crv2__high_polish__cocobolo": 2,
         "stainless__satin__cocobolo": 3
       },
 
       "options": {
         "steel": [
-          { "id": "1095", "label": "1095 High Carbon Steel", "price": 0 }
+          { "id": "80crv2", "label": "80CRV2 High Carbon Steel", "price": 0 }
         ],
         "finish": [
           { "id": "stonewash", "label": "Stonewash", "price": 0 },
-          { "id": "satin", "label": "Satin Polish", "price": 25 }
+          { "id": "satin", "label": "Satin Polish", "price": 50 }
         ],
         "handle": [
           { "id": "black_g10", "label": "Black G10", "price": 0 },
@@ -34,7 +34,7 @@
         ]
       },
       "defaults": {
-        "steel": "1095",
+        "steel": "80crv2",
         "finish": "stonewash",
         "handle": "black_g10"
       }
@@ -46,25 +46,25 @@
       "basePrice": 200,
       "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
       "images": [
-        "./productimages/miniedc.jpeg",
+        "./productimages/micro-edc-trailing-point-cover.png",
         "./productimages/noimage.png",
         "./productimages/noimage.png",
         "./productimages/noimage.png"
       ],
       "variantToIndex": {
-        "1095__acid__cocobolo": 0,
-        "1095__stonewash__black_micarta": 1,
-        "1095__high_polish__cocobolo": 2,
+        "80crv2__acid__cocobolo": 0,
+        "80crv2__stonewash__black_micarta": 1,
+        "80crv2__high_polish__cocobolo": 2,
         "stainless__satin__cocobolo": 3
       },
 
       "options": {
         "steel": [
-          { "id": "1095", "label": "1095 High Carbon Steel", "price": 0 }
+          { "id": "80crv2", "label": "80crv2 High Carbon Steel", "price": 0 }
         ],
         "finish": [
           { "id": "stonewash", "label": "Stonewash", "price": 0 },
-          { "id": "satin", "label": "Satin Polish", "price": 25 }
+          { "id": "satin", "label": "Satin Polish", "price": 50 }
         ],
         "handle": [
           { "id": "black_g10", "label": "Black G10", "price": 0 },
@@ -74,7 +74,7 @@
         ]
       },
       "defaults": {
-        "steel": "1095",
+        "steel": "80crv2",
         "finish": "stonewash",
         "handle": "black_g10"
       }
@@ -86,21 +86,21 @@
       "basePrice": 200,
       "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
       "images": [
-        "./productimages/miniedc.jpeg",
+        "./productimages/micro-edc-reverse-tanto-cover.png",
         "./productimages/noimage.png",
         "./productimages/noimage.png",
         "./productimages/noimage.png"
       ],
       "variantToIndex": {
-        "1095__acid__cocobolo": 0,
-        "1095__stonewash__black_micarta": 1,
-        "1095__high_polish__cocobolo": 2,
+        "80crv2__acid__cocobolo": 0,
+        "80crv2__stonewash__black_micarta": 1,
+        "80crv2__high_polish__cocobolo": 2,
         "stainless__satin__cocobolo": 3
       },
 
       "options": {
         "steel": [
-          { "id": "1095", "label": "1095 High Carbon Steel", "price": 0 }
+          { "id": "80crv2", "label": "80crv2 High Carbon Steel", "price": 0 }
         ],
         "finish": [
           { "id": "stonewash", "label": "Stonewash", "price": 0 },
@@ -114,7 +114,7 @@
         ]
       },
       "defaults": {
-        "steel": "1095",
+        "steel": "80crv2",
         "finish": "stonewash",
         "handle": "black_g10"
       }
@@ -126,7 +126,7 @@
       "basePrice": 400,
       "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
       "images": [
-        "./productimages/march-custom.JPG",
+        "./productimages/march-26-custom.png",
         "./productimages/noimage.png",
         "./productimages/noimage.png",
         "./productimages/noimage.png"
