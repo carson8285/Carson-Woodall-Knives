@@ -14,10 +14,14 @@
         "./productimages/noimage.png"
       ],
       "variantToIndex": {
-        "80crv2__acid__cocobolo": 0,
-        "80crv2__stonewash__black_micarta": 1,
-        "80crv2__high_polish__cocobolo": 2,
-        "stainless__satin__cocobolo": 3
+        "80crv2__stonewash__black_g10": 0,
+        "80crv2__stonewash__blue_g10": 1,
+        "80crv2__stonewash__orange_g10": 5,
+        "80crv2__stonewash__green_black_g10": 5,
+        "80crv2__satin__black_g10": 5,
+        "80crv2__satin__blue_g10": 5,
+        "80crv2__satin__orange_g10": 5,
+        "80crv2__satin__green_black_g10": 5
       },
 
       "options": {
@@ -53,13 +57,19 @@
         "./productimages/trailing-point/img2.png",
         "./productimages/trailing-point/img3.png",
         "./productimages/trailing-point/img4.png",
-        "./productimages/trailing-point/img5.png"
+        "./productimages/trailing-point/img5.png",
+        "./productimages/noimage.png"
+
       ],
       "variantToIndex": {
-        "80crv2__acid__cocobolo": 0,
-        "80crv2__stonewash__black_micarta": 1,
-        "80crv2__high_polish__cocobolo": 2,
-        "stainless__satin__cocobolo": 3
+        "80crv2__stonewash__black_g10": 6,
+        "80crv2__stonewash__blue_g10": 6,
+        "80crv2__stonewash__orange_g10": 6,
+        "80crv2__stonewash__green_black_g10": 0,
+        "80crv2__satin__black_g10": 6,
+        "80crv2__satin__blue_g10": 6,
+        "80crv2__satin__orange_g10": 3,
+        "80crv2__satin__green_black_g10": 6
       },
 
       "options": {
@@ -80,7 +90,7 @@
       "defaults": {
         "steel": "80crv2",
         "finish": "stonewash",
-        "handle": "black_g10"
+        "handle": "green_black_g10"
       }
     }
 
@@ -91,16 +101,22 @@
       "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
       "images": [
         "./productimages/micro-edc-reverse-tanto-cover.png",
+
+        "./productimages/reverse-tanto/img3.png",
+        "./productimages/reverse-tanto/img4.png",
         "./productimages/reverse-tanto/img1.png",
         "./productimages/reverse-tanto/img2.png",
-        "./productimages/reverse-tanto/img3.png",
-        "./productimages/reverse-tanto/img4.png"
+        "./productimages/noimage.png"
       ],
       "variantToIndex": {
-        "80crv2__acid__cocobolo": 0,
-        "80crv2__stonewash__black_micarta": 1,
-        "80crv2__high_polish__cocobolo": 2,
-        "stainless__satin__cocobolo": 3
+        "80crv2__stonewash__black_g10": 3,
+        "80crv2__stonewash__blue_g10": 5,
+        "80crv2__stonewash__orange_g10": 5,
+        "80crv2__stonewash__green_black_g10": 5,
+        "80crv2__satin__black_g10": 5,
+        "80crv2__satin__blue_g10": 0,
+        "80crv2__satin__orange_g10": 5,
+        "80crv2__satin__green_black_g10": 5
       },
 
       "options": {
@@ -120,8 +136,8 @@
       },
       "defaults": {
         "steel": "80crv2",
-        "finish": "stonewash",
-        "handle": "black_g10"
+        "finish": "satin",
+        "handle": "blue_g10"
       }
     }
 
