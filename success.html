@@ -49,7 +49,7 @@
       <div class="cart-hero-inner">
         <h1 class="cart-heading">ORDER COMPLETE</h1>
         <p class="cart-subheading">
-          Payment successful. A confirmation email with your order details has been sent to you.        </p>
+          Payment successful. A confirmation email with your order details has been sent to you.</p>
       </div>
     </section>
 
@@ -94,7 +94,7 @@
           statusEl.textContent =
             "Your payment was received, but I couldn’t finalize the order record automatically. I’ll review it manually.";
         } else {
-          statusEl.textContent = "Your order has been confirmed and added to my build queue.";
+          statusEl.textContent = "Thank you for you order.";
         }
       } catch (err) {
         console.error(err);
@@ -108,7 +108,8 @@
     confirmOrder();
   </script>
 
-<div class="section-divider"></div>
+  <!-- SECTION 5 – FOOTER -->
+   <div class="section-divider"></div>
 <footer class="footer">
   <div class="footer-inner">
 
@@ -130,7 +131,7 @@
     <!-- MIDDLE: nav · logo · socials -->
     <div class="footer-main">
       <nav class="footer-nav">
-        <a href="index.html#shop">SHOP</a>
+        <a href="#shop">SHOP</a>
         <a href="index.html#about">ABOUT</a>
         <a href="contact.html">CONTACT</a>
       </nav>
@@ -144,24 +145,12 @@
       </a>
 
       <div class="footer-social">
-        <a
-          href="https://www.instagram.com/carsonwoodallknives"
-          target="blank"
-          aria-label="Instagram"
-          class="footer-social-icon"
-        >IG</a>
-        <a
-          href="https://www.facebook.com/share/14HZGgMjPLt/?mibextid=wwXIfr"
-          target="blank"
-          aria-label="Facebook"
-          class="footer-social-icon"
-        >F</a>
-        <a
-          href="https://www.youtube.com/@CWKnives"
-          target="blank"
-          aria-label="YouTube"
-          class="footer-social-icon"
-        >YT</a>
+        <a href="https://www.instagram.com/carsonwoodallknives" target="blank"
+            aria-label="Instagram" class="footer-social-icon">IG</a>
+        <a href="https://www.facebook.com/share/14HZGgMjPLt/?mibextid=wwXIfr" target="blank"
+            aria-label="Facebook" class="footer-social-icon">F</a>
+        <a href="https://www.youtube.com/@CWKnives" target="blank"
+            aria-label="YouTube" class="footer-social-icon">YT</a>
       </div>
     </div>
 
@@ -171,25 +160,25 @@
     </div>
   </div>
 </footer>
-
+  
 <script>
   const navBar = document.querySelector('.nav-bar');
   const menuBtn = document.querySelector('.nav-menu-btn');
   const navLinks = document.querySelectorAll('.nav-links a');
 
-  // Select your logo link (header or footer)
-  const logoLink = document.querySelector('.nav-logo-btn, .footer-logo-link');
+// Select your logo link
+const logoLink = document.querySelector('.nav-logo-btn, .footer-logo-link'); 
+// adjust selector depending on your actual class
 
-  if (logoLink) {
-    logoLink.addEventListener('click', function (e) {
-      // If NOT currently at the top of the page
-      if (window.scrollY > 20) {
-        e.preventDefault(); // stop link navigation
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      // ELSE let the default <a href="index.html"> work normally
-    });
-  }
+logoLink.addEventListener('click', function (e) {
+
+  // If NOT currently at the top of the page
+  if (window.scrollY > 20) {
+    e.preventDefault(); // stop link navigation
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } 
+  // ELSE let the default <a href="index.html"> work normally
+});
 
   if (navBar && menuBtn) {
     menuBtn.addEventListener('click', () => {
@@ -204,6 +193,5 @@
     });
   }
 </script>
-
 </body>
 </html>

@@ -4,6 +4,7 @@
       "id": "micro-edc-01",
       "title": "Drop Point Micro EDC",
       "basePrice": 200,
+      "type": "fixed", 
       "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
       "images": [
         "./productimages/micro-edc-drop-point-cover.png",
