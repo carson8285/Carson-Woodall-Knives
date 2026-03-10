@@ -10,7 +10,6 @@
 <body>
 
 <header class="nav-bar">
-  <!-- LEFT: logo (scorpion + text, both SVGs) -->
   <a href="index.html#top" class="nav-left">
     <img
       src="./productimages/notxtlogowhite.svg"
@@ -24,7 +23,6 @@
     />
   </a>
 
-  <!-- CENTER: links -->
   <nav class="nav-links" aria-label="Main navigation">
     <a href="./index.html#shop">SHOP</a>
     <a href="./index.html#about">ABOUT</a>
@@ -32,7 +30,6 @@
     <a href="./builder/index.html">KNIFE BUILDER</a>
   </nav>
 
-  <!-- RIGHT: cart + menu -->
   <div class="nav-right">
     <a href="./cart.html" class="nav-cart-btn" aria-label="Cart">
       <img src="./productimages/shopping-cart.svg" alt="cart" />
@@ -48,11 +45,10 @@
   <section class="shop-page-hero">
     <div class="shop-page-hero-inner">
       <h1 class="shop-page-heading">KNIVES</h1>
-      <p class="shop-page-subheading">Available blades and current offerings.</p>
+      <p class="shop-page-subheading">Browse available models.</p>
     </div>
   </section>
 
-  <!-- Filters -->
   <section class="shop-page-categories">
     <div class="shop-page-categories-inner">
 
@@ -62,7 +58,7 @@
             <label for="filterType">Type</label>
             <select id="filterType">
               <option value="all">All</option>
-              <option value="fixed">EDC</option>
+              <option value="edc">EDC</option>
               <option value="kitchen">Kitchen</option>
               <option value="hunting">Hunting / Bushcraft</option>
             </select>
@@ -75,15 +71,6 @@
               <option value="1095">1095 High Carbon</option>
               <option value="80crv2">80CRV2</option>
               <option value="stainless">Stainless</option>
-            </select>
-          </div>
-
-          <div class="filter">
-            <label for="filterAvailability">Availability</label>
-            <select id="filterAvailability">
-              <option value="all">All</option>
-              <option value="in-stock">In stock</option>
-              <option value="made-to-order">Made to order</option>
             </select>
           </div>
         </div>
@@ -101,15 +88,12 @@
 
           <div class="filter search">
             <label for="search">Search</label>
-            <input id="search" type="text" placeholder="Model, steel, finish..." />
+            <input id="search" type="text" placeholder="Search knives..." />
           </div>
         </div>
       </div>
 
-      <!-- Product grid -->
-      <div class="listing-grid" id="listingGrid">
-        <!-- JS will render cards here -->
-      </div>
+      <div class="listing-grid" id="listingGrid"></div>
 
     </div>
   </section>
@@ -120,8 +104,15 @@
   <div class="footer-inner">
     <div class="footer-newsletter">
       <h2 class="footer-newsletter-heading">STAY CONNECTED</h2>
-      <form class="footer-newsletter-form" action="#" method="post">
-        <input type="email" name="email" placeholder="Email address" required />
+
+      <form class="footer-newsletter-form" action="https://formspree.io/f/xykygdje" method="post">
+        <input
+          type="email"
+          name="email"
+          placeholder="Email address"
+          required
+        />
+        <input type="hidden" name="_next" value="https://carsonwoodallknives.com" />
         <button type="submit">SUBSCRIBE</button>
       </form>
     </div>
@@ -152,7 +143,7 @@
 </footer>
 
 <script>
-  // nav open/close (same as your index behavior)
+  // nav open/close
   const navBar = document.querySelector('.nav-bar');
   const menuBtn = document.querySelector('.nav-menu-btn');
   const navLinks = document.querySelectorAll('.nav-links a');
@@ -161,34 +152,12 @@
     navLinks.forEach(link => link.addEventListener('click', () => navBar.classList.remove('nav-bar--open')));
   }
 
-  // ---------- KNIFE LISTING (pull from JSON) ----------
-  // Expected JSON shape:
-  // {
-  //   "products": [
-  //     {
-  //       "id": "mini-edc-01",
-  //       "title": "Mini EDC",
-  //       "basePrice": 275,
-  //       "type": "fixed",
-  //       "steelTag": "1095",          // optional for filtering tags
-  //       "availability": "in-stock",
-  //       "cardImage": "./productimages/miniedc.jpeg", // preferred for tiles
-  //       "featured": true,
-  //       "date": "2025-12-01"
-  //     }
-  //   ]
-  // }
-  //
-  // If your products.json doesn't have cardImage/type/etc yet, this script will
-  // try to fall back gracefully.
-
   let products = [];
 
   const els = {
     grid: document.getElementById("listingGrid"),
     filterType: document.getElementById("filterType"),
     filterSteel: document.getElementById("filterSteel"),
-    filterAvailability: document.getElementById("filterAvailability"),
     sortBy: document.getElementById("sortBy"),
     search: document.getElementById("search"),
   };
@@ -201,22 +170,74 @@
     return String(s || "").replace(/-/g, " ");
   }
 
+  function getTypes(p) {
+    if (Array.isArray(p.types) && p.types.length) {
+      return p.types.map(t => String(t).toLowerCase());
+    }
+
+    // backward compatibility with old single-type products
+    if (p.type) {
+      const raw = String(p.type).toLowerCase();
+
+      // map old values to new filter categories
+      if (raw === "fixed") return ["edc"];
+      if (raw === "hunting-bushcraft") return ["hunting-bushcraft"];
+
+      return [raw];
+    }
+
+    // safe default for your current products
+    return ["edc"];
+  }
+
+  function getPrimaryType(p) {
+    return getTypes(p)[0] || "edc";
+  }
+
+  function getSteel(p) {
+    if (p.steelTag) return String(p.steelTag).toLowerCase();
+    if (p.steel) return String(p.steel).toLowerCase();
+
+    const firstSteel = p?.options?.steel?.[0]?.id;
+    if (firstSteel) return String(firstSteel).toLowerCase();
+
+    return "";
+  }
+
+  function getAvailability(p) {
+    return String(p.availability || "made-to-order").toLowerCase();
+  }
+
+  function getCardImage(p) {
+    return (
+      p.cardImage ||
+      (Array.isArray(p.images) ? p.images[0] : null) ||
+      p.image ||
+      "./productimages/noimage.png"
+    );
+  }
+
+  function getPrice(p) {
+    return Number(p.basePrice ?? p.price ?? 0);
+  }
+
   function render(list) {
+    if (!list.length) {
+      els.grid.innerHTML = `
+        <div class="cart-empty">
+          <p>No knives match those filters.</p>
+        </div>
+      `;
+      return;
+    }
+
     els.grid.innerHTML = list.map(p => {
-      // Fallbacks so you don't have to perfect JSON on day 1
-      const img =
-        p.cardImage ||
-        (Array.isArray(p.images) ? p.images[0] : null) ||
-        p.image ||
-        "./productimages/noimage.png";
-
+      const img = getCardImage(p);
       const title = p.title || "Untitled";
-      const price = p.basePrice ?? p.price ?? 0;
-
-      // tags for pills (fallback if you haven’t defined them yet)
-      const type = p.type || "fixed";
-      const steel = (p.steelTag || p.steel || "").toString();
-      const availability = p.availability || "made-to-order";
+      const price = getPrice(p);
+      const primaryType = getPrimaryType(p);
+      const steel = getSteel(p);
+      const availability = getAvailability(p);
 
       return `
         <a class="listing-card" href="./product.html?id=${encodeURIComponent(p.id)}">
@@ -226,7 +247,7 @@
           <div class="listing-meta">
             <div class="listing-title">${title}</div>
             <div class="listing-sub">
-              <span class="pill">${pillText(type)}</span>
+              <span class="pill">${pillText(primaryType)}</span>
               ${steel ? `<span class="pill">${steel.toUpperCase()}</span>` : ``}
               <span class="pill">${pillText(availability)}</span>
             </div>
@@ -240,34 +261,32 @@
   function apply() {
     const t = els.filterType.value;
     const s = els.filterSteel.value;
-    const a = els.filterAvailability.value;
     const q = els.search.value.trim().toLowerCase();
     const sort = els.sortBy.value;
 
     let list = products.filter(p => {
-      const type = p.type || "fixed";
-      const steel = (p.steelTag || p.steel || "").toString();
-      const avail = p.availability || "made-to-order";
+      const types = getTypes(p);
+      const steel = getSteel(p);
+      const availability = getAvailability(p);
       const title = (p.title || "").toLowerCase();
 
-      const okType = (t === "all" || type === t);
+      const okType = (t === "all" || types.includes(t));
       const okSteel = (s === "all" || steel === s);
-      const okAvail = (a === "all" || avail === a);
 
-      const haystack = `${title} ${type} ${steel} ${avail}`.toLowerCase();
+      const haystack = `${title} ${types.join(" ")} ${steel} ${availability}`.toLowerCase();
       const okSearch = (!q || haystack.includes(q));
 
-      return okType && okSteel && okAvail && okSearch;
+      return okType && okSteel && okSearch;
     });
 
     if (sort === "featured") {
-      list.sort((x, y) => Number(!!y.featured) - Number(!!x.featured));
+      list.sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
     } else if (sort === "price-low") {
-      list.sort((x, y) => (x.basePrice ?? x.price ?? 0) - (y.basePrice ?? y.price ?? 0));
+      list.sort((a, b) => getPrice(a) - getPrice(b));
     } else if (sort === "price-high") {
-      list.sort((x, y) => (y.basePrice ?? y.price ?? 0) - (x.basePrice ?? x.price ?? 0));
+      list.sort((a, b) => getPrice(b) - getPrice(a));
     } else if (sort === "newest") {
-      list.sort((x, y) => new Date(y.date || 0) - new Date(x.date || 0));
+      list.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
     }
 
     render(list);
@@ -277,7 +296,6 @@
     ["change", "input"].forEach(evt => {
       els.filterType.addEventListener(evt, apply);
       els.filterSteel.addEventListener(evt, apply);
-      els.filterAvailability.addEventListener(evt, apply);
       els.sortBy.addEventListener(evt, apply);
       els.search.addEventListener(evt, apply);
     });
@@ -286,24 +304,34 @@
   async function init() {
     try {
       const res = await fetch("./data/products.json", { cache: "no-store" });
+      if (!res.ok) throw new Error(`Failed to load products.json (${res.status})`);
+
       const data = await res.json();
       products = Array.isArray(data) ? data : (data.products || []);
+
       if (!products.length) {
-        console.warn("products.json loaded but no products found.");
+        els.grid.innerHTML = `
+          <div class="cart-empty">
+            <p>No products found.</p>
+          </div>
+        `;
+        return;
       }
+
       wireFilters();
-      render(products);
+      apply();
     } catch (err) {
       console.error("Failed to load ./data/products.json", err);
-      // Fallback to empty state so page doesn’t implode
-      wireFilters();
-      els.grid.innerHTML = `<div class="cart-empty"><p>Products failed to load.</p></div>`;
+      els.grid.innerHTML = `
+        <div class="cart-empty">
+          <p>Products failed to load.</p>
+        </div>
+      `;
     }
   }
 
   init();
 </script>
-
 
 </body>
 </html>

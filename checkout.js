@@ -48,7 +48,17 @@ const API_BASE =
 
     cart.forEach((item) => {
       const selection = item.selection || {};
-      const metaParts = Object.values(selection).filter(Boolean);
+
+      function formatOption(v) {
+        if (!v) return "";
+        return v
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, c => c.toUpperCase());
+      }
+
+      const metaParts = Object.values(selection)
+        .filter(Boolean)
+        .map(formatOption);
 
       const qty = item.quantity || 1;
       const lineTotal = (item.unitPrice || 0) * qty;

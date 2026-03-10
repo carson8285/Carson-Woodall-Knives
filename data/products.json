@@ -4,7 +4,10 @@
       "id": "micro-edc-01",
       "title": "Drop Point Micro EDC",
       "basePrice": 200,
-      "type": "fixed", 
+      "type": "fixed",
+      "featured": false,
+      "availability": "made-to-order",
+      "date": "2026-03-08",
       "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
       "images": [
         "./productimages/micro-edc-drop-point-cover.png",
@@ -51,6 +54,10 @@
       "id": "micro-edc-02",
       "title": "Trailing Point Micro EDC",
       "basePrice": 200,
+      "type": "fixed",
+      "featured": false,
+      "availability": "made-to-order",
+      "date": "2026-03-08",
       "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
       "images": [
         "./productimages/micro-edc-trailing-point-cover.png",
@@ -99,6 +106,10 @@
       "id": "micro-edc-03",
       "title": "Reverse Tanto Micro EDC",
       "basePrice": 200,
+      "type": "fixed",
+      "featured": false,
+      "availability": "made-to-order",
+      "date": "2026-03-08",
       "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
       "images": [
         "./productimages/micro-edc-reverse-tanto-cover.png",
@@ -146,6 +157,10 @@
       "id": "custom-01",
       "title": "March 26' Custom Knife",
       "basePrice": 400,
+      "types": ["edc", "hunting-bushcraft"],
+      "featured": true,
+      "availability": "Custom",
+      "date": "2026-03-09",
       "description": "Compact fixed blade built for daily carry. Clean lines, deliberate geometry.",
       "images": [
         "./productimages/march-26-custom.png",
@@ -162,13 +177,13 @@
           { "id": "stonewash", "label": "Stonewash", "price": 0 }
         ],
         "handle": [
-          { "id": "cocobolo", "label": "Cocobolo", "price": 0 }
+          { "id": "amboyna", "label": "Amboyna Burl", "price": 0 }
         ]
       },
       "defaults": {
         "steel": "1095",
         "finish": "stonewash",
-        "handle": "cocobolo"
+        "handle": "amboyna"
       }
     }
   ]

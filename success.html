@@ -44,12 +44,12 @@
 
 <body id="top">
   
-  <main class="cart-page">
+  <main class="cart-page success-page">
     <section class="cart-hero">
       <div class="cart-hero-inner">
         <h1 class="cart-heading">ORDER COMPLETE</h1>
         <p class="cart-subheading">
-          Payment successful. A confirmation email with your order details has been sent to you.</p>
+          Payment successful. A order confirmation has been sent to your email.</p>
       </div>
     </section>
 
@@ -81,7 +81,7 @@
       const backLink = document.getElementById("backLink");
 
       if (!sessionId) {
-        statusEl.textContent = "Missing Stripe session ID. If you just paid, please contact me with your details.";
+        statusEl.textContent = "Missing Stripe session ID. If you just paid, please contact me.";
         backLink.style.display = "inline-block";
         return;
       }
@@ -92,14 +92,14 @@
 
         if (!res.ok || !data.ok) {
           statusEl.textContent =
-            "Your payment was received, but I couldn’t finalize the order record automatically. I’ll review it manually.";
+            "Your payment was received, but I couldn’t finalize the order record automatically. Please contact me for further assistance.";
         } else {
           statusEl.textContent = "Thank you for you order.";
         }
       } catch (err) {
         console.error(err);
         statusEl.textContent =
-          "Your payment went through, but there was a problem recording the order. I’ll sort it out manually.";
+          "Your payment went through, but there was a problem recording the order. Please contact me for further assistance.";
       }
 
       backLink.style.display = "inline-block";
@@ -117,13 +117,14 @@
     <div class="footer-newsletter">
       <h2 class="footer-newsletter-heading">STAY CONNECTED</h2>
 
-      <form class="footer-newsletter-form" action="#" method="post">
+      <form class="footer-newsletter-form" action="https://formspree.io/f/xykygdje" method="post">
         <input
           type="email"
           name="email"
           placeholder="Email address"
           required
         />
+        <input type="hidden" name="_next" value="https://carsonwoodallknives.com" />
         <button type="submit">SUBSCRIBE</button>
       </form>
     </div>

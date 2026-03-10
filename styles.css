@@ -714,6 +714,17 @@ html {
   outline: none;
 }
 
+/* Fix filter dropdown list colors */
+.filter select option {
+  background: #111;
+  color: #eee;
+}
+
+/* Keep hover readable */
+.filter select option:hover {
+  background: #1b1b1b;
+}
+
 .filter.search input { min-width: 220px; }
 
 .listing-grid {
@@ -910,6 +921,12 @@ html {
   gap: 32px;
 }
 
+.success-page .cart-inner {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
 .cart-items {
   display: flex;
   flex-direction: column;
@@ -1076,7 +1093,12 @@ html {
   text-transform: uppercase;
   letter-spacing: 0.16em;
   font-size: 12px;
+  cursor: pointer;
+}
+
+.cart-checkout-btn:disabled {
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .cart-summary-note {
