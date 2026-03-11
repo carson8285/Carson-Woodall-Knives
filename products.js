@@ -289,7 +289,7 @@
 
     // Text content
     if (els.title) els.title.textContent = product.title || "";
-    if (els.desc) els.desc.textContent = product.description || "";
+    if (els.desc) els.desc.innerHTML = product.description || "";
 
     // Images
     const images = safeArr(product.images).length ? safeArr(product.images) : ["/productimages/miniedc.jpg"];

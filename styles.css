@@ -664,6 +664,18 @@ html {
   margin-top: 12px;
 }
 
+.contact-success {
+  margin-top: 14px;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #f5f5f5;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
 /* =========================
    Shop Listing Pages
    (Knives / Merch)
@@ -1105,6 +1117,12 @@ html {
   margin-top: 12px;
   font-size: 11px;
   color: #9b9b9b;
+}
+.summary-note{
+  font-size:12px;
+  opacity:0.65;
+  margin:6px 0 10px 0;
+  font-style:italic;
 }
 
 /* =========================
@@ -1880,4 +1898,93 @@ html {
   .checkout-form-row {
     flex-direction: column;
   }
+}
+
+/* ============================= */
+/* KNIFE BUILDER COMING SOON */
+/* ============================= */
+
+.coming-soon-wrapper{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:60px 20px;
+}
+
+.coming-card{
+  max-width:620px;
+  text-align:center;
+  padding:50px 40px;
+
+  background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(6px);
+
+  border-radius:12px;
+
+  box-shadow:
+  0 0 60px rgba(0,0,0,0.6),
+  inset 0 0 40px rgba(255,255,255,0.03);
+}
+
+.coming-title{
+  font-size:42px;
+  letter-spacing:6px;
+  margin-bottom:18px;
+}
+
+.coming-sub{
+  font-size:16px;
+  opacity:0.8;
+  margin-bottom:20px;
+}
+
+.coming-description{
+  font-size:14px;
+  opacity:0.7;
+  line-height:1.7;
+  margin-bottom:10px;
+}
+
+.coming-buttons{
+  margin-top:30px;
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+/* Button styles */
+
+.primary-btn,
+.secondary-btn{
+
+  padding:12px 22px;
+  border-radius:6px;
+  text-decoration:none;
+
+  font-size:14px;
+  letter-spacing:1px;
+
+  transition:all .25s ease;
+
+}
+
+.primary-btn{
+  background:#ffffff;
+  color:#000;
+}
+
+.primary-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 20px rgba(0,0,0,0.4);
+}
+
+.secondary-btn{
+  border:1px solid rgba(255,255,255,0.4);
+  color:#fff;
+}
+
+.secondary-btn:hover{
+  background:rgba(255,255,255,0.08);
 }
