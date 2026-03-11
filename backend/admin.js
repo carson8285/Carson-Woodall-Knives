@@ -5,6 +5,7 @@ async function fetchOrders() {
   try {
     const res = await fetch("/api/orders");
     if (!res.ok) throw new Error("Failed to fetch orders");
+
     const orders = await res.json();
 
     if (!orders.length) {
@@ -19,19 +20,26 @@ async function fetchOrders() {
       .map((order) => {
         const date = new Date(order.created);
         const when = date.toLocaleString();
+
         const amount =
           order.amount_total != null
             ? `$${(order.amount_total / 100).toFixed(2)}`
             : "";
-        const email = order.email || order.shipping?.email || "";
 
-        const shipping = order.shipping || {};
+        const customerName =
+          order.customerName ||
+          order.shippingName ||
+          "";
+
+        const email = order.email || "";
+
+        const shipping = order.shippingAddress || {};
         const shippingText = [
-          shipping.fullName,
-          shipping.address1,
+          shipping.line1,
+          shipping.line2,
           shipping.city,
           shipping.state,
-          shipping.postalCode,
+          shipping.postal_code,
           shipping.country,
         ]
           .filter(Boolean)
@@ -47,6 +55,7 @@ async function fetchOrders() {
               item.unitPrice != null
                 ? `$${Number(item.unitPrice).toFixed(2)}`
                 : "";
+
             return `<div class="small">
               <span class="mono">x${qty}</span> ${title}
               ${options ? `<span class="muted">(${options})</span>` : ""}
@@ -62,13 +71,14 @@ async function fetchOrders() {
               <div class="small muted">${when}</div>
             </td>
             <td>
-              <div class="small">${email || "<span class='muted'>n/a</span>"}</div>
-              <div class="small muted">${shippingText}</div>
+              <div class="small">${customerName || "<span class='muted'>n/a</span>"}</div>
+              <div class="small muted">${email || ""}</div>
+              <div class="small muted">${shippingText || ""}</div>
             </td>
             <td>${cartLines}</td>
             <td>
               <div class="pill">${amount}</div>
-              <div class="small muted">${order.currency || "usd"}</div>
+              <div class="small muted">${(order.currency || "usd").toUpperCase()}</div>
             </td>
           </tr>
         `;

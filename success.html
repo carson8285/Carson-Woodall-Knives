@@ -6,50 +6,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<header class="nav-bar">
-  <!-- LEFT: logo (scorpion + text, both SVGs) -->
-  <a href="index.html#top" class="nav-left">
-    <img
-      src="./productimages/notxtlogowhite.svg"
-      alt=""
-      class="nav-logo-scorpion"
-    />
-    <img
-      src="./productimages/textlogowhite.svg"
-      alt="Carson Woodall Knives"
-      class="nav-logo-textimg"
-    />
-  </a>
+<body id="top">
 
-  <!-- CENTER: links -->
-  <nav class="nav-links" aria-label="Main navigation">
-    <a href="index.html#shop">SHOP</a>
-    <a href="index.html#about">ABOUT</a>
-    <a href="./contact.html">CONTACT</a>
-    <!--<a href="./builder/index.html">KNIFE BUILDER</a>-->
-
-  </nav>
-
-  <!-- RIGHT: cart + menu -->
-  <div class="nav-right">
-    <a href="./cart.html" class="nav-cart-btn" aria-label="Cart">
-      <img src="./productimages/shopping-cart.svg" alt="cart" />
+  <header class="nav-bar">
+    <a href="index.html#top" class="nav-left">
+      <img
+        src="./productimages/notxtlogowhite.svg"
+        alt=""
+        class="nav-logo-scorpion"
+      />
+      <img
+        src="./productimages/textlogowhite.svg"
+        alt="Carson Woodall Knives"
+        class="nav-logo-textimg"
+      />
     </a>
 
-    <button class="nav-menu-btn" type="button" aria-label="Toggle menu">
-      <img src="./productimages/menulogo.svg" alt="menu" />
-    </button>
-  </div>
-</header>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="index.html#shop">SHOP</a>
+      <a href="index.html#about">ABOUT</a>
+      <a href="./contact.html">CONTACT</a>
+    </nav>
 
-<body id="top">
-  
+    <div class="nav-right">
+      <a href="./cart.html" class="nav-cart-btn" aria-label="Cart">
+        <img src="./productimages/shopping-cart.svg" alt="cart" />
+      </a>
+
+      <button class="nav-menu-btn" type="button" aria-label="Toggle menu">
+        <img src="./productimages/menulogo.svg" alt="menu" />
+      </button>
+    </div>
+  </header>
+
   <main class="cart-page success-page">
     <section class="cart-hero">
       <div class="cart-hero-inner">
         <h1 class="cart-heading">ORDER COMPLETE</h1>
         <p class="cart-subheading">
-          Payment successful. A order confirmation has been sent to your email.</p>
+          Payment successful. An order confirmation has been sent to your email.
+        </p>
       </div>
     </section>
 
@@ -58,141 +54,91 @@
         <div class="cart-items">
           <div class="cart-empty">
             <p id="statusMessage">Thank you for your order.</p>
-            <a href="index.html#top" class="cart-empty-cta" id="backLink" style="display:none;">
+            <a href="index.html#top" class="cart-empty-cta" id="backLink">
               RETURN HOME
             </a>
           </div>
         </div>
-
       </div>
     </section>
   </main>
 
-  <script>
-    const API_BASE =
-  window.location.hostname === "localhost"
-    ? "http://localhost:4242"
-    : "https://carson-woodall-knives.onrender.com";
+  <div class="section-divider"></div>
 
-    async function confirmOrder() {
-      const params = new URLSearchParams(window.location.search);
-      const sessionId = params.get("session_id");
-      const statusEl = document.getElementById("statusMessage");
-      const backLink = document.getElementById("backLink");
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-newsletter">
+        <h2 class="footer-newsletter-heading">STAY CONNECTED</h2>
 
-      if (!sessionId) {
-        statusEl.textContent = "Missing Stripe session ID. If you just paid, please contact me.";
-        backLink.style.display = "inline-block";
-        return;
-      }
+        <form class="footer-newsletter-form" action="https://formspree.io/f/xykygdje" method="post">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email address"
+            required
+          />
+          <input type="hidden" name="_next" value="https://carsonwoodallknives.com" />
+          <button type="submit">SUBSCRIBE</button>
+        </form>
+      </div>
 
-      try {
-        const res = await fetch(`${API_BASE}/confirm-order?session_id=${encodeURIComponent(sessionId)}`);
-        const data = await res.json();
+      <div class="footer-main">
+        <nav class="footer-nav">
+          <a href="index.html#shop">SHOP</a>
+          <a href="index.html#about">ABOUT</a>
+          <a href="contact.html">CONTACT</a>
+        </nav>
 
-        if (!res.ok || !data.ok) {
-          statusEl.textContent =
-            "Your payment was received, but I couldn’t finalize the order record automatically. Please contact me for further assistance.";
-        } else {
-          statusEl.textContent = "Thank you for you order.";
-        }
-      } catch (err) {
-        console.error(err);
-        statusEl.textContent =
-          "Your payment went through, but there was a problem recording the order. Please contact me for further assistance.";
-      }
+        <a href="#top" class="footer-logo-link">
+          <img
+            src="./productimages/logowhite.svg"
+            alt="Carson Woodall Knives"
+            class="footer-logo"
+          />
+        </a>
 
-      backLink.style.display = "inline-block";
-    }
+        <div class="footer-social">
+          <a href="https://www.instagram.com/carsonwoodallknives" target="_blank"
+             rel="noopener noreferrer" aria-label="Instagram" class="footer-social-icon">IG</a>
+          <a href="https://www.facebook.com/share/14HZGgMjPLt/?mibextid=wwXIfr" target="_blank"
+             rel="noopener noreferrer" aria-label="Facebook" class="footer-social-icon">F</a>
+          <a href="https://www.youtube.com/@CWKnives" target="_blank"
+             rel="noopener noreferrer" aria-label="YouTube" class="footer-social-icon">YT</a>
+        </div>
+      </div>
 
-    confirmOrder();
-  </script>
-
-  <!-- SECTION 5 – FOOTER -->
-   <div class="section-divider"></div>
-<footer class="footer">
-  <div class="footer-inner">
-
-    <!-- TOP: newsletter -->
-    <div class="footer-newsletter">
-      <h2 class="footer-newsletter-heading">STAY CONNECTED</h2>
-
-      <form class="footer-newsletter-form" action="https://formspree.io/f/xykygdje" method="post">
-        <input
-          type="email"
-          name="email"
-          placeholder="Email address"
-          required
-        />
-        <input type="hidden" name="_next" value="https://carsonwoodallknives.com" />
-        <button type="submit">SUBSCRIBE</button>
-      </form>
-    </div>
-
-    <!-- MIDDLE: nav · logo · socials -->
-    <div class="footer-main">
-      <nav class="footer-nav">
-        <a href="#shop">SHOP</a>
-        <a href="index.html#about">ABOUT</a>
-        <a href="contact.html">CONTACT</a>
-      </nav>
-
-      <a href="#top" class="footer-logo-link">
-        <img
-          src="./productimages/logowhite.svg"
-          alt="Carson Woodall Knives"
-          class="footer-logo"
-        />
-      </a>
-
-      <div class="footer-social">
-        <a href="https://www.instagram.com/carsonwoodallknives" target="blank"
-            aria-label="Instagram" class="footer-social-icon">IG</a>
-        <a href="https://www.facebook.com/share/14HZGgMjPLt/?mibextid=wwXIfr" target="blank"
-            aria-label="Facebook" class="footer-social-icon">F</a>
-        <a href="https://www.youtube.com/@CWKnives" target="blank"
-            aria-label="YouTube" class="footer-social-icon">YT</a>
+      <div class="footer-copy">
+        © 2025 CARSON WOODALL KNIVES
       </div>
     </div>
+  </footer>
 
-    <!-- BOTTOM: copyright -->
-    <div class="footer-copy">
-      © 2025 CARSON WOODALL KNIVES
-    </div>
-  </div>
-</footer>
-  
-<script>
-  const navBar = document.querySelector('.nav-bar');
-  const menuBtn = document.querySelector('.nav-menu-btn');
-  const navLinks = document.querySelectorAll('.nav-links a');
+  <script>
+    const navBar = document.querySelector(".nav-bar");
+    const menuBtn = document.querySelector(".nav-menu-btn");
+    const navLinks = document.querySelectorAll(".nav-links a");
+    const logoLink = document.querySelector(".footer-logo-link");
 
-// Select your logo link
-const logoLink = document.querySelector('.nav-logo-btn, .footer-logo-link'); 
-// adjust selector depending on your actual class
-
-logoLink.addEventListener('click', function (e) {
-
-  // If NOT currently at the top of the page
-  if (window.scrollY > 20) {
-    e.preventDefault(); // stop link navigation
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  } 
-  // ELSE let the default <a href="index.html"> work normally
-});
-
-  if (navBar && menuBtn) {
-    menuBtn.addEventListener('click', () => {
-      navBar.classList.toggle('nav-bar--open');
-    });
-
-    // close when clicking a nav link
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        navBar.classList.remove('nav-bar--open');
+    if (logoLink) {
+      logoLink.addEventListener("click", function (e) {
+        if (window.scrollY > 20) {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
       });
-    });
-  }
-</script>
+    }
+
+    if (navBar && menuBtn) {
+      menuBtn.addEventListener("click", () => {
+        navBar.classList.toggle("nav-bar--open");
+      });
+
+      navLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          navBar.classList.remove("nav-bar--open");
+        });
+      });
+    }
+  </script>
 </body>
 </html>

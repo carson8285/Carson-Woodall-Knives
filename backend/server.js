@@ -1,4 +1,3 @@
-// backend/server.js
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -8,8 +7,7 @@ const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 4242;
-const FRONTEND_BASE =
-  process.env.FRONTEND_BASE || "http://localhost:8000";
+const FRONTEND_BASE = process.env.FRONTEND_BASE || "http://localhost:8000";
 
 // ====== simple file-based order storage ======
 
@@ -28,19 +26,104 @@ function saveOrders(orders) {
   fs.writeFileSync(ORDERS_FILE, JSON.stringify(orders, null, 2), "utf8");
 }
 
-// ====== middleware ======
+function parseCart(metadataCart) {
+  try {
+    return metadataCart ? JSON.parse(metadataCart) : [];
+  } catch (err) {
+    console.error("Failed to parse cart metadata:", err);
+    return [];
+  }
+}
+
+function upsertOrder(order) {
+  const orders = loadOrders();
+  const existingIndex = orders.findIndex((o) => o.id === order.id);
+
+  if (existingIndex >= 0) {
+    orders[existingIndex] = order;
+  } else {
+    orders.push(order);
+  }
+
+  saveOrders(orders);
+}
+
+// ====== webhook MUST come before express.json() ======
+
+app.post(
+  "/stripe-webhook",
+  express.raw({ type: "application/json" }),
+  (req, res) => {
+    const sig = req.headers["stripe-signature"];
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+    if (!webhookSecret) {
+      console.error("Missing STRIPE_WEBHOOK_SECRET in environment.");
+      return res.status(500).send("Webhook secret not configured.");
+    }
+
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+    } catch (err) {
+      console.error("Webhook signature verification failed:", err.message);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+
+      const cart = parseCart(session.metadata?.cart);
+
+      const shippingAddress = session.shipping_details?.address || {};
+
+      const order = {
+        id: session.id,
+        created: Date.now(),
+        amount_total: session.amount_total,
+        currency: session.currency,
+        payment_status: session.payment_status,
+        customerName:
+          session.customer_details?.name ||
+          session.shipping_details?.name ||
+          "",
+        email: session.customer_details?.email || "",
+        phone: session.customer_details?.phone || "",
+        shippingName: session.shipping_details?.name || "",
+        shippingAddress: {
+          line1: shippingAddress.line1 || "",
+          line2: shippingAddress.line2 || "",
+          city: shippingAddress.city || "",
+          state: shippingAddress.state || "",
+          postal_code: shippingAddress.postal_code || "",
+          country: shippingAddress.country || "",
+        },
+        cart,
+      };
+
+      upsertOrder(order);
+      console.log("✅ Saved paid order from webhook:", order.id);
+    }
+
+    res.json({ received: true });
+  }
+);
+
+// ====== normal middleware ======
 
 app.use(cors());
 app.use(express.json());
 
-// ====== create checkout session (used by checkout.js) ======
+// ====== create checkout session ======
 
 function buildLineItems(cart) {
   if (!Array.isArray(cart)) return [];
+
   return cart.map((item) => {
     const quantity = item.quantity || 1;
     const unitPrice = Number(item.unitPrice) || 0;
-    const amount = Math.round(unitPrice * 100); // dollars -> cents
+    const amount = Math.round(unitPrice * 100);
 
     return {
       price_data: {
@@ -57,7 +140,7 @@ function buildLineItems(cart) {
 
 app.post("/create-checkout-session", async (req, res) => {
   try {
-    const { cart, shipping } = req.body;
+    const { cart } = req.body;
 
     if (!Array.isArray(cart) || cart.length === 0) {
       return res.status(400).json({ error: "Cart is empty or invalid." });
@@ -66,92 +149,32 @@ app.post("/create-checkout-session", async (req, res) => {
     const line_items = buildLineItems(cart);
 
     const session = await stripe.checkout.sessions.create({
-  mode: "payment",
-  payment_method_types: ["card"],
-  line_items,
+      mode: "payment",
+      payment_method_types: ["card"],
+      line_items,
 
-  shipping_address_collection: {
-    allowed_countries: ["US"],
-  },
+      shipping_address_collection: {
+        allowed_countries: ["US"],
+      },
 
-  shipping_options: [
-    {
-      shipping_rate: "shr_1T9r581EZJjQUOOYO1olMazV",
-    },
-  ],
+      shipping_options: [
+        {
+          shipping_rate: "shr_1T9r581EZJjQUOOYO1olMazV",
+        },
+      ],
 
-  success_url: `${FRONTEND_BASE}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-  cancel_url: `${FRONTEND_BASE}/checkout.html?status=cancel`,
+      success_url: `${FRONTEND_BASE}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${FRONTEND_BASE}/cart.html?status=cancel`,
 
-  metadata: {
-    cart: JSON.stringify(cart),
-    shipping: JSON.stringify(shipping || {}),
-  },
-});
+      metadata: {
+        cart: JSON.stringify(cart),
+      },
+    });
 
     res.json({ url: session.url });
   } catch (err) {
     console.error("Stripe error:", err);
     res.status(500).json({ error: "Failed to create Stripe session." });
-  }
-});
-
-// ====== confirm order after redirect from Stripe ======
-
-app.get("/confirm-order", async (req, res) => {
-  try {
-    const sessionId = req.query.session_id;
-    if (!sessionId) {
-      return res.status(400).json({ error: "Missing session_id" });
-    }
-
-    const session = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ["line_items"],
-    });
-
-    if (session.payment_status !== "paid") {
-      return res
-        .status(400)
-        .json({ error: "Session is not paid yet.", status: session.payment_status });
-    }
-
-    // Pull cart + shipping from metadata
-    let cart = [];
-    let shipping = {};
-    try {
-      if (session.metadata?.cart) {
-        cart = JSON.parse(session.metadata.cart);
-      }
-      if (session.metadata?.shipping) {
-        shipping = JSON.parse(session.metadata.shipping);
-      }
-    } catch (err) {
-      console.error("Failed to parse metadata JSON:", err);
-    }
-
-    const orders = loadOrders();
-
-    // Avoid duplicating same session
-    const existing = orders.find((o) => o.id === session.id);
-    if (!existing) {
-      const newOrder = {
-        id: session.id,
-        created: Date.now(),
-        amount_total: session.amount_total,
-        currency: session.currency,
-        email: session.customer_details?.email || shipping.email || "",
-        cart,
-        shipping,
-      };
-      orders.push(newOrder);
-      saveOrders(orders);
-      console.log("✅ Saved order:", newOrder.id);
-    }
-
-    res.json({ ok: true });
-  } catch (err) {
-    console.error("Confirm-order error:", err);
-    res.status(500).json({ error: "Failed to confirm order." });
   }
 });
 
@@ -162,7 +185,6 @@ app.get("/api/orders", (req, res) => {
   res.json(orders);
 });
 
-// admin UI files
 app.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "admin.html"));
 });
@@ -171,7 +193,6 @@ app.get("/admin.js", (req, res) => {
   res.sendFile(path.join(__dirname, "admin.js"));
 });
 
-// root health check
 app.get("/", (req, res) => {
   res.send("Backend is running. Admin UI: /admin");
 });

@@ -1,5 +1,9 @@
 // cart.js
 // Render cwk_cart from localStorage into cart.html
+const API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4242"
+    : "https://carson-woodall-knives.onrender.com";
 
 (function () {
   const CART_KEY = "cwk_cart";
@@ -131,11 +135,48 @@ const metaParts = Object.values(selection)
     renderCart();
   });
 
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener("click", () => {
-      window.location.href = "./checkout.html";
-    });
+async function startStripeCheckout() {
+  const cart = loadCart();
+
+  if (!cart.length) {
+    alert("Your cart is empty.");
+    return;
   }
+
+  checkoutBtn.disabled = true;
+  checkoutBtn.textContent = "REDIRECTING...";
+
+  try {
+    const res = await fetch(`${API_BASE}/create-checkout-session`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cart }),
+    });
+
+    if (!res.ok) {
+      throw new Error(await res.text());
+    }
+
+    const data = await res.json();
+
+    if (!data.url) {
+      throw new Error("No checkout URL returned.");
+    }
+
+    window.location.href = data.url;
+  } catch (err) {
+    console.error("Stripe checkout error:", err);
+    alert("Could not start checkout. Please try again.");
+    checkoutBtn.disabled = false;
+    checkoutBtn.textContent = "PROCEED TO CHECKOUT";
+  }
+}
+
+if (checkoutBtn) {
+  checkoutBtn.addEventListener("click", startStripeCheckout);
+}
 
   renderCart();
 })();
