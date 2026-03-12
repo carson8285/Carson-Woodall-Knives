@@ -78,6 +78,33 @@ async function upsertOrder(order) {
   }
 }
 
+function requireAdmin(req, res, next) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Basic ")) {
+    res.setHeader("WWW-Authenticate", 'Basic realm="Admin Area"');
+    return res.status(401).send("Authentication required.");
+  }
+
+  const base64Credentials = authHeader.split(" ")[1];
+  const credentials = Buffer.from(base64Credentials, "base64").toString("utf8");
+  const [username, password] = credentials.split(":");
+
+  const expectedUsername = process.env.ADMIN_USERNAME || "admin";
+  const expectedPassword = process.env.ADMIN_PASSWORD;
+
+  if (!expectedPassword) {
+    console.error("Missing ADMIN_PASSWORD in environment.");
+    return res.status(500).send("Admin auth not configured.");
+  }
+
+  if (username !== expectedUsername || password !== expectedPassword) {
+    return res.status(403).send("Forbidden");
+  }
+
+  next();
+}
+
 // Webhook route must come before express.json()
 app.post(
   "/stripe-webhook",
@@ -213,7 +240,7 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
-app.get("/api/orders", async (req, res) => {
+app.get("/api/orders", requireAdmin, async (req, res) => {
   try {
     const orders = await loadOrders();
     res.json(orders);
@@ -223,11 +250,11 @@ app.get("/api/orders", async (req, res) => {
   }
 });
 
-app.get("/admin", (req, res) => {
+app.get("/admin", requireAdmin, (req, res) => {
   res.sendFile(path.join(__dirname, "admin.html"));
 });
 
-app.get("/admin.js", (req, res) => {
+app.get("/admin.js", requireAdmin, (req, res) => {
   res.sendFile(path.join(__dirname, "admin.js"));
 });
 
