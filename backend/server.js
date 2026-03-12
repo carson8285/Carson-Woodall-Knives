@@ -76,7 +76,12 @@ app.post(
 
       const cart = parseCart(session.metadata?.cart);
 
-      const shippingAddress = session.shipping_details?.address || {};
+      const shippingDetails =
+        session.collected_information?.shipping_details ||
+        session.shipping_details ||
+        {};
+
+      const shippingAddress = shippingDetails.address || {};
 
       const order = {
         id: session.id,
@@ -86,11 +91,11 @@ app.post(
         payment_status: session.payment_status,
         customerName:
           session.customer_details?.name ||
-          session.shipping_details?.name ||
+          shippingDetails.name ||
           "",
         email: session.customer_details?.email || "",
         phone: session.customer_details?.phone || "",
-        shippingName: session.shipping_details?.name || "",
+        shippingName: shippingDetails.name || "",
         shippingAddress: {
           line1: shippingAddress.line1 || "",
           line2: shippingAddress.line2 || "",
