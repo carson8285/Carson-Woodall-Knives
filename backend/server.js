@@ -2,29 +2,23 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const fs = require("fs");
 const path = require("path");
+const { createClient } = require("@supabase/supabase-js");
 
 const app = express();
 const PORT = process.env.PORT || 4242;
 const FRONTEND_BASE = process.env.FRONTEND_BASE || "http://localhost:8000";
 
-// ====== simple file-based order storage ======
-
-const ORDERS_FILE = path.join(__dirname, "orders.json");
-
-function loadOrders() {
-  try {
-    const raw = fs.readFileSync(ORDERS_FILE, "utf8");
-    return JSON.parse(raw);
-  } catch {
-    return [];
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
   }
-}
-
-function saveOrders(orders) {
-  fs.writeFileSync(ORDERS_FILE, JSON.stringify(orders, null, 2), "utf8");
-}
+);
 
 function parseCart(metadataCart) {
   try {
@@ -35,25 +29,60 @@ function parseCart(metadataCart) {
   }
 }
 
-function upsertOrder(order) {
-  const orders = loadOrders();
-  const existingIndex = orders.findIndex((o) => o.id === order.id);
+async function loadOrders() {
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*")
+    .order("created", { ascending: false });
 
-  if (existingIndex >= 0) {
-    orders[existingIndex] = order;
-  } else {
-    orders.push(order);
+  if (error) {
+    throw error;
   }
 
-  saveOrders(orders);
+  return (data || []).map((order) => ({
+    id: order.id,
+    created: order.created,
+    amount_total: order.amount_total,
+    currency: order.currency,
+    payment_status: order.payment_status,
+    customerName: order.customer_name || "",
+    email: order.email || "",
+    phone: order.phone || "",
+    shippingName: order.shipping_name || "",
+    shippingAddress: order.shipping_address || {},
+    cart: order.cart || [],
+  }));
 }
 
-// ====== webhook MUST come before express.json() ======
+async function upsertOrder(order) {
+  const payload = {
+    id: order.id,
+    created: order.created,
+    amount_total: order.amount_total,
+    currency: order.currency,
+    payment_status: order.payment_status,
+    customer_name: order.customerName || "",
+    email: order.email || "",
+    phone: order.phone || "",
+    shipping_name: order.shippingName || "",
+    shipping_address: order.shippingAddress || {},
+    cart: order.cart || [],
+  };
 
+  const { error } = await supabase
+    .from("orders")
+    .upsert(payload, { onConflict: "id" });
+
+  if (error) {
+    throw error;
+  }
+}
+
+// Webhook route must come before express.json()
 app.post(
   "/stripe-webhook",
   express.raw({ type: "application/json" }),
-  (req, res) => {
+  async (req, res) => {
     const sig = req.headers["stripe-signature"];
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -72,55 +101,56 @@ app.post(
     }
 
     if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
+      try {
+        const session = event.data.object;
 
-      const cart = parseCart(session.metadata?.cart);
+        const cart = parseCart(session.metadata?.cart);
 
-      const shippingDetails =
-        session.collected_information?.shipping_details ||
-        session.shipping_details ||
-        {};
+        const shippingDetails =
+          session.collected_information?.shipping_details ||
+          session.shipping_details ||
+          {};
 
-      const shippingAddress = shippingDetails.address || {};
+        const shippingAddress = shippingDetails.address || {};
 
-      const order = {
-        id: session.id,
-        created: Date.now(),
-        amount_total: session.amount_total,
-        currency: session.currency,
-        payment_status: session.payment_status,
-        customerName:
-          session.customer_details?.name ||
-          shippingDetails.name ||
-          "",
-        email: session.customer_details?.email || "",
-        phone: session.customer_details?.phone || "",
-        shippingName: shippingDetails.name || "",
-        shippingAddress: {
-          line1: shippingAddress.line1 || "",
-          line2: shippingAddress.line2 || "",
-          city: shippingAddress.city || "",
-          state: shippingAddress.state || "",
-          postal_code: shippingAddress.postal_code || "",
-          country: shippingAddress.country || "",
-        },
-        cart,
-      };
+        const order = {
+          id: session.id,
+          created: Date.now(),
+          amount_total: session.amount_total,
+          currency: session.currency,
+          payment_status: session.payment_status,
+          customerName:
+            session.customer_details?.name ||
+            shippingDetails.name ||
+            "",
+          email: session.customer_details?.email || "",
+          phone: session.customer_details?.phone || "",
+          shippingName: shippingDetails.name || "",
+          shippingAddress: {
+            line1: shippingAddress.line1 || "",
+            line2: shippingAddress.line2 || "",
+            city: shippingAddress.city || "",
+            state: shippingAddress.state || "",
+            postal_code: shippingAddress.postal_code || "",
+            country: shippingAddress.country || "",
+          },
+          cart,
+        };
 
-      upsertOrder(order);
-      console.log("✅ Saved paid order from webhook:", order.id);
+        await upsertOrder(order);
+        console.log("✅ Saved paid order to Supabase:", order.id);
+      } catch (err) {
+        console.error("Failed to save webhook order to Supabase:", err);
+        return res.status(500).send("Failed to save order.");
+      }
     }
 
     res.json({ received: true });
   }
 );
 
-// ====== normal middleware ======
-
 app.use(cors());
 app.use(express.json());
-
-// ====== create checkout session ======
 
 function buildLineItems(cart) {
   if (!Array.isArray(cart)) return [];
@@ -183,11 +213,14 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
-// ====== admin API & UI ======
-
-app.get("/api/orders", (req, res) => {
-  const orders = loadOrders();
-  res.json(orders);
+app.get("/api/orders", async (req, res) => {
+  try {
+    const orders = await loadOrders();
+    res.json(orders);
+  } catch (err) {
+    console.error("Failed to load orders from Supabase:", err);
+    res.status(500).json({ error: "Failed to load orders." });
+  }
 });
 
 app.get("/admin", (req, res) => {
