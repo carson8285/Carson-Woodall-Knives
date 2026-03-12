@@ -137,7 +137,7 @@
         ],
         "finish": [
           { "id": "stonewash", "label": "Stonewash", "price": 0 },
-          { "id": "satin", "label": "Satin Polish", "price": 25 }
+          { "id": "satin", "label": "Satin Polish", "price": 50 }
         ],
         "handle": [
           { "id": "black_g10", "label": "Black G10", "price": 0 },
