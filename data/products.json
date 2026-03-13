@@ -156,7 +156,7 @@
         ,{
       "id": "custom-01",
       "title": "March 26' Custom Knife",
-      "basePrice": 1,
+      "basePrice": 400,
       "types": ["edc", "hunting-bushcraft"],
       "featured": true,
       "availability": "ready-to-ship",

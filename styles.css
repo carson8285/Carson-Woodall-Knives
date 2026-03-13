@@ -872,10 +872,24 @@ html {
   position: relative;
   text-decoration: none;
   color: inherit;
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #050505;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.65);
 }
 
 .shop-category-card .product-image {
-  filter: brightness(0.9);
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.92);
   transition: filter 0.2s ease, transform 0.2s ease;
 }
 
@@ -886,17 +900,18 @@ html {
 
 .shop-category-label {
   position: absolute;
-  left: 16px;
-  bottom: 16px;
-
+  left: 18px;
+  bottom: 18px;
   font-size: 12px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #f5f5f5;
-
-  background: rgba(0, 0, 0, 0.55);
-  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.58);
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 8px 12px;
   border-radius: 999px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 /* =========================
@@ -1600,6 +1615,36 @@ html {
     min-height: 220px;
   }
 
+    .shop-page-categories {
+    padding: 20px 16px 84px;
+  }
+
+  .shop-page-categories-inner {
+    max-width: 100%;
+  }
+
+  .product-grid {
+    gap: 18px;
+  }
+
+  .shop-category-card {
+    max-width: 100%;
+    border-radius: 24px;
+  }
+
+  .shop-category-card .product-image {
+    aspect-ratio: 4 / 3;
+    object-position: center 42%;
+  }
+
+  .shop-category-label {
+    left: 14px;
+    bottom: 14px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    padding: 7px 11px;
+  }
+
   .about-body {
     font-size: 13px;
   }
@@ -1942,6 +1987,151 @@ button:disabled {
   background: rgba(6, 6, 6, 0.88);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+}
+
+/* =========================
+   FAQ Page
+   ========================= */
+
+.faq-page {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.faq-hero {
+  width: 100%;
+  padding: 130px 24px 28px;
+  display: flex;
+  justify-content: center;
+}
+
+.faq-hero-inner {
+  width: 100%;
+  max-width: 920px;
+  text-align: center;
+}
+
+.faq-heading {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.faq-subheading {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #b3b3b3;
+}
+
+.faq-content {
+  width: 100%;
+  padding: 0 24px 110px;
+  display: flex;
+  justify-content: center;
+}
+
+.faq-inner {
+  width: 100%;
+  max-width: 920px;
+  display: grid;
+  gap: 14px;
+}
+
+.faq-item {
+  background: rgba(8, 8, 8, 0.9);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  overflow: hidden;
+}
+
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  position: relative;
+  padding: 22px 56px 20px 22px;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: "+";
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1;
+  color: rgba(255,255,255,0.75);
+}
+
+.faq-item[open] summary::after {
+  content: "−";
+}
+
+.faq-answer {
+  padding: 0 22px 22px;
+}
+
+.faq-answer p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.82);
+}
+
+@media (max-width: 700px) {
+  .faq-hero {
+    padding: 112px 18px 22px;
+  }
+
+  .faq-content {
+    padding: 0 18px 84px;
+  }
+
+  .faq-heading {
+    font-size: 22px;
+    letter-spacing: 0.16em;
+  }
+
+  .faq-subheading {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .faq-item {
+    border-radius: 16px;
+  }
+
+  .faq-item summary {
+    padding: 18px 48px 18px 16px;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    line-height: 1.5;
+  }
+
+  .faq-item summary::after {
+    right: 16px;
+    font-size: 20px;
+  }
+
+  .faq-answer {
+    padding: 0 16px 18px;
+  }
+
+  .faq-answer p {
+    font-size: 13px;
+    line-height: 1.7;
+  }
 }
 
 @media (max-width: 700px) {
