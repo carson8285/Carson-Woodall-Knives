@@ -328,7 +328,7 @@ const line_items = buildLineItems(cart);
 
       shipping_options: [
         {
-          shipping_rate: "shr_1T9r581EZJjQUOOYO1olMazV",
+          shipping_rate: "shr_1T9CWo0WVv0kReKCbfJ8Hkyg",
         },
       ],
 
