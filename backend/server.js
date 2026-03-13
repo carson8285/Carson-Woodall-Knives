@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const path = require("path");
+const fs = require("fs");
 const { createClient } = require("@supabase/supabase-js");
 
 const app = express();
@@ -19,6 +20,66 @@ const supabase = createClient(
     },
   }
 );
+
+function loadCatalogProducts() {
+  const productsPath = path.join(__dirname, "..", "data", "products.json");
+  const raw = fs.readFileSync(productsPath, "utf8");
+  const parsed = JSON.parse(raw);
+  return Array.isArray(parsed?.products) ? parsed.products : [];
+}
+
+function getCatalogProduct(productId) {
+  return loadCatalogProducts().find((p) => p.id === productId) || null;
+}
+
+async function getProductState(productId) {
+  const { data, error } = await supabase
+    .from("product_state")
+    .select("product_id, purchase_enabled, max_qty")
+    .eq("product_id", productId)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data;
+}
+
+async function getCatalogStateMap() {
+  const { data, error } = await supabase
+    .from("product_state")
+    .select("product_id, purchase_enabled, max_qty");
+
+  if (error) throw error;
+
+  const map = {};
+  for (const row of data || []) {
+    map[row.product_id] = row;
+  }
+  return map;
+}
+
+async function setProductPurchaseEnabled(productId, enabled) {
+  const existing = await getProductState(productId);
+  const catalogProduct = getCatalogProduct(productId);
+
+  const maxQty =
+    Number(existing?.max_qty) ||
+    Number(catalogProduct?.maxQty) ||
+    99;
+
+  const { error } = await supabase
+    .from("product_state")
+    .upsert(
+      {
+        product_id: productId,
+        purchase_enabled: enabled,
+        max_qty: maxQty,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "product_id" }
+    );
+
+  if (error) throw error;
+}
 
 function parseCart(metadataCart) {
   try {
@@ -131,12 +192,18 @@ app.post(
       try {
         const session = event.data.object;
 
-        const cart = parseCart(session.metadata?.cart);
+const cart = parseCart(session.metadata?.cart);
 
-        const shippingDetails =
-          session.collected_information?.shipping_details ||
-          session.shipping_details ||
-          {};
+for (const item of cart) {
+  if (item.productId === "monthly-custom") {
+    await setProductPurchaseEnabled("monthly-custom", false);
+  }
+}
+
+const shippingDetails =
+  session.collected_information?.shipping_details ||
+  session.shipping_details ||
+  {};
 
         const shippingAddress = shippingDetails.address || {};
 
@@ -205,10 +272,50 @@ app.post("/create-checkout-session", async (req, res) => {
     const { cart } = req.body;
 
     if (!Array.isArray(cart) || cart.length === 0) {
-      return res.status(400).json({ error: "Cart is empty or invalid." });
-    }
+  return res.status(400).json({ error: "Cart is empty or invalid." });
+}
 
-    const line_items = buildLineItems(cart);
+const qtyByProduct = new Map();
+
+for (const item of cart) {
+  const currentQty = qtyByProduct.get(item.productId) || 0;
+  qtyByProduct.set(item.productId, currentQty + (Number(item.quantity) || 0));
+}
+
+for (const [productId, qty] of qtyByProduct.entries()) {
+  const catalogProduct = getCatalogProduct(productId);
+
+  if (!catalogProduct) {
+    return res.status(400).json({ error: `Product not found: ${productId}` });
+  }
+
+  const liveState = await getProductState(productId);
+
+  const purchaseEnabled =
+    liveState?.purchase_enabled ??
+    catalogProduct.purchaseEnabled ??
+    true;
+
+  const maxQty = Number(
+    liveState?.max_qty ??
+    catalogProduct.maxQty ??
+    99
+  );
+
+  if (!purchaseEnabled) {
+    return res.status(400).json({
+      error: `${catalogProduct.title} is sold out.`,
+    });
+  }
+
+  if (qty > maxQty) {
+    return res.status(400).json({
+      error: `Only ${maxQty} of ${catalogProduct.title} can be purchased.`,
+    });
+  }
+}
+
+const line_items = buildLineItems(cart);
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -237,6 +344,16 @@ app.post("/create-checkout-session", async (req, res) => {
   } catch (err) {
     console.error("Stripe error:", err);
     res.status(500).json({ error: "Failed to create Stripe session." });
+  }
+});
+
+app.get("/catalog-state", async (req, res) => {
+  try {
+    const map = await getCatalogStateMap();
+    res.json(map);
+  } catch (err) {
+    console.error("Failed to load catalog state:", err);
+    res.status(500).json({ error: "Failed to load catalog state." });
   }
 });
 

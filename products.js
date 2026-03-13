@@ -7,7 +7,11 @@
 */
 
 (() => {
-  const PRODUCTS_JSON_URL = "./data/products.json"; // root-safe
+  const PRODUCTS_JSON_URL = "./data/products.json";
+const API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4242"
+    : "https://carson-woodall-knives.onrender.com";
 
   // ---- Simple local cart (localStorage) ----
   const CART_KEY = "cwk_cart";
@@ -91,6 +95,30 @@
   function setPageTitle(t) {
     document.title = `${t} | Carson Woodall Knives`;
   }
+
+  async function loadLiveStateMap() {
+  try {
+    const res = await fetch(`${API_BASE}/catalog-state`, { cache: "no-store" });
+    if (!res.ok) throw new Error("Failed to load live product state.");
+    return await res.json();
+  } catch (err) {
+    console.warn("Live product state unavailable:", err);
+    return {};
+  }
+}
+
+function applyLiveState(productsList, stateMap) {
+  return productsList.map((p) => {
+    const live = stateMap[p.id];
+    if (!live) return p;
+
+    return {
+      ...p,
+      purchaseEnabled: live.purchase_enabled,
+      maxQty: live.max_qty,
+    };
+  });
+}
 
   function buildOptions(selectEl, optionList, currentId) {
     selectEl.innerHTML = "";
@@ -290,6 +318,12 @@
     // Text content
     if (els.title) els.title.textContent = product.title || "";
     if (els.desc) els.desc.innerHTML = product.description || "";
+    if (els.addToCart) {
+  const purchasable = product.purchaseEnabled !== false;
+
+  els.addToCart.disabled = !purchasable;
+  els.addToCart.textContent = purchasable ? "Add to Cart" : "Sold Out";
+}
 
     // Images
     const images = safeArr(product.images).length ? safeArr(product.images) : ["/productimages/miniedc.jpg"];
@@ -339,7 +373,27 @@
 
     // Add to cart → store in localStorage and go to cart.html
     els.addToCart?.addEventListener("click", (e) => {
-      if (!product) return;
+  if (!product) return;
+
+  if (product.purchaseEnabled === false) {
+    alert("This knife is sold out.");
+    return;
+  }
+
+  const cart = loadCart();
+
+  if (Number(product.maxQty || 99) === 1) {
+    const existing = cart.find((entry) => entry.productId === product.id);
+    if (existing) {
+      alert("Only one of this knife is available.");
+      return;
+    }
+  }
+
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
 
       if (e) {
         e.preventDefault();
@@ -387,10 +441,11 @@
       if (!res.ok) throw new Error(`Failed to load ${PRODUCTS_JSON_URL} (${res.status})`);
       const data = await res.json();
 
-      products = safeArr(data.products);
+const liveStateMap = await loadLiveStateMap();
+products = applyLiveState(safeArr(data.products), liveStateMap);
 
-      const id = qsParam("id");
-      product = products.find((p) => p.id === id) || products[0];
+const id = qsParam("id");
+product = products.find((p) => p.id === id) || products[0];
 
       if (!product) throw new Error("No products found in products.json");
 

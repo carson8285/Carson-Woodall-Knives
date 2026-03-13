@@ -154,6 +154,11 @@
 
   let products = [];
 
+const API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4242"
+    : "https://carson-woodall-knives.onrender.com";
+
   const els = {
     grid: document.getElementById("listingGrid"),
     filterType: document.getElementById("filterType"),
@@ -165,6 +170,30 @@
   function money(n) {
     return `$${Math.round(Number(n) || 0)}`;
   }
+
+  async function loadLiveStateMap() {
+  try {
+    const res = await fetch(`${API_BASE}/catalog-state`, { cache: "no-store" });
+    if (!res.ok) throw new Error("Failed to load live product state.");
+    return await res.json();
+  } catch (err) {
+    console.warn("Live product state unavailable:", err);
+    return {};
+  }
+}
+
+function applyLiveState(productsList, stateMap) {
+  return productsList.map((p) => {
+    const live = stateMap[p.id];
+    if (!live) return p;
+
+    return {
+      ...p,
+      purchaseEnabled: live.purchase_enabled,
+      maxQty: live.max_qty,
+    };
+  });
+}
 
   function pillText(s) {
     return String(s || "").replace(/-/g, " ");
@@ -205,8 +234,9 @@
   }
 
   function getAvailability(p) {
-    return String(p.availability || "made-to-order").toLowerCase();
-  }
+  if (p.purchaseEnabled === false) return "sold-out";
+  return String(p.availability || "made-to-order").toLowerCase();
+}
 
   function getCardImage(p) {
     return (
@@ -307,7 +337,9 @@
       if (!res.ok) throw new Error(`Failed to load products.json (${res.status})`);
 
       const data = await res.json();
-      products = Array.isArray(data) ? data : (data.products || []);
+const rawProducts = Array.isArray(data) ? data : (data.products || []);
+const liveStateMap = await loadLiveStateMap();
+products = applyLiveState(rawProducts, liveStateMap);
 
       if (!products.length) {
         els.grid.innerHTML = `

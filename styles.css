@@ -1896,6 +1896,11 @@ html {
 }
 
 /* Button styles */
+.add-cart:disabled,
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 
 .primary-btn,
 .secondary-btn{
