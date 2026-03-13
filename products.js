@@ -30,24 +30,43 @@ const API_BASE =
   }
 
   function addCartItem(item) {
-    const cart = loadCart();
+  const cart = loadCart();
 
-    const existing = cart.find(
-      (entry) =>
-        entry.productId === item.productId &&
-        entry.selection?.steel === item.selection?.steel &&
-        entry.selection?.finish === item.selection?.finish &&
-        entry.selection?.handle === item.selection?.handle
+  if (Number(item.maxQty || 99) === 1) {
+    const existingSingle = cart.find(
+      (entry) => entry.productId === item.productId
     );
 
-    if (existing) {
-      existing.quantity += item.quantity;
-    } else {
-      cart.push(item);
+    if (existingSingle) {
+      alert("Only one of this knife is available.");
+      return false;
+    }
+  }
+
+  const existing = cart.find(
+    (entry) =>
+      entry.productId === item.productId &&
+      entry.selection?.steel === item.selection?.steel &&
+      entry.selection?.finish === item.selection?.finish &&
+      entry.selection?.handle === item.selection?.handle
+  );
+
+  if (existing) {
+    const nextQty = (existing.quantity || 1) + (item.quantity || 1);
+
+    if (Number(item.maxQty || 99) < nextQty) {
+      alert(`Only ${item.maxQty} of this knife is available.`);
+      return false;
     }
 
-    saveCart(cart);
+    existing.quantity = nextQty;
+  } else {
+    cart.push(item);
   }
+
+  saveCart(cart);
+  return true;
+}
   // ------------------------------------------
 
   const els = {
@@ -380,48 +399,36 @@ function applyLiveState(productsList, stateMap) {
     return;
   }
 
-  const cart = loadCart();
-
-  if (Number(product.maxQty || 99) === 1) {
-    const existing = cart.find((entry) => entry.productId === product.id);
-    if (existing) {
-      alert("Only one of this knife is available.");
-      return;
-    }
-  }
-
   if (e) {
     e.preventDefault();
     e.stopPropagation();
   }
 
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+  const images = safeArr(product.images);
+  const variantIdx = indexForSelection(state.sel);
 
-      const images = safeArr(product.images);
-      const variantIdx = indexForSelection(state.sel);
+  const image =
+    images[variantIdx ?? state.imgIndex] ||
+    images[state.imgIndex] ||
+    images[0] ||
+    "./productimages/noimage.png";
 
-      const image =
-        images[variantIdx ?? state.imgIndex] ||
-        images[state.imgIndex] ||
-        images[0] ||
-        "./productimages/noimage.png";
+  const item = {
+    productId: product.id,
+    title: product.title,
+    selection: { ...state.sel },
+    quantity: 1,
+    unitPrice: calcTotal(),
+    image,
+    source: "product",
+    maxQty: Number(product.maxQty || 99),
+  };
 
-      const item = {
-        productId: product.id,
-        title: product.title,
-        selection: { ...state.sel },   // { steel, finish, handle }
-        quantity: 1,
-        unitPrice: calcTotal(),
-        image,
-        source: "product",
-      };
+  const added = addCartItem(item);
+  if (!added) return;
 
-      addCartItem(item);
-      window.location.href = "./cart.html";
-    });
+  window.location.href = "./cart.html";
+});
 
     // Keyboard nav
     window.addEventListener("keydown", (e) => {

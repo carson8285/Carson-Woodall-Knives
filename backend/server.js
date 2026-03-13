@@ -195,8 +195,8 @@ app.post(
 const cart = parseCart(session.metadata?.cart);
 
 for (const item of cart) {
-  if (item.productId === "monthly-custom") {
-    await setProductPurchaseEnabled("monthly-custom", false);
+  if (item.productId === "custom-01") {
+    await setProductPurchaseEnabled("custom-01", false);
   }
 }
 

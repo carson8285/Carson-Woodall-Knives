@@ -26,6 +26,10 @@ const API_BASE =
     return `$${v.toFixed(2)}`;
   }
 
+  function getMaxQty(item) {
+  return Number(item.maxQty || 99);
+}
+
   const itemsContainer = document.querySelector(".cart-items");
   const summaryRows = document.querySelectorAll(".cart-summary-row");
   const subtotalEl =
@@ -123,13 +127,21 @@ const metaParts = Object.values(selection)
     if (!item) return;
 
     if (decBtn) {
-      item.quantity = (item.quantity || 1) - 1;
-      if (item.quantity <= 0) {
-        cart.splice(idx, 1);
-      }
-    } else if (incBtn) {
-      item.quantity = (item.quantity || 1) + 1;
-    }
+  item.quantity = (item.quantity || 1) - 1;
+  if (item.quantity <= 0) {
+    cart.splice(idx, 1);
+  }
+} else if (incBtn) {
+  const currentQty = Number(item.quantity || 1);
+  const maxQty = getMaxQty(item);
+
+  if (currentQty >= maxQty) {
+    alert(`Only ${maxQty} of this knife is available.`);
+    return;
+  }
+
+  item.quantity = currentQty + 1;
+}
 
     saveCart(cart);
     renderCart();
@@ -156,22 +168,35 @@ async function startStripeCheckout() {
     });
 
     if (!res.ok) {
-      throw new Error(await res.text());
+  let message = "Could not start checkout.";
+
+  try {
+    const errorData = await res.json();
+    message = errorData.error || message;
+  } catch {
+    try {
+      message = await res.text();
+    } catch {
+      // keep default
     }
-
-    const data = await res.json();
-
-    if (!data.url) {
-      throw new Error("No checkout URL returned.");
-    }
-
-    window.location.href = data.url;
-  } catch (err) {
-    console.error("Stripe checkout error:", err);
-    alert("Could not start checkout. Please try again.");
-    checkoutBtn.disabled = false;
-    checkoutBtn.textContent = "PROCEED TO CHECKOUT";
   }
+
+  throw new Error(message);
+}
+
+const data = await res.json();
+
+if (!data.url) {
+  throw new Error("No checkout URL returned.");
+}
+
+window.location.href = data.url;
+} catch (err) {
+  console.error("Stripe checkout error:", err);
+  alert(err.message || "Could not start checkout.");
+  checkoutBtn.disabled = false;
+  checkoutBtn.textContent = "PROCEED TO CHECKOUT";
+}
 }
 
 if (checkoutBtn) {
