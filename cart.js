@@ -1,5 +1,6 @@
 // cart.js
 // Render cwk_cart from localStorage into cart.html
+
 const API_BASE =
   window.location.hostname === "localhost"
     ? "http://localhost:4242"
@@ -27,8 +28,8 @@ const API_BASE =
   }
 
   function getMaxQty(item) {
-  return Number(item.maxQty || 99);
-}
+    return Number(item.maxQty || 99);
+  }
 
   const itemsContainer = document.querySelector(".cart-items");
   const summaryRows = document.querySelectorAll(".cart-summary-row");
@@ -47,7 +48,6 @@ const API_BASE =
   function renderCart() {
     const cart = loadCart();
 
-    // Clear any previously rendered items
     itemsContainer.querySelectorAll(".cart-item").forEach((el) => el.remove());
 
     if (!cart.length) {
@@ -68,16 +68,16 @@ const API_BASE =
 
       const selection = item.selection || {};
 
-    function formatOption(v) {
-      if (!v) return "";
+      function formatOption(v) {
+        if (!v) return "";
         return v
           .replace(/_/g, " ")
-          .replace(/\b\w/g, c => c.toUpperCase());
-    }
+          .replace(/\b\w/g, (c) => c.toUpperCase());
+      }
 
-const metaParts = Object.values(selection)
-  .filter(Boolean)
-  .map(formatOption);
+      const metaParts = Object.values(selection)
+        .filter(Boolean)
+        .map(formatOption);
 
       const qty = item.quantity || 1;
       const lineTotal = (item.unitPrice || 0) * qty;
@@ -115,7 +115,6 @@ const metaParts = Object.values(selection)
     if (checkoutBtn) checkoutBtn.disabled = false;
   }
 
-  // Quantity +/- logic
   itemsContainer.addEventListener("click", (e) => {
     const decBtn = e.target.closest(".cart-qty-decrease");
     const incBtn = e.target.closest(".cart-qty-increase");
@@ -127,83 +126,99 @@ const metaParts = Object.values(selection)
     if (!item) return;
 
     if (decBtn) {
-  item.quantity = (item.quantity || 1) - 1;
-  if (item.quantity <= 0) {
-    cart.splice(idx, 1);
-  }
-} else if (incBtn) {
-  const currentQty = Number(item.quantity || 1);
-  const maxQty = getMaxQty(item);
+      item.quantity = (item.quantity || 1) - 1;
+      if (item.quantity <= 0) {
+        cart.splice(idx, 1);
+      }
+    } else if (incBtn) {
+      const currentQty = Number(item.quantity || 1);
+      const maxQty = getMaxQty(item);
 
-  if (currentQty >= maxQty) {
-    alert(`Only ${maxQty} of this knife is available.`);
-    return;
-  }
+      if (currentQty >= maxQty) {
+        alert(`Only ${maxQty} of this knife is available.`);
+        return;
+      }
 
-  item.quantity = currentQty + 1;
-}
+      item.quantity = currentQty + 1;
+    }
 
     saveCart(cart);
     renderCart();
   });
 
-async function startStripeCheckout() {
-  const cart = loadCart();
+  async function startStripeCheckout() {
+    const cart = loadCart();
 
-  if (!cart.length) {
-    alert("Your cart is empty.");
-    return;
-  }
+    if (!cart.length) {
+      alert("Your cart is empty.");
+      return;
+    }
 
-  checkoutBtn.disabled = true;
-  checkoutBtn.textContent = "REDIRECTING...";
+    if (typeof gtag === "function") {
+      const value = cart.reduce((sum, item) => {
+        return sum + (Number(item.unitPrice || 0) * Number(item.quantity || 1));
+      }, 0);
 
-  try {
-    const res = await fetch(`${API_BASE}/create-checkout-session`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ cart }),
-    });
+      gtag("event", "begin_checkout", {
+        currency: "USD",
+        value,
+        items: cart.map((item) => ({
+          item_id: item.productId,
+          item_name: item.title,
+          price: Number(item.unitPrice || 0),
+          quantity: Number(item.quantity || 1),
+          item_variant: `${item.selection?.steel || ""} / ${item.selection?.finish || ""} / ${item.selection?.handle || ""}`
+        }))
+      });
+    }
 
-    if (!res.ok) {
-  let message = "Could not start checkout.";
+    checkoutBtn.disabled = true;
+    checkoutBtn.textContent = "REDIRECTING...";
 
-  try {
-    const errorData = await res.json();
-    message = errorData.error || message;
-  } catch {
     try {
-      message = await res.text();
-    } catch {
-      // keep default
+      const res = await fetch(`${API_BASE}/create-checkout-session`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cart }),
+      });
+
+      if (!res.ok) {
+        let message = "Could not start checkout.";
+
+        try {
+          const errorData = await res.json();
+          message = errorData.error || message;
+        } catch {
+          try {
+            message = await res.text();
+          } catch {
+            // keep default
+          }
+        }
+
+        throw new Error(message);
+      }
+
+      const data = await res.json();
+
+      if (!data.url) {
+        throw new Error("No checkout URL returned.");
+      }
+
+      window.location.href = data.url;
+    } catch (err) {
+      console.error("Stripe checkout error:", err);
+      alert(err.message || "Could not start checkout.");
+      checkoutBtn.disabled = false;
+      checkoutBtn.textContent = "PROCEED TO CHECKOUT";
     }
   }
 
-  throw new Error(message);
-}
-
-const data = await res.json();
-
-if (!data.url) {
-  throw new Error("No checkout URL returned.");
-}
-
-window.location.href = data.url;
-} catch (err) {
-  console.error("Stripe checkout error:", err);
-  alert(err.message || "Could not start checkout.");
-  checkoutBtn.disabled = false;
-  checkoutBtn.textContent = "PROCEED TO CHECKOUT";
-}
-}
-
-if (checkoutBtn) {
-  checkoutBtn.addEventListener("click", startStripeCheckout);
-}
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener("click", startStripeCheckout);
+  }
 
   renderCart();
 })();
-
-

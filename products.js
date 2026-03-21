@@ -8,10 +8,10 @@
 
 (() => {
   const PRODUCTS_JSON_URL = "./data/products.json";
-const API_BASE =
-  window.location.hostname === "localhost"
-    ? "http://localhost:4242"
-    : "https://carson-woodall-knives.onrender.com";
+  const API_BASE =
+    window.location.hostname === "localhost"
+      ? "http://localhost:4242"
+      : "https://carson-woodall-knives.onrender.com";
 
   // ---- Simple local cart (localStorage) ----
   const CART_KEY = "cwk_cart";
@@ -30,43 +30,43 @@ const API_BASE =
   }
 
   function addCartItem(item) {
-  const cart = loadCart();
+    const cart = loadCart();
 
-  if (Number(item.maxQty || 99) === 1) {
-    const existingSingle = cart.find(
-      (entry) => entry.productId === item.productId
+    if (Number(item.maxQty || 99) === 1) {
+      const existingSingle = cart.find(
+        (entry) => entry.productId === item.productId
+      );
+
+      if (existingSingle) {
+        alert("Only one of this knife is available.");
+        return false;
+      }
+    }
+
+    const existing = cart.find(
+      (entry) =>
+        entry.productId === item.productId &&
+        entry.selection?.steel === item.selection?.steel &&
+        entry.selection?.finish === item.selection?.finish &&
+        entry.selection?.handle === item.selection?.handle
     );
 
-    if (existingSingle) {
-      alert("Only one of this knife is available.");
-      return false;
-    }
-  }
+    if (existing) {
+      const nextQty = (existing.quantity || 1) + (item.quantity || 1);
 
-  const existing = cart.find(
-    (entry) =>
-      entry.productId === item.productId &&
-      entry.selection?.steel === item.selection?.steel &&
-      entry.selection?.finish === item.selection?.finish &&
-      entry.selection?.handle === item.selection?.handle
-  );
+      if (Number(item.maxQty || 99) < nextQty) {
+        alert(`Only ${item.maxQty} of this knife is available.`);
+        return false;
+      }
 
-  if (existing) {
-    const nextQty = (existing.quantity || 1) + (item.quantity || 1);
-
-    if (Number(item.maxQty || 99) < nextQty) {
-      alert(`Only ${item.maxQty} of this knife is available.`);
-      return false;
+      existing.quantity = nextQty;
+    } else {
+      cart.push(item);
     }
 
-    existing.quantity = nextQty;
-  } else {
-    cart.push(item);
+    saveCart(cart);
+    return true;
   }
-
-  saveCart(cart);
-  return true;
-}
   // ------------------------------------------
 
   const els = {
@@ -81,7 +81,6 @@ const API_BASE =
     handle: document.getElementById("handleSelect"),
     addToCart: document.getElementById("addToCartBtn"),
   };
-
 
   // If this script is loaded on a page without the product DOM, do nothing.
   if (!els.root || !els.mainImg || !els.thumbs || !els.steel || !els.finish || !els.handle) return;
@@ -116,28 +115,28 @@ const API_BASE =
   }
 
   async function loadLiveStateMap() {
-  try {
-    const res = await fetch(`${API_BASE}/catalog-state`, { cache: "no-store" });
-    if (!res.ok) throw new Error("Failed to load live product state.");
-    return await res.json();
-  } catch (err) {
-    console.warn("Live product state unavailable:", err);
-    return {};
+    try {
+      const res = await fetch(`${API_BASE}/catalog-state`, { cache: "no-store" });
+      if (!res.ok) throw new Error("Failed to load live product state.");
+      return await res.json();
+    } catch (err) {
+      console.warn("Live product state unavailable:", err);
+      return {};
+    }
   }
-}
 
-function applyLiveState(productsList, stateMap) {
-  return productsList.map((p) => {
-    const live = stateMap[p.id];
-    if (!live) return p;
+  function applyLiveState(productsList, stateMap) {
+    return productsList.map((p) => {
+      const live = stateMap[p.id];
+      if (!live) return p;
 
-    return {
-      ...p,
-      purchaseEnabled: live.purchase_enabled,
-      maxQty: live.max_qty,
-    };
-  });
-}
+      return {
+        ...p,
+        purchaseEnabled: live.purchase_enabled,
+        maxQty: live.max_qty,
+      };
+    });
+  }
 
   function buildOptions(selectEl, optionList, currentId) {
     selectEl.innerHTML = "";
@@ -171,7 +170,6 @@ function applyLiveState(productsList, stateMap) {
   }
 
   function variantKey(sel) {
-    // Must match products.json keys: "steel__finish__handle"
     return `${sel.steel}__${sel.finish}__${sel.handle}`;
   }
 
@@ -196,23 +194,33 @@ function applyLiveState(productsList, stateMap) {
     scrollThumbIntoView();
   }
 
+  function trackViewItem() {
+    if (!product || typeof gtag !== "function") return;
+
+    gtag("event", "view_item", {
+      currency: "USD",
+      value: calcTotal(),
+      items: [
+        {
+          item_id: product.id,
+          item_name: product.title,
+          price: calcTotal(),
+          item_category: Array.isArray(product.types)
+            ? product.types.join(", ")
+            : (product.type || "")
+        }
+      ]
+    });
+  }
+
   // -------------------------
   // Ensure markup exists
   // -------------------------
   function ensureCarouselButtons() {
-    // We want a wrapper like:
-    // <div class="gallery-main">
-    //   <button class="gallery-nav prev">‹</button>
-    //   <img id="productMainImage">
-    //   <button class="gallery-nav next">›</button>
-    // </div>
-
     const img = els.mainImg;
 
-    // If already inside .gallery-main with buttons, just wire later.
     let galleryMain = img.closest(".gallery-main");
     if (!galleryMain) {
-      // Create wrapper and move img into it
       galleryMain = document.createElement("div");
       galleryMain.className = "gallery-main";
 
@@ -221,7 +229,6 @@ function applyLiveState(productsList, stateMap) {
       galleryMain.appendChild(img);
     }
 
-    // Prev button
     let prevBtn = galleryMain.querySelector(".gallery-nav.prev");
     if (!prevBtn) {
       prevBtn = document.createElement("button");
@@ -232,7 +239,6 @@ function applyLiveState(productsList, stateMap) {
       galleryMain.insertBefore(prevBtn, galleryMain.firstChild);
     }
 
-    // Next button
     let nextBtn = galleryMain.querySelector(".gallery-nav.next");
     if (!nextBtn) {
       nextBtn = document.createElement("button");
@@ -247,7 +253,6 @@ function applyLiveState(productsList, stateMap) {
   }
 
   function ensureBreakdownBox() {
-    // Insert a mini breakdown box under the dropdowns inside .product-options
     const optionsCol = els.root.querySelector(".product-options");
     if (!optionsCol) return null;
 
@@ -306,10 +311,8 @@ function applyLiveState(productsList, stateMap) {
   }
 
   function renderPriceAndBreakdown() {
-    // Main price
     if (els.price) els.price.textContent = money(calcTotal());
 
-    // Breakdown box
     const box = ensureBreakdownBox();
     if (!box) return;
 
@@ -334,25 +337,24 @@ function applyLiveState(productsList, stateMap) {
   function render() {
     if (!product) return;
 
-    // Text content
     if (els.title) els.title.textContent = product.title || "";
     if (els.desc) els.desc.innerHTML = product.description || "";
     if (els.addToCart) {
-  const purchasable = product.purchaseEnabled !== false;
+      const purchasable = product.purchaseEnabled !== false;
+      els.addToCart.disabled = !purchasable;
+      els.addToCart.textContent = purchasable ? "Add to Cart" : "Sold Out";
+    }
 
-  els.addToCart.disabled = !purchasable;
-  els.addToCart.textContent = purchasable ? "Add to Cart" : "Sold Out";
-}
+    const images = safeArr(product.images).length
+      ? safeArr(product.images)
+      : ["/productimages/miniedc.jpg"];
 
-    // Images
-    const images = safeArr(product.images).length ? safeArr(product.images) : ["/productimages/miniedc.jpg"];
     if (state.imgIndex >= images.length) state.imgIndex = 0;
 
     renderImageOnly();
     renderThumbs(images);
     renderPriceAndBreakdown();
 
-    // Dropdowns
     buildOptions(els.steel, safeArr(product.options?.steel), state.sel.steel);
     buildOptions(els.finish, safeArr(product.options?.finish), state.sel.finish);
     buildOptions(els.handle, safeArr(product.options?.handle), state.sel.handle);
@@ -362,13 +364,11 @@ function applyLiveState(productsList, stateMap) {
   // Events
   // -------------------------
   function wireEvents() {
-    // Ensure buttons exist and wire them
     const { prevBtn, nextBtn } = ensureCarouselButtons();
 
     prevBtn.addEventListener("click", () => setImageIndex(state.imgIndex - 1));
     nextBtn.addEventListener("click", () => setImageIndex(state.imgIndex + 1));
 
-    // Dropdown changes: jump carousel to mapped index if available
     els.steel.addEventListener("change", (e) => {
       state.sel.steel = e.target.value;
       const mapped = indexForSelection(state.sel);
@@ -390,47 +390,61 @@ function applyLiveState(productsList, stateMap) {
       renderPriceAndBreakdown();
     });
 
-    // Add to cart → store in localStorage and go to cart.html
     els.addToCart?.addEventListener("click", (e) => {
-  if (!product) return;
+      if (!product) return;
 
-  if (product.purchaseEnabled === false) {
-    alert("This knife is sold out.");
-    return;
-  }
+      if (product.purchaseEnabled === false) {
+        alert("This knife is sold out.");
+        return;
+      }
 
-  if (e) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
 
-  const images = safeArr(product.images);
-  const variantIdx = indexForSelection(state.sel);
+      const images = safeArr(product.images);
+      const variantIdx = indexForSelection(state.sel);
 
-  const image =
-    images[variantIdx ?? state.imgIndex] ||
-    images[state.imgIndex] ||
-    images[0] ||
-    "./productimages/noimage.png";
+      const image =
+        images[variantIdx ?? state.imgIndex] ||
+        images[state.imgIndex] ||
+        images[0] ||
+        "./productimages/noimage.png";
 
-  const item = {
-    productId: product.id,
-    title: product.title,
-    selection: { ...state.sel },
-    quantity: 1,
-    unitPrice: calcTotal(),
-    image,
-    source: "product",
-    maxQty: Number(product.maxQty || 99),
-  };
+      const item = {
+        productId: product.id,
+        title: product.title,
+        selection: { ...state.sel },
+        quantity: 1,
+        unitPrice: calcTotal(),
+        image,
+        source: "product",
+        maxQty: Number(product.maxQty || 99),
+      };
 
-  const added = addCartItem(item);
-  if (!added) return;
+      const added = addCartItem(item);
+      if (!added) return;
 
-  window.location.href = "./cart.html";
-});
+      if (typeof gtag === "function") {
+        gtag("event", "add_to_cart", {
+          currency: "USD",
+          value: item.unitPrice * item.quantity,
+          items: [
+            {
+              item_id: item.productId,
+              item_name: item.title,
+              price: item.unitPrice,
+              quantity: item.quantity,
+              item_variant: `${item.selection?.steel || ""} / ${item.selection?.finish || ""} / ${item.selection?.handle || ""}`
+            }
+          ]
+        });
+      }
 
-    // Keyboard nav
+      window.location.href = "./cart.html";
+    });
+
     window.addEventListener("keydown", (e) => {
       const images = safeArr(product?.images);
       if (!images.length) return;
@@ -448,15 +462,14 @@ function applyLiveState(productsList, stateMap) {
       if (!res.ok) throw new Error(`Failed to load ${PRODUCTS_JSON_URL} (${res.status})`);
       const data = await res.json();
 
-const liveStateMap = await loadLiveStateMap();
-products = applyLiveState(safeArr(data.products), liveStateMap);
+      const liveStateMap = await loadLiveStateMap();
+      products = applyLiveState(safeArr(data.products), liveStateMap);
 
-const id = qsParam("id");
-product = products.find((p) => p.id === id) || products[0];
+      const id = qsParam("id");
+      product = products.find((p) => p.id === id) || products[0];
 
       if (!product) throw new Error("No products found in products.json");
 
-      // Defaults
       const defSteel = product?.defaults?.steel || safeArr(product?.options?.steel)[0]?.id;
       const defFinish = product?.defaults?.finish || safeArr(product?.options?.finish)[0]?.id;
       const defHandle = product?.defaults?.handle || safeArr(product?.options?.handle)[0]?.id;
@@ -465,18 +478,17 @@ product = products.find((p) => p.id === id) || products[0];
       state.sel.finish = defFinish || null;
       state.sel.handle = defHandle || null;
 
-      // Start on mapped image for defaults if possible
       const mapped = indexForSelection(state.sel);
       if (mapped !== null) state.imgIndex = mapped;
 
       setPageTitle(product.title || "Product");
 
-      // Ensure required UI blocks exist before first render
       ensureCarouselButtons();
       ensureBreakdownBox();
 
       render();
       wireEvents();
+      trackViewItem();
     } catch (err) {
       console.error(err);
       els.root.innerHTML = `

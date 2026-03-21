@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7TL4NS1XTG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7TL4NS1XTG');
+  </script>
+
   <meta charset="UTF-8" />
   <title>Knives | Carson Woodall Knives</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="stylesheet" href="styles.css" />
 </head>
 
@@ -156,10 +168,10 @@
 
   let products = [];
 
-const API_BASE =
-  window.location.hostname === "localhost"
-    ? "http://localhost:4242"
-    : "https://carson-woodall-knives.onrender.com";
+  const API_BASE =
+    window.location.hostname === "localhost"
+      ? "http://localhost:4242"
+      : "https://carson-woodall-knives.onrender.com";
 
   const els = {
     grid: document.getElementById("listingGrid"),
@@ -174,28 +186,28 @@ const API_BASE =
   }
 
   async function loadLiveStateMap() {
-  try {
-    const res = await fetch(`${API_BASE}/catalog-state`, { cache: "no-store" });
-    if (!res.ok) throw new Error("Failed to load live product state.");
-    return await res.json();
-  } catch (err) {
-    console.warn("Live product state unavailable:", err);
-    return {};
+    try {
+      const res = await fetch(`${API_BASE}/catalog-state`, { cache: "no-store" });
+      if (!res.ok) throw new Error("Failed to load live product state.");
+      return await res.json();
+    } catch (err) {
+      console.warn("Live product state unavailable:", err);
+      return {};
+    }
   }
-}
 
-function applyLiveState(productsList, stateMap) {
-  return productsList.map((p) => {
-    const live = stateMap[p.id];
-    if (!live) return p;
+  function applyLiveState(productsList, stateMap) {
+    return productsList.map((p) => {
+      const live = stateMap[p.id];
+      if (!live) return p;
 
-    return {
-      ...p,
-      purchaseEnabled: live.purchase_enabled,
-      maxQty: live.max_qty,
-    };
-  });
-}
+      return {
+        ...p,
+        purchaseEnabled: live.purchase_enabled,
+        maxQty: live.max_qty,
+      };
+    });
+  }
 
   function pillText(s) {
     return String(s || "").replace(/-/g, " ");
@@ -206,18 +218,15 @@ function applyLiveState(productsList, stateMap) {
       return p.types.map(t => String(t).toLowerCase());
     }
 
-    // backward compatibility with old single-type products
     if (p.type) {
       const raw = String(p.type).toLowerCase();
 
-      // map old values to new filter categories
       if (raw === "fixed") return ["edc"];
       if (raw === "hunting-bushcraft") return ["hunting-bushcraft"];
 
       return [raw];
     }
 
-    // safe default for your current products
     return ["edc"];
   }
 
@@ -236,9 +245,9 @@ function applyLiveState(productsList, stateMap) {
   }
 
   function getAvailability(p) {
-  if (p.purchaseEnabled === false) return "sold-out";
-  return String(p.availability || "made-to-order").toLowerCase();
-}
+    if (p.purchaseEnabled === false) return "sold-out";
+    return String(p.availability || "made-to-order").toLowerCase();
+  }
 
   function getCardImage(p) {
     return (
@@ -251,6 +260,37 @@ function applyLiveState(productsList, stateMap) {
 
   function getPrice(p) {
     return Number(p.basePrice ?? p.price ?? 0);
+  }
+
+  function trackSelectItem(product, href) {
+    if (!product || typeof gtag !== "function") {
+      window.location.href = href;
+      return;
+    }
+
+    let navigated = false;
+    const go = () => {
+      if (navigated) return;
+      navigated = true;
+      window.location.href = href;
+    };
+
+    gtag("event", "select_item", {
+      item_list_name: "Knives Listing",
+      transport_type: "beacon",
+      event_callback: go,
+      items: [
+        {
+          item_id: product.id,
+          item_name: product.title || "Untitled",
+          price: getPrice(product),
+          item_category: getPrimaryType(product),
+          item_list_name: "Knives Listing"
+        }
+      ]
+    });
+
+    setTimeout(go, 200);
   }
 
   function render(list) {
@@ -333,15 +373,41 @@ function applyLiveState(productsList, stateMap) {
     });
   }
 
+  function wireGridTracking() {
+    els.grid.addEventListener("click", (e) => {
+      const card = e.target.closest(".listing-card");
+      if (!card) return;
+
+      e.preventDefault();
+
+      const href = card.getAttribute("href") || "";
+      const match = href.match(/[?&]id=([^&]+)/);
+      if (!match) {
+        window.location.href = href;
+        return;
+      }
+
+      const productId = decodeURIComponent(match[1]);
+      const selectedProduct = products.find((p) => p.id === productId);
+
+      if (!selectedProduct) {
+        window.location.href = href;
+        return;
+      }
+
+      trackSelectItem(selectedProduct, href);
+    });
+  }
+
   async function init() {
     try {
       const res = await fetch("./data/products.json", { cache: "no-store" });
       if (!res.ok) throw new Error(`Failed to load products.json (${res.status})`);
 
       const data = await res.json();
-const rawProducts = Array.isArray(data) ? data : (data.products || []);
-const liveStateMap = await loadLiveStateMap();
-products = applyLiveState(rawProducts, liveStateMap);
+      const rawProducts = Array.isArray(data) ? data : (data.products || []);
+      const liveStateMap = await loadLiveStateMap();
+      products = applyLiveState(rawProducts, liveStateMap);
 
       if (!products.length) {
         els.grid.innerHTML = `
@@ -353,6 +419,7 @@ products = applyLiveState(rawProducts, liveStateMap);
       }
 
       wireFilters();
+      wireGridTracking();
       apply();
     } catch (err) {
       console.error("Failed to load ./data/products.json", err);
