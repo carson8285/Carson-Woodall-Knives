@@ -158,10 +158,10 @@
       "title": "March 26' Custom Knife",
       "basePrice": 400,
       "types": ["edc", "hunting-bushcraft"],
-      "featured": true,
+      "featured": false,
       "availability": "ready-to-ship",
-      "purchaseEnabled": true,
-      "maxQty": 1,
+      "purchaseEnabled": false,
+      "maxQty": 0,
       "date": "2026-03-09",
       "description": "Each monthly custom is a one-off knife built start to finish by my hand. Unlike the standard models, these builds give me the freedom to work with materials and details chosen specifically for the knife.<br><br>Measures 7.5\" overall with a 3.5\" cutting edge. Built from 1095 high carbon steel with a stonewashed finish and fitted with stabilized amboyna burl selected specifically for this piece.<br><br>Ready to ship in 2–3 business days.",
       "images": [
