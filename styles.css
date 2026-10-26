@@ -33,22 +33,14 @@ body {
 body {
   min-height: 100vh;
   position: relative;
-  background:
-    radial-gradient(circle at 50% 8%, rgba(58, 58, 58, 0.72) 0%, rgba(24, 24, 24, 0.94) 34%, #111111 72%);
+  background: #242424;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
   color: #f5f5f5;
   overflow-x: hidden;
 }
 
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  mix-blend-mode: soft-light;
+  content: none;
 }
 
 body > * {
@@ -74,20 +66,11 @@ html {
 .snap-page .knife-hero,
 .snap-page .shop-section,
 .snap-page .about-section,
-.snap-page .builder-images {
-  scroll-snap-align: center;
-}
-
+.snap-page .builder-images,
 .snap-page .footer {
-  scroll-snap-align: end;
+  scroll-snap-align: none;
+  scroll-snap-stop: normal;
 }
-
-.snap-page .builder-images {
-  scroll-snap-stop: always;
-  min-height: 100vh;
-  scroll-margin-top: 80px; /* offsets fixed nav */
-}
-
 /* =========================
    Shared Section Shells
    ========================= */
